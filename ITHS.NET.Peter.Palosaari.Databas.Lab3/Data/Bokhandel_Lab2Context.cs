@@ -12,17 +12,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 
         public Bokhandel_Lab2Context(DbContextOptions<Bokhandel_Lab2Context> options) : base(options) {}
 
-        public virtual DbSet<Butiker> Butikers { get; set; }
-        public virtual DbSet<Böcker> Böckers { get; set; }
-        public virtual DbSet<Författare> Författares { get; set; }
+        public virtual DbSet<Butiker> Butiker { get; set; }
+        public virtual DbSet<Böcker> Böcker { get; set; }
+        public virtual DbSet<Författare> Författare { get; set; }
         public virtual DbSet<FörfattareBöckerJunction> FörfattareBöckerJunctions { get; set; }
-        public virtual DbSet<Förlag> Förlags { get; set; }
-        public virtual DbSet<FörsäljningsstatistikButikerÅr2020> FörsäljningsstatistikButikerÅr2020s { get; set; }
-        public virtual DbSet<Kunder> Kunders { get; set; }
-        public virtual DbSet<LagerSaldo> LagerSaldos { get; set; }
-        public virtual DbSet<OrderDetaljer> OrderDetaljers { get; set; }
-        public virtual DbSet<Ordrar> Ordrars { get; set; }
-        public virtual DbSet<TitlarPerFörfattare> TitlarPerFörfattares { get; set; }
+        public virtual DbSet<Förlag> Förlag { get; set; }
+        public virtual DbSet<FörsäljningsstatistikButikerÅr2020> FörsäljningsstatistikButikerÅr2020 { get; set; }
+        public virtual DbSet<Kunder> Kunder { get; set; }
+        public virtual DbSet<LagerSaldo> LagerSaldon { get; set; }
+        public virtual DbSet<OrderDetaljer> OrderDetaljer { get; set; }
+        public virtual DbSet<Ordrar> Ordrar { get; set; }
+        public virtual DbSet<TitlarPerFörfattare> TitlarPerFörfattare { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

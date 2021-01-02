@@ -18,25 +18,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         [STAThread]
         static void Main()
         {
-            //using (var db = new NetDemoContext())
-            //{
-            //    var regions = db.Countries.ToList();
-
-            //    foreach (Country region in regions)
-            //    {
-            //        Debug.WriteLine(region.Region);
-            //    }
-            //}
-
-
-
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-
-
-
+            Application.Run(new ViewMain());
         }
     }
 }

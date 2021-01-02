@@ -19,9 +19,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\" />
-    <Folder Include="Presenters\" />
-  </ItemGroup>
-
 </Project>
