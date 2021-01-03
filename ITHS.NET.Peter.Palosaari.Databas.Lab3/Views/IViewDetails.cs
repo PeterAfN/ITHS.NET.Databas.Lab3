@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 {
-    interface IViewDetails
+    public interface IViewDetails
     {
+        DataGridView DataGridView { get; set; }
+
     }
 }

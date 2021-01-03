@@ -13,6 +13,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         public ViewDetails()
         {
             InitializeComponent();
+
         }
+
+        public DataGridView DataGridView
+        {
+            get { return dataGridView1; }
+            set { dataGridView1 = value; }
+        }
+
+
     }
 }
