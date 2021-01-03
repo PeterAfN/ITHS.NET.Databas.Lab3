@@ -29,10 +29,46 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.groupBoxBookstores = new System.Windows.Forms.GroupBox();
+            this.treeViewBookstores = new System.Windows.Forms.TreeView();
+            this.groupBoxBookstores.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // groupBoxBookstores
+            // 
+            this.groupBoxBookstores.Controls.Add(this.treeViewBookstores);
+            this.groupBoxBookstores.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxBookstores.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxBookstores.Name = "groupBoxBookstores";
+            this.groupBoxBookstores.Padding = new System.Windows.Forms.Padding(11, 14, 11, 11);
+            this.groupBoxBookstores.Size = new System.Drawing.Size(421, 545);
+            this.groupBoxBookstores.TabIndex = 1;
+            this.groupBoxBookstores.TabStop = false;
+            this.groupBoxBookstores.Text = "Bookstores - Stock Balance [rightclick for options]";
+            // 
+            // treeViewBookstores
+            // 
+            this.treeViewBookstores.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeViewBookstores.Location = new System.Drawing.Point(11, 30);
+            this.treeViewBookstores.Name = "treeViewBookstores";
+            this.treeViewBookstores.Size = new System.Drawing.Size(399, 504);
+            this.treeViewBookstores.TabIndex = 0;
+            // 
+            // ViewBookstores
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBoxBookstores);
+            this.DoubleBuffered = true;
+            this.Name = "ViewBookstores";
+            this.Size = new System.Drawing.Size(421, 545);
+            this.groupBoxBookstores.ResumeLayout(false);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+        private System.Windows.Forms.GroupBox groupBoxBookstores;
+        private System.Windows.Forms.TreeView treeViewBookstores;
     }
 }

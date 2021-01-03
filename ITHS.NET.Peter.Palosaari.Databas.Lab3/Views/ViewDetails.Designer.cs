@@ -29,10 +29,34 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.groupBoxDetailsBook = new System.Windows.Forms.GroupBox();
+            this.SuspendLayout();
+            // 
+            // groupBoxDetailsBook
+            // 
+            this.groupBoxDetailsBook.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxDetailsBook.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxDetailsBook.Name = "groupBoxDetailsBook";
+            this.groupBoxDetailsBook.Padding = new System.Windows.Forms.Padding(11, 14, 11, 11);
+            this.groupBoxDetailsBook.Size = new System.Drawing.Size(580, 539);
+            this.groupBoxDetailsBook.TabIndex = 1;
+            this.groupBoxDetailsBook.TabStop = false;
+            this.groupBoxDetailsBook.Text = "Details - Book [click to edit]";
+            // 
+            // ViewDetails
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBoxDetailsBook);
+            this.DoubleBuffered = true;
+            this.Name = "ViewDetails";
+            this.Size = new System.Drawing.Size(580, 539);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.GroupBox groupBoxDetailsBook;
     }
 }

@@ -14,21 +14,30 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 {
     public partial class ViewMain : Form, IViewMain
     {
-        public ViewMain()
+        private ViewBookstores viewBookstores;
+        private ViewDetails viewDetails;
+
+        public ViewMain(ViewBookstores viewBookstores, ViewDetails viewDetails)
         {
             InitializeComponent();
 
-            using ( var db = new Bokhandel_Lab2Context())
-            {
-                if (db.Database.CanConnect())
-                {
-                    Debug.WriteLine("Connection to database succeeded.");
-                    var böcker = db.Böcker.ToList();
-
-                }
-                else Debug.WriteLine("Could not connect to database.");
-            }
+            this.viewBookstores = viewBookstores;
+            this.viewDetails = viewDetails;
         }
 
+        public void AddControls()
+        {
+            splitContainerMain.Panel1.Controls.Add(viewBookstores);
+            splitContainerMain.Panel2.Controls.Add(viewDetails);
+        }
+
+        public void AddNodesToTreeview(ICollection<Butiker> bookstores)
+        {
+            foreach (Butiker bookstore in bookstores)
+            {
+                TreeNode customerNode = new TreeNode($"{bookstore.Namn}");
+                viewBookstores.TreeViewBookstores.Nodes.Add(customerNode);
+            }
+        }
     }
 }
