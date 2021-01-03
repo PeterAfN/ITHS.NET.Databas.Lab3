@@ -19,7 +19,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewDetails viewDetails;
 
         public ICollection<Butiker> Butiker { get; set; }
-
+        public ICollection<Böcker> Böcker { get; set; }
+        public ICollection<LagerSaldo> LagerSaldo { get; set; }
 
         public PresenterMain(IViewMain viewMain, IViewBookstores viewBookstores, IViewDetails viewDetails)
         {
@@ -30,6 +31,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewMain.Load += ViewMain_Load;
         }
 
+        private void ViewMain_Load(object sender, EventArgs e)
+        {
+            GetDataFromDatabase();
+            viewMain.AddNodesToTreeview(Butiker/*, Böcker, LagerSaldo*/);
+            viewMain.AddControls();
+        }
+
         private void GetDataFromDatabase()
         {
             using (var db = new Bokhandel_Lab2Context())
@@ -37,18 +45,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 if (db.Database.CanConnect())
                 {
                     Debug.WriteLine("Connection to database succeeded.");
-                    var böcker = db.Böcker.ToList();
+                    Böcker = db.Böcker.ToList();
                     Butiker = db.Butiker.ToList();
+                    LagerSaldo = db.LagerSaldon.ToList();
                 }
                 else Debug.WriteLine("Could not connect to database.");
             }
-        }
-
-        private void ViewMain_Load(object sender, EventArgs e)
-        {
-            GetDataFromDatabase();
-            viewMain.AddNodesToTreeview(Butiker);
-            viewMain.AddControls();
         }
 
     }

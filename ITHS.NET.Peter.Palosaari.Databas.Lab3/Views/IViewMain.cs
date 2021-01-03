@@ -12,12 +12,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 
         event EventHandler Load;
 
-        //Views.ViewBookstores ViewBookstores { get; set; }
-
-        //public SplitContainer SplitContainerMain { get; set; }
-
-        //void AddTreeview(ViewBookstores viewBookstores);
-
         void AddControls();
     }
 }

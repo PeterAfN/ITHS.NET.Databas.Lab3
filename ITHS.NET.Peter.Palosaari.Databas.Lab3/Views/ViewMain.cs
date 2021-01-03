@@ -35,8 +35,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         {
             foreach (Butiker bookstore in bookstores)
             {
-                TreeNode customerNode = new TreeNode($"{bookstore.Namn}");
-                viewBookstores.TreeViewBookstores.Nodes.Add(customerNode);
+                TreeNode bookstoreNode = new TreeNode($"{bookstore.Namn}");
+
+                foreach (LagerSaldo lagerSaldo in bookstore.LagerSaldon)
+                {
+                    TreeNode lagerSaldoNode = 
+                        new TreeNode($"\"{lagerSaldo.IsbnNavigation.Titel}\" x {lagerSaldo.Antal} st.");
+                    bookstoreNode.Nodes.Add(lagerSaldoNode);
+                }
+                viewBookstores.TreeViewBookstores.Nodes.Add(bookstoreNode);
             }
         }
     }
