@@ -8,5 +8,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
     public interface IViewBookstores
     {
         System.Windows.Forms.TreeView TreeViewBookstores { get; set; }
+
+        event EventHandler Load;
     }
 }

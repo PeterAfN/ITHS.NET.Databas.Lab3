@@ -149,7 +149,7 @@
             // 
             this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(3, 5, 11, 0);
             this.splitContainerMain.Size = new System.Drawing.Size(1308, 636);
-            this.splitContainerMain.SplitterDistance = 560;
+            this.splitContainerMain.SplitterDistance = 415;
             this.splitContainerMain.TabIndex = 0;
             // 
             // ViewMain
