@@ -131,7 +131,7 @@
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 24);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1308, 636);
+            this.panelMain.Size = new System.Drawing.Size(1308, 626);
             this.panelMain.TabIndex = 1;
             // 
             // splitContainerMain
@@ -148,7 +148,7 @@
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(3, 5, 11, 0);
-            this.splitContainerMain.Size = new System.Drawing.Size(1308, 636);
+            this.splitContainerMain.Size = new System.Drawing.Size(1308, 626);
             this.splitContainerMain.SplitterDistance = 415;
             this.splitContainerMain.TabIndex = 0;
             // 
@@ -156,7 +156,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1308, 671);
+            this.ClientSize = new System.Drawing.Size(1308, 661);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTop);
             this.DoubleBuffered = true;

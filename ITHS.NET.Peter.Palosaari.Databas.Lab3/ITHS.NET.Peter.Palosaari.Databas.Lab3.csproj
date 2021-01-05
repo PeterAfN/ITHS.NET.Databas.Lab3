@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\NetDemoContext.cs" />
+    <Compile Remove="Models\Data\NetDemoContext.cs" />
     <Compile Remove="Models\Country.cs" />
   </ItemGroup>
 

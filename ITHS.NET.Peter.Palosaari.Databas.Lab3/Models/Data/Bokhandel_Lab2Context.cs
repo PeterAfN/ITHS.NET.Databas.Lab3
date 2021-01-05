@@ -15,7 +15,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         public virtual DbSet<Butiker> Butiker { get; set; }
         public virtual DbSet<Böcker> Böcker { get; set; }
         public virtual DbSet<Författare> Författare { get; set; }
-        public virtual DbSet<FörfattareBöckerJunction> FörfattareBöckerJunctions { get; set; }
+        public virtual DbSet<FörfattareBöckerJunction> FörfattareBöckerJunction { get; set; }
         public virtual DbSet<Förlag> Förlag { get; set; }
         public virtual DbSet<FörsäljningsstatistikButikerÅr2020> FörsäljningsstatistikButikerÅr2020 { get; set; }
         public virtual DbSet<Kunder> Kunder { get; set; }
@@ -111,7 +111,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
                     .HasColumnName("BokID");
 
                 entity.HasOne(d => d.Böcker)
-                    .WithMany(p => p.FörfattareBöckerJunctions)
+                    .WithMany(p => p.FörfattareBöckerJunction)
                     .HasForeignKey(d => d.BokId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FörfattareBöcker_Junction_Böcker");

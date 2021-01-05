@@ -13,10 +13,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         public ViewBookstores()
         {
             InitializeComponent();
-
-            //var treeview = new CustomerOrdersTree() { Dock = DockStyle.Fill };
-            //splitContainer1.Panel1.Controls.Add(treeview);
+            CreateEvents();
         }
+
+        private void CreateEvents()
+        {
+            treeViewBookstores.AfterSelect += TreeViewBookstores_AfterSelect;
+        }
+
+
+        public event TreeViewEventHandler _TreeViewBookstores_AfterSelect;
+
+        private void TreeViewBookstores_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            _TreeViewBookstores_AfterSelect?.Invoke(TreeViewBookstores, e);
+        }
+
 
         public TreeView TreeViewBookstores
         {

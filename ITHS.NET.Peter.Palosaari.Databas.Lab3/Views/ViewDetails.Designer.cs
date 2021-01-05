@@ -72,6 +72,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dataGridViewDetailsBookstore.AllowUserToResizeRows = false;
             this.dataGridViewDetailsBookstore.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewDetailsBookstore.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewDetailsBookstore.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewDetailsBookstore.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewDetailsBookstore.ColumnHeadersVisible = false;
             this.dataGridViewDetailsBookstore.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -149,6 +150,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dataGridViewDetailsBook.AllowUserToResizeRows = false;
             this.dataGridViewDetailsBook.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewDetailsBook.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridViewDetailsBook.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewDetailsBook.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewDetailsBook.ColumnHeadersVisible = false;
             this.dataGridViewDetailsBook.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {

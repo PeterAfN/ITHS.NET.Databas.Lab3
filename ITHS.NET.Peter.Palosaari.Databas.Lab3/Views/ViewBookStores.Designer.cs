@@ -44,10 +44,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBookstores.Size = new System.Drawing.Size(421, 545);
             this.groupBoxBookstores.TabIndex = 1;
             this.groupBoxBookstores.TabStop = false;
-            this.groupBoxBookstores.Text = "Bookstores - Stock Balance [rightclick for options]";
+            this.groupBoxBookstores.Text = "Bookstore - Stock Balance [rightclick for options]";
             // 
             // treeViewBookstores
             // 
+            this.treeViewBookstores.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeViewBookstores.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewBookstores.Location = new System.Drawing.Point(11, 30);
             this.treeViewBookstores.Name = "treeViewBookstores";
