@@ -22,33 +22,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewDetails = viewDetails;
 
             this.viewBookstores.Load += ViewBookstores_Load;
-            //this.viewBookstores._TreeViewBookstores_AfterSelect += ViewBookstores__TreeViewBookstores_AfterSelect;
         }
-
-        //public event EventHandler<BookstoreEventArgs> OrderSelected;
-        //public event EventHandler<BookstoreEventArgs> OrderDeleted;
-
-        //private void ViewBookstores__TreeViewBookstores_AfterSelect(object sender, TreeViewEventArgs e)
-        //{
-        //    Butiker butiker = null;
-
-        //    if (e.Node.Tag is Butiker selectedOrder)
-        //    {
-        //        butiker = selectedOrder;
-        //    }
-        //    else if (e.Node.Tag is LagerSaldo)
-        //    {
-        //        if (e.Node.Parent.Tag is Butiker parentOrder)
-        //        {
-        //            butiker = parentOrder;
-        //        }
-        //    }
-
-        //    if (butiker != null)
-        //    {
-        //        OrderSelected?.Invoke(this, new BookstoreEventArgs(butiker));
-        //    }
-        //}
 
         public ICollection<Butiker> Butiker { get; set; }
         public ICollection<Böcker> Böcker { get; set; }
@@ -83,8 +57,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     FörfattareBöckerJunction = db.FörfattareBöckerJunction.ToList();
                     Författare = db.Författare.ToList();
                     Förlag = db.Förlag.ToList();
+                    db.ChangeTracker.Clear();
                 }
-                else Debug.WriteLine("Could not connect to database.");
+                else Debug.WriteLine("Could not connect to database to read values");
             }
         }
 

@@ -17,38 +17,53 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         }
 
 
-        public DataGridView DataGridViewDetailsBookstore
+        public DataGridView DGVDetailsBookstore
         {
-            get { return dataGridViewDetailsBookstore; }
-            set { dataGridViewDetailsBookstore = value; }
+            get { return dgvDetailsBookstore; }
+            set { dgvDetailsBookstore = value; }
         }
 
-        public DataGridView DataGridViewDetailsBook
+        public DataGridView DGVDetailsBook
         {
-            get { return dataGridViewDetailsBook; }
-            set { dataGridViewDetailsBook = value; }
+            get { return dgvDetailsBook; }
+            set { dgvDetailsBook = value; }
         }
 
 
         private void CreateEvents()
         {
-            dataGridViewDetailsBookstore.SelectionChanged += DataGridViewDetailsBookstore_SelectionChanged;
-            DataGridViewDetailsBook.SelectionChanged += DataGridViewDetailsBook_SelectionChanged;
+            DGVDetailsBookstore.SelectionChanged += DGVDetailsBookstore_SelectionChanged;
+            DGVDetailsBook.SelectionChanged += DGVDetailsBook_SelectionChanged;
+            DGVDetailsBookstore.CellValueChanged += DGVDetailsBookstore_CellValueChanged;
+            DGVDetailsBook.CellValueChanged += DGVDetailsBook_CellValueChanged;
         }
 
+        public event DataGridViewCellEventHandler _DGVDetailsBook_CellValueChanged;
 
-        public event EventHandler _DataGridViewDetailsBook_SelectionChanged;
-
-        private void DataGridViewDetailsBook_SelectionChanged(object sender, EventArgs e)
+        private void DGVDetailsBook_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            _DataGridViewDetailsBook_SelectionChanged?.Invoke(DataGridViewDetailsBook, e);
+            _DGVDetailsBook_CellValueChanged?.Invoke(DGVDetailsBook, e);
         }
 
-        public event EventHandler _DataGridViewDetailsBookstore_SelectionChanged;
+        public event DataGridViewCellEventHandler _DGVDetailsBookstore_CellValueChanged;
 
-        private void DataGridViewDetailsBookstore_SelectionChanged(object sender, EventArgs e)
+        private void DGVDetailsBookstore_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            _DataGridViewDetailsBookstore_SelectionChanged?.Invoke(DataGridViewDetailsBookstore, e);
+            _DGVDetailsBookstore_CellValueChanged?.Invoke(DGVDetailsBookstore, e);
+        }
+
+        public event EventHandler _DGVDetailsBook_SelectionChanged;
+
+        private void DGVDetailsBook_SelectionChanged(object sender, EventArgs e)
+        {
+            _DGVDetailsBook_SelectionChanged?.Invoke(DGVDetailsBook, e);
+        }
+
+        public event EventHandler _DGVDetailsBookstore_SelectionChanged;
+
+        private void DGVDetailsBookstore_SelectionChanged(object sender, EventArgs e)
+        {
+            _DGVDetailsBookstore_SelectionChanged?.Invoke(DGVDetailsBookstore, e);
         }
     }
 }

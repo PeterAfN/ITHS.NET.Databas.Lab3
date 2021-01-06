@@ -7,11 +7,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 {
     public interface IViewDetails
     {
-        DataGridView DataGridViewDetailsBookstore { get; set; }
-        DataGridView DataGridViewDetailsBook { get; set; }
+        DataGridView DGVDetailsBookstore { get; set; }
+        DataGridView DGVDetailsBook { get; set; }
 
-        event EventHandler _DataGridViewDetailsBook_SelectionChanged;
-        event EventHandler _DataGridViewDetailsBookstore_SelectionChanged;
+        event EventHandler Load;
+        event EventHandler _DGVDetailsBook_SelectionChanged;
+        event EventHandler _DGVDetailsBookstore_SelectionChanged;
+        event DataGridViewCellEventHandler _DGVDetailsBook_CellValueChanged;
+        event DataGridViewCellEventHandler _DGVDetailsBookstore_CellValueChanged;
     }
 }
 
