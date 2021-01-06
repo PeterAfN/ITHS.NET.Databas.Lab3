@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -22,12 +23,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewDetails._DataGridViewDetailsBook_SelectionChanged += ViewDetails__DataGridViewDetailsBook_SelectionChanged;
             this.viewBookstores._TreeViewBookstores_AfterSelect += ViewBookstores__TreeViewBookstores_AfterSelect;
 
+            viewDetails.DataGridViewDetailsBook.AllowUserToAddRows = false;
             CreateDatagridviewDetailBookstore();
             CreateDatagridviewDetailBook();
         }
 
-        public event EventHandler<BookstoreEventArgs> OrderSelected;
-        public event EventHandler<BookstoreEventArgs> OrderDeleted;
+        //public event EventHandler<BookstoreEventArgs> OrderSelected;
+        //public event EventHandler<BookstoreEventArgs> OrderDeleted;
 
         private void ViewBookstores__TreeViewBookstores_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
         {
@@ -35,27 +37,38 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
             if (e.Node.Tag is Butiker selectedOrder)
             {
-                butiker = selectedOrder;
-                UpdateBookstore(butiker);
+                ClearBook();
+                UpdateBookstore(selectedOrder);
             }
             else if (e.Node.Tag is LagerSaldo lagerSaldo)
             {
                 if (e.Node.Parent.Tag is Butiker parentOrder)
                 {
-                    butiker = parentOrder;
+                    UpdateBookstore(parentOrder);
                     UpdateBook(lagerSaldo);
+                    ClearBookAuthors();
+                    CreateBookAuthors(lagerSaldo);
                 }
             }
 
-            if (butiker != null)
-            {
-                OrderSelected?.Invoke(this, new BookstoreEventArgs(butiker));
-            }
+            //if (butiker != null) OrderSelected?.Invoke(this, new BookstoreEventArgs(butiker));
         }
 
+        void ClearBook()
+        {
+            var tmp = viewDetails.DataGridViewDetailsBook.Columns[1];
+            viewDetails.DataGridViewDetailsBook.Columns.Remove(viewDetails.DataGridViewDetailsBook.Columns[1]);
+            viewDetails.DataGridViewDetailsBook.Columns.Insert(1, tmp);
+        }
 
         private void UpdateBookstore(Butiker butik)
         {
+            viewDetails.DataGridViewDetailsBookstore[1, 0].Value = butik.Id; 
+            viewDetails.DataGridViewDetailsBookstore[1, 1].Value = butik.Namn;
+            viewDetails.DataGridViewDetailsBookstore[1, 2].Value = butik.Adress;
+            viewDetails.DataGridViewDetailsBookstore[1, 3].Value = butik.Postnummer;
+            viewDetails.DataGridViewDetailsBookstore[1, 4].Value = butik.Stad;
+            viewDetails.DataGridViewDetailsBookstore[1, 5].Value = butik.Land;
         }
 
         private void UpdateBook(LagerSaldo lagerSaldo)
@@ -71,29 +84,21 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DataGridViewDetailsBook[1, 8].Value = lagerSaldo.IsbnNavigation.Förlag.Beskrivning;
             viewDetails.DataGridViewDetailsBook[1, 9].Value = lagerSaldo.IsbnNavigation.Förlag.Telefonnummer;
             viewDetails.DataGridViewDetailsBook[1, 10].Value = lagerSaldo.IsbnNavigation.Förlag.Epost;
-
-            ClearBookAuthors(lagerSaldo);
-            CreateBookAuthors(lagerSaldo);
         }
 
-        void ClearBookAuthors(LagerSaldo lagerSaldo)
+        void ClearBookAuthors()
         {
             viewDetails.DataGridViewDetailsBook.AllowUserToAddRows = false;
             int count = viewDetails.DataGridViewDetailsBook.Rows.Count;
-
             
             for (int i = count-1; i > 10; i--)
             {
                 viewDetails.DataGridViewDetailsBook.Rows.RemoveAt(i);
             }
-            //viewDetails.DataGridViewDetailsBook.AllowUserToAddRows = true;
         }
 
         void CreateBookAuthors(LagerSaldo lagerSaldo)
         {
-            //int count = lagerSaldo.IsbnNavigation.FörfattareBöckerJunction.Count;
-            //for (int i = 0; i < count; i++)
-            //{
             int i = 0;
             foreach (var item in lagerSaldo.IsbnNavigation.FörfattareBöckerJunction)
             {
@@ -108,21 +113,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewDetails.DataGridViewDetailsBook[1, 14 + (i * 4)].Value = item.Författare.Födelsedatum;
                 i++;
             }
-            //}
         }
-
-        private void ViewDetails__DataGridViewDetailsBook_SelectionChanged(object sender, EventArgs e)
-        {
-            if (viewDetails.DataGridViewDetailsBook.CurrentCell.ColumnIndex == 0)
-                viewDetails.DataGridViewDetailsBook.CurrentCell.Selected = false;
-        }
-
-        private void ViewDetails__DataGridViewDetailsBookstore_SelectionChanged(object sender, EventArgs e)
-        {
-            if (viewDetails.DataGridViewDetailsBookstore.CurrentCell.ColumnIndex == 0)
-                viewDetails.DataGridViewDetailsBookstore.CurrentCell.Selected = false;
-        }
-
 
         private void CreateDatagridviewDetailBookstore()
         {
@@ -137,7 +128,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void CreateDatagridviewDetailBook()
         {
-            viewDetails.DataGridViewDetailsBook.Rows.Add(14);
+            viewDetails.DataGridViewDetailsBook.Rows.Add(15);
             viewDetails.DataGridViewDetailsBook[0, 0].Value = "Isbn:";
             viewDetails.DataGridViewDetailsBook[0, 1].Value = "Title:";
             viewDetails.DataGridViewDetailsBook[0, 2].Value = "Amount:";
@@ -153,6 +144,19 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DataGridViewDetailsBook[0, 12].Value = "Author First Name:";
             viewDetails.DataGridViewDetailsBook[0, 13].Value = "Author Last Name:";
             viewDetails.DataGridViewDetailsBook[0, 14].Value = "Author Date of Birth";
+        }
+
+
+        private void ViewDetails__DataGridViewDetailsBook_SelectionChanged(object sender, EventArgs e)
+        {
+            if (viewDetails.DataGridViewDetailsBook.CurrentCell.ColumnIndex == 0)
+                viewDetails.DataGridViewDetailsBook.CurrentCell.Selected = false;
+        }
+
+        private void ViewDetails__DataGridViewDetailsBookstore_SelectionChanged(object sender, EventArgs e)
+        {
+            if (viewDetails.DataGridViewDetailsBookstore.CurrentCell.ColumnIndex == 0)
+                viewDetails.DataGridViewDetailsBookstore.CurrentCell.Selected = false;
         }
     }
 }
