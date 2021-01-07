@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
+using System;
 using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
@@ -11,10 +10,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         DataGridView DGVDetailsBook { get; set; }
 
         event EventHandler Load;
-        event EventHandler _DGVDetailsBook_SelectionChanged;
-        event EventHandler _DGVDetailsBookstore_SelectionChanged;
-        event DataGridViewCellEventHandler _DGVDetailsBook_CellValueChanged;
-        event DataGridViewCellEventHandler _DGVDetailsBookstore_CellValueChanged;
+        event EventHandler<BookstoreEventArgs> BookstoreDatabaseUpdated;
+        event EventHandler<BookEventArgs> BookDatabaseUpdated;
+
+        void TriggerEventBookstoreDatabaseUpdated(object sender, BookstoreEventArgs e);
+        void TriggerEventBookDatabaseUpdated(object sender, BookEventArgs e);
     }
 }
 

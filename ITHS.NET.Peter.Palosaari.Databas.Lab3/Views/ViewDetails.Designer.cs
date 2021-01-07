@@ -95,9 +95,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvDetailsBookstore.RowTemplate.Height = 25;
             this.dgvDetailsBookstore.Size = new System.Drawing.Size(813, 167);
             this.dgvDetailsBookstore.TabIndex = 1;
-            //this.dgvDetailsBookstore.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvDetailsBookstore_CellValidating);
-            //this.dgvDetailsBookstore.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvDetailsBookstore_EditingControlShowing);
-            //this.dgvDetailsBookstore.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dgvDetailsBookstore_KeyPress);
+            this.dgvDetailsBookstore.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgvDetailsBookstore_CellBeginEdit);
+            this.dgvDetailsBookstore.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDetailsBookstore_CellEndEdit);
             // 
             // dgvTextBoxColumn1
             // 

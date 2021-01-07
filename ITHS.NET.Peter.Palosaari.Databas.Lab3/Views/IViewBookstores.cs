@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
@@ -11,5 +9,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 
         event EventHandler Load;
         event TreeViewEventHandler _TreeViewBookstores_AfterSelect;
+
+        bool PreventEvent { get; set; }
     }
 }

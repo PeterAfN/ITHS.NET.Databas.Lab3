@@ -2,15 +2,18 @@
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs
 {
-    public class BookstoreEventArgs : EventArgs
+    public class BookEventArgs : EventArgs
     {
-        public Butiker Butik { get; set; }
+        //public LagerSaldo LagerSaldo { get; set; }
+
+        public object TableType { get; set; }
+
         public int IndexSelectedChildNode { get; set; } = -1; //value of -1 means no childnode is selected.
         public int IndexSelectedParentNode { get; set; }
 
-        public BookstoreEventArgs(Butiker Butik)
+        public BookEventArgs(object TableType)
         {
-            this.Butik = Butik;
+            this.TableType = TableType;
         }
     }
 }

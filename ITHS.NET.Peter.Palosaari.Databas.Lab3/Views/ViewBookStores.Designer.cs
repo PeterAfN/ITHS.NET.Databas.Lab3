@@ -50,6 +50,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             // 
             this.treeViewBookstores.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeViewBookstores.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeViewBookstores.HideSelection = false;
             this.treeViewBookstores.Location = new System.Drawing.Point(11, 30);
             this.treeViewBookstores.Name = "treeViewBookstores";
             this.treeViewBookstores.Size = new System.Drawing.Size(399, 504);

@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
@@ -8,9 +6,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 {
     public partial class Bokhandel_Lab2Context : DbContext
     {
-        public Bokhandel_Lab2Context() {}
+        public Bokhandel_Lab2Context() { }
 
-        public Bokhandel_Lab2Context(DbContextOptions<Bokhandel_Lab2Context> options) : base(options) {}
+        public Bokhandel_Lab2Context(DbContextOptions<Bokhandel_Lab2Context> options) : base(options) { }
 
         public virtual DbSet<Butiker> Butiker { get; set; }
         public virtual DbSet<Böcker> Böcker { get; set; }

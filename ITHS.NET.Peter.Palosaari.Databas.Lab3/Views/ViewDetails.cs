@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
+using System;
 using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
@@ -13,7 +9,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         public ViewDetails()
         {
             InitializeComponent();
-            CreateEvents();
         }
 
 
@@ -30,40 +25,34 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         }
 
 
-        private void CreateEvents()
+        public event EventHandler<BookstoreEventArgs> BookstoreDatabaseUpdated;
+
+        /// <summary>
+        /// This event is triggered after a user has updated a datagrid cell value 
+        /// and after the value has been saved to the sql server database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void TriggerEventBookstoreDatabaseUpdated(object sender, BookstoreEventArgs e)
         {
-            DGVDetailsBookstore.SelectionChanged += DGVDetailsBookstore_SelectionChanged;
-            DGVDetailsBook.SelectionChanged += DGVDetailsBook_SelectionChanged;
-            DGVDetailsBookstore.CellValueChanged += DGVDetailsBookstore_CellValueChanged;
-            DGVDetailsBook.CellValueChanged += DGVDetailsBook_CellValueChanged;
+            BookstoreDatabaseUpdated.Invoke(this, e);
         }
 
-        public event DataGridViewCellEventHandler _DGVDetailsBook_CellValueChanged;
+        public event EventHandler<BookEventArgs> BookDatabaseUpdated;
 
-        private void DGVDetailsBook_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        public void TriggerEventBookDatabaseUpdated(object sender, BookEventArgs e)
         {
-            _DGVDetailsBook_CellValueChanged?.Invoke(DGVDetailsBook, e);
+            BookDatabaseUpdated.Invoke(this, e);
         }
 
-        public event DataGridViewCellEventHandler _DGVDetailsBookstore_CellValueChanged;
-
-        private void DGVDetailsBookstore_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dgvDetailsBookstore_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            _DGVDetailsBookstore_CellValueChanged?.Invoke(DGVDetailsBookstore, e);
+
         }
 
-        public event EventHandler _DGVDetailsBook_SelectionChanged;
-
-        private void DGVDetailsBook_SelectionChanged(object sender, EventArgs e)
+        private void dgvDetailsBookstore_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            _DGVDetailsBook_SelectionChanged?.Invoke(DGVDetailsBook, e);
-        }
 
-        public event EventHandler _DGVDetailsBookstore_SelectionChanged;
-
-        private void DGVDetailsBookstore_SelectionChanged(object sender, EventArgs e)
-        {
-            _DGVDetailsBookstore_SelectionChanged?.Invoke(DGVDetailsBookstore, e);
         }
     }
 }

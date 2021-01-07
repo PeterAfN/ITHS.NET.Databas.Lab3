@@ -1,12 +1,10 @@
-﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
+﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
+using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -22,8 +20,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewBookstores = viewBookstores;
             this.viewDetails = viewDetails;
 
-            this.viewDetails._DGVDetailsBookstore_SelectionChanged += ViewDetails__DGVDetailsBookstore_SelectionChanged;
-            this.viewDetails._DGVDetailsBook_SelectionChanged += ViewDetails__DGVDetailsBook_SelectionChanged;
+            this.viewDetails.DGVDetailsBook.SelectionChanged += DGVDetailsBook_SelectionChanged;
+            this.viewDetails.DGVDetailsBookstore.SelectionChanged += DGVDetailsBookstore_SelectionChanged;
             this.viewBookstores._TreeViewBookstores_AfterSelect += ViewBookstores__TreeViewBookstores_AfterSelect;
             this.viewDetails.Load += ViewDetails_Load;
 
@@ -32,58 +30,96 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             CreateDGVDetailBook();
         }
 
-        private void ViewDetails_Load(object sender, EventArgs e)
+        private string CellValueBeforeEdit { get; set; }
+
+        private void DGVDetailsBookstore_SelectionChanged(object sender, EventArgs e)
         {
-            viewDetails._DGVDetailsBookstore_CellValueChanged += ViewDetails__DGVDetailsBookstore_CellValueChanged;
-            viewDetails._DGVDetailsBook_CellValueChanged += ViewDetails__DGVDetailsBook_CellValueChanged;
-            //viewDetails.DGVDetailsBookstore.EditingControlShowing += DGVDetailsBookstore_EditingControlShowing;
+            if (viewDetails.DGVDetailsBookstore.CurrentCell.ColumnIndex == 0) viewDetails.DGVDetailsBookstore.CurrentCell.Selected = false;
         }
 
-        //private void DGVDetailsBookstore_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        //{
-        //    e.Control.KeyPress -= new KeyPressEventHandler(Column1_KeyPress);
-        //    if (viewDetails.DGVDetailsBookstore.CurrentCell.ColumnIndex == 1 && viewDetails.DGVDetailsBookstore.CurrentCell.RowIndex == 3)
-        //    {
-        //        TextBox tb = e.Control as TextBox;
-        //        if (tb != null) tb.KeyPress += new KeyPressEventHandler(Column1_KeyPress);
-        //    }
-        //}
+        private void DGVDetailsBook_SelectionChanged(object sender, EventArgs e)
+        {
+            if (viewDetails.DGVDetailsBook.CurrentCell.ColumnIndex == 0) viewDetails.DGVDetailsBook.CurrentCell.Selected = false;
+        }
 
-        //private void Column1_KeyPress(object sender, KeyPressEventArgs e)
-        //{
-        //    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
-        //}
+        private void ViewDetails_Load(object sender, EventArgs e)
+        {
+            viewDetails.DGVDetailsBookstore.CellValueChanged += DGVDetailsBookstore_CellValueChanged;
+            viewDetails.DGVDetailsBook.CellValueChanged += DGVDetailsBook_CellValueChanged;
+            viewDetails.DGVDetailsBookstore.CellBeginEdit += DGVDetailsBookstore_CellBeginEdit;
+            viewDetails.DGVDetailsBook.CellBeginEdit += DGVDetailsBook_CellBeginEdit;
+        }
 
-        private void ViewDetails__DGVDetailsBook_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DGVDetailsBook_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            CellValueBeforeEdit = viewDetails.DGVDetailsBook.CurrentCell.Value.ToString();
+        }
+
+        private void DGVDetailsBookstore_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            CellValueBeforeEdit = viewDetails.DGVDetailsBookstore.CurrentCell.Value.ToString();
+        }
+
+        private void DGVDetailsBook_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (userNavigating) return;
+            if (viewDetails.DGVDetailsBook.CurrentCell.Value == null)
+            {
+                RestoreCellValue();
+                return;
+            }
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
+                int.TryParse(viewDetails.DGVDetailsBookstore[1, 0].Value.ToString(), out int butikID);
+                var stock = db.LagerSaldon.FirstOrDefault(b => b.ButikId == butikID && b.Isbn == viewDetails.DGVDetailsBook[1, 0].Value.ToString());
+                var books = db.Böcker.FirstOrDefault(b => b.Isbn13 == viewDetails.DGVDetailsBook[1, 0].Value.ToString());
+                int.TryParse(viewDetails.DGVDetailsBook[1, 6].Value.ToString(), out int _publisher);
+                var publisher = db.Förlag.FirstOrDefault(b => b.Id == _publisher);
+
+                BookEventArgs args = new BookEventArgs(books);
                 switch (e.RowIndex)
                 {
-                    case 0:
-                        break;
                     case 1:
-
+                        books.Titel = viewDetails.DGVDetailsBook[1, 1].Value.ToString();
+                        args = new BookEventArgs(books);
                         break;
                     case 2:
+                        int.TryParse(viewDetails.DGVDetailsBook[1, 2].Value.ToString(), out int amount);
+                        stock.Antal = amount;
+                        args = new BookEventArgs(stock);
                         break;
                     case 3:
+                        books.Språk = viewDetails.DGVDetailsBook[1, 3].Value.ToString();
+                        args = new BookEventArgs(books);
                         break;
                     case 4:
+                        decimal.TryParse(viewDetails.DGVDetailsBook[1, 4].Value.ToString(), out decimal price);
+                        books.Pris = price;
+                        args = new BookEventArgs(books);
                         break;
-                    case 5:
-                        break;
-                    case 6:
+                    case 5: //todo: when sql database is changed to date instead this must be changed also to date
+                        books.Utgivningsdatum = viewDetails.DGVDetailsBook[1, 5].Value.ToString();
+                        args = new BookEventArgs(books);
                         break;
                     case 7:
+                        publisher.Namn = viewDetails.DGVDetailsBook[1, 7].Value.ToString();
+                        args = new BookEventArgs(publisher);
                         break;
                     case 8:
+                        publisher.Beskrivning = viewDetails.DGVDetailsBook[1, 8].Value.ToString();
+                        args = new BookEventArgs(publisher);
                         break;
                     case 9:
+                        publisher.Telefonnummer = viewDetails.DGVDetailsBook[1, 9].Value.ToString();
+                        args = new BookEventArgs(publisher);
                         break;
                     case 10:
+                        publisher.Epost = viewDetails.DGVDetailsBook[1, 10].Value.ToString();
+                        args = new BookEventArgs(publisher);
+                        break;
+                    case 12:
+                        //author.Förnamn = viewDetails.DGVDetailsBook[1, 11].Value.ToString();
                         break;
                 }
                 try
@@ -95,14 +131,30 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 catch (Exception)
                 {
                     db.Dispose();
+                    RestoreCellValue();
+                    return;
                 }
+                if (viewBookstores.TreeViewBookstores.SelectedNode.Parent == null)
+                    args.IndexSelectedParentNode = viewBookstores.TreeViewBookstores.SelectedNode.Index;
+                else
+                {
+                    args.IndexSelectedChildNode = viewBookstores.TreeViewBookstores.SelectedNode.Index;
+                    args.IndexSelectedParentNode = viewBookstores.TreeViewBookstores.SelectedNode.Parent.Index;
+                }
+                viewDetails.TriggerEventBookDatabaseUpdated(sender, args);
             }
             else Debug.WriteLine("Could not connect to database to read values.");
         }
 
-        private void ViewDetails__DGVDetailsBookstore_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+
+        private void DGVDetailsBookstore_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (userNavigating) return;
+            if (viewDetails.DGVDetailsBookstore.CurrentCell.Value == null)
+            {
+                RestoreCellValue();
+                return;
+            }
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
@@ -110,8 +162,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 var butiker = db.Butiker.FirstOrDefault(b => b.Id == bookID);
                 switch (e.RowIndex)
                 {
-                    case 0:
-                        break;
                     case 1:
                         butiker.Namn = viewDetails.DGVDetailsBookstore[1, 1].Value.ToString();
                         break;
@@ -138,9 +188,29 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 catch (Exception)
                 {
                     db.Dispose();
+                    RestoreCellValue();
+                    return;
                 }
+
+                BookstoreEventArgs args = new BookstoreEventArgs(butiker);
+                if (viewBookstores.TreeViewBookstores.SelectedNode.Parent == null)
+                    args.IndexSelectedParentNode = viewBookstores.TreeViewBookstores.SelectedNode.Index;
+                else
+                {
+                    args.IndexSelectedChildNode = viewBookstores.TreeViewBookstores.SelectedNode.Index;
+                    args.IndexSelectedParentNode = viewBookstores.TreeViewBookstores.SelectedNode.Parent.Index;
+                }
+                viewDetails.TriggerEventBookstoreDatabaseUpdated(sender, args);
             }
             else Debug.WriteLine("Could not connect to database to set values.");
+        }
+
+
+        private void RestoreCellValue()
+        {
+            viewDetails.DGVDetailsBookstore.CellValueChanged -= DGVDetailsBookstore_CellValueChanged;
+            viewDetails.DGVDetailsBookstore.CurrentCell.Value = CellValueBeforeEdit;
+            viewDetails.DGVDetailsBookstore.CellValueChanged += DGVDetailsBookstore_CellValueChanged;
         }
 
         private void Db_SaveChangesFailed(object sender, SaveChangesFailedEventArgs e)
@@ -189,7 +259,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void UpdateBookstore(Butiker butik)
         {
-            viewDetails.DGVDetailsBookstore[1, 0].Value = butik.Id; 
+            viewDetails.DGVDetailsBookstore[1, 0].Value = butik.Id;
             viewDetails.DGVDetailsBookstore[1, 1].Value = butik.Namn;
             viewDetails.DGVDetailsBookstore[1, 2].Value = butik.Adress;
             viewDetails.DGVDetailsBookstore[1, 3].Value = butik.Postnummer;
@@ -215,8 +285,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         void ClearBookAuthors()
         {
             int count = viewDetails.DGVDetailsBook.Rows.Count;
-            
-            for (int i = count-1; i > 10; i--)
+
+            for (int i = count - 1; i > 10; i--)
             {
                 viewDetails.DGVDetailsBook.Rows.RemoveAt(i);
             }
@@ -278,16 +348,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVDetailsBook[1, 0].ReadOnly = true;       //isbn
             viewDetails.DGVDetailsBook[1, 6].ReadOnly = true;       //publisher id
             viewDetails.DGVDetailsBook[1, 11].ReadOnly = true;      //author id
-        }
-
-        private void ViewDetails__DGVDetailsBook_SelectionChanged(object sender, EventArgs e)
-        {
-            if (viewDetails.DGVDetailsBook.CurrentCell.ColumnIndex == 0) viewDetails.DGVDetailsBook.CurrentCell.Selected = false;
-        }
-
-        private void ViewDetails__DGVDetailsBookstore_SelectionChanged(object sender, EventArgs e)
-        {
-            if (viewDetails.DGVDetailsBookstore.CurrentCell.ColumnIndex == 0) viewDetails.DGVDetailsBookstore.CurrentCell.Selected = false;
         }
     }
 }
