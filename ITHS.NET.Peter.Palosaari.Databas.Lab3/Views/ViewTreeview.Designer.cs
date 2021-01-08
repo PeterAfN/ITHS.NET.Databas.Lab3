@@ -1,7 +1,7 @@
 ﻿
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 {
-    partial class ViewBookstores
+    partial class ViewTreeView
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,13 +30,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         private void InitializeComponent()
         {
             this.groupBoxBookstores = new System.Windows.Forms.GroupBox();
-            this.treeViewBookstores = new System.Windows.Forms.TreeView();
+            this.treeView = new System.Windows.Forms.TreeView();
             this.groupBoxBookstores.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxBookstores
             // 
-            this.groupBoxBookstores.Controls.Add(this.treeViewBookstores);
+            this.groupBoxBookstores.Controls.Add(this.treeView);
             this.groupBoxBookstores.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxBookstores.Location = new System.Drawing.Point(0, 0);
             this.groupBoxBookstores.Name = "groupBoxBookstores";
@@ -46,23 +46,23 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBookstores.TabStop = false;
             this.groupBoxBookstores.Text = "Bookstore - Stock Balance [rightclick for options]";
             // 
-            // treeViewBookstores
+            // treeView
             // 
-            this.treeViewBookstores.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.treeViewBookstores.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeViewBookstores.HideSelection = false;
-            this.treeViewBookstores.Location = new System.Drawing.Point(11, 30);
-            this.treeViewBookstores.Name = "treeViewBookstores";
-            this.treeViewBookstores.Size = new System.Drawing.Size(399, 504);
-            this.treeViewBookstores.TabIndex = 0;
+            this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView.HideSelection = false;
+            this.treeView.Location = new System.Drawing.Point(11, 30);
+            this.treeView.Name = "treeView";
+            this.treeView.Size = new System.Drawing.Size(399, 504);
+            this.treeView.TabIndex = 0;
             // 
-            // ViewBookstores
+            // ViewTreeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBoxBookstores);
             this.DoubleBuffered = true;
-            this.Name = "ViewBookstores";
+            this.Name = "ViewTreeView";
             this.Size = new System.Drawing.Size(421, 545);
             this.groupBoxBookstores.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -71,6 +71,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 
         #endregion
         private System.Windows.Forms.GroupBox groupBoxBookstores;
-        private System.Windows.Forms.TreeView treeViewBookstores;
+        private System.Windows.Forms.TreeView treeView;
     }
 }

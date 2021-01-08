@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
-    class PresenterBookstores
+    class PresenterTreeView
     {
         #region Native Methods - Win32
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
@@ -36,20 +36,18 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         }
         #endregion Native Methods - Win32
 
-
-
         private readonly IViewMain viewMain;
-        private readonly IViewBookstores viewBookstores;
+        private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
 
-        public PresenterBookstores(IViewMain viewMain, IViewBookstores viewBookstores, IViewDetails viewDetails)
+        public PresenterTreeView(IViewMain viewMain, IViewTreeView viewBookstores, IViewDetails viewDetails)
         {
             this.viewMain = viewMain;
-            this.viewBookstores = viewBookstores;
+            this.viewTreeView = viewBookstores;
             this.viewDetails = viewDetails;
-
-            this.viewBookstores.Load += ViewBookstores_Load;
+            this.viewTreeView.Load += ViewBookstores_Load;
         }
+
 
         public ICollection<Butiker> Butiker { get; set; }
         public ICollection<Böcker> Böcker { get; set; }
@@ -65,75 +63,55 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             AddNodesToTreeview(Butiker);
             viewMain.AddControls();
             SelectTreeviewNode(0);
-
-            viewDetails.BookDatabaseUpdated += ViewDetails_BookDatabaseUpdated;
-            viewDetails.BookstoreDatabaseUpdated += ViewDetails_BookstoreDatabaseUpdated;
+            viewDetails.DataGridViewUpdated += ViewDetails_DataGridViewUpdated;
         }
 
         void SelectTreeviewNode(int parentNode, int childNode = -1)
         {
-            viewBookstores.TreeViewBookstores.ExpandAll();
+            viewTreeView.TreeView.ExpandAll();
             if (childNode == -1)
-                viewBookstores.TreeViewBookstores.SelectedNode = viewBookstores.TreeViewBookstores.Nodes[parentNode];
+                viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode];
             else
-                viewBookstores.TreeViewBookstores.SelectedNode = viewBookstores.TreeViewBookstores.Nodes[parentNode].Nodes[childNode];
-            viewBookstores.TreeViewBookstores.SelectedNode.EnsureVisible();
-            viewBookstores.TreeViewBookstores.Focus();
+                viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode].Nodes[childNode];
+            viewTreeView.TreeView.SelectedNode.EnsureVisible();
+            viewTreeView.TreeView.Focus();
         }
 
-        private void ViewDetails_BookstoreDatabaseUpdated(object sender, BookstoreEventArgs e)
+        private void ViewDetails_DataGridViewUpdated(object sender, DetailsChangedEventArgs e)
         {
-            viewBookstores.TreeViewBookstores.BeginUpdate();
-            Point ScrollPos = GetTreeViewScrollPos(viewBookstores.TreeViewBookstores);
+            viewTreeView.TreeView.BeginUpdate();
+            Point ScrollPos = GetTreeViewScrollPos(viewTreeView.TreeView);
 
-            viewBookstores.PreventEvent = true;
+            viewTreeView.PreventEvent = true;
             GetDataFromDatabase();
             AddNodesToTreeview(Butiker);
             SelectTreeviewNode(e.IndexSelectedParentNode, e.IndexSelectedChildNode);
-            viewBookstores.PreventEvent = false;
+            viewTreeView.PreventEvent = false;
 
-            SetTreeViewScrollPos(viewBookstores.TreeViewBookstores, ScrollPos);
-            viewBookstores.TreeViewBookstores.EndUpdate();
-        }
-
-        //todo: merge with ViewDetails_BookstoreDatabaseUpdated
-        private void ViewDetails_BookDatabaseUpdated(object sender, BookEventArgs e)
-        {
-            viewBookstores.TreeViewBookstores.BeginUpdate();
-            Point ScrollPos = GetTreeViewScrollPos(viewBookstores.TreeViewBookstores);
-
-            viewBookstores.PreventEvent = true;
-            GetDataFromDatabase();
-            AddNodesToTreeview(Butiker);
-            SelectTreeviewNode(e.IndexSelectedParentNode, e.IndexSelectedChildNode);
-            viewBookstores.PreventEvent = false;
-
-            SetTreeViewScrollPos(viewBookstores.TreeViewBookstores, ScrollPos);
-            viewBookstores.TreeViewBookstores.EndUpdate();
+            SetTreeViewScrollPos(viewTreeView.TreeView, ScrollPos);
+            viewTreeView.TreeView.EndUpdate();
         }
 
         private void GetDataFromDatabase()
         {
-            using (var db = new Bokhandel_Lab2Context())
+            using var db = new Bokhandel_Lab2Context();
+            if (db.Database.CanConnect())
             {
-                if (db.Database.CanConnect())
-                {
-                    Debug.WriteLine("Connected to database.");
-                    Böcker = db.Böcker.ToList();
-                    Butiker = db.Butiker.ToList();
-                    LagerSaldo = db.LagerSaldon.ToList();
-                    FörfattareBöckerJunction = db.FörfattareBöckerJunction.ToList();
-                    Författare = db.Författare.ToList();
-                    Förlag = db.Förlag.ToList();
-                    db.ChangeTracker.Clear();
-                }
-                else Debug.WriteLine("Could not connect to database to read values");
+                Debug.WriteLine("Connected to database.");
+                Böcker = db.Böcker.ToList();
+                Butiker = db.Butiker.ToList();
+                LagerSaldo = db.LagerSaldon.ToList();
+                FörfattareBöckerJunction = db.FörfattareBöckerJunction.ToList();
+                Författare = db.Författare.ToList();
+                Förlag = db.Förlag.ToList();
+                db.ChangeTracker.Clear();
             }
+            else Debug.WriteLine("Could not connect to database to read values");
         }
 
         public void AddNodesToTreeview(ICollection<Butiker> bookstores)
         {
-            viewBookstores.TreeViewBookstores.Nodes.Clear();
+            viewTreeView.TreeView.Nodes.Clear();
             foreach (Butiker bookstore in bookstores)
             {
                 TreeNode bookstoreNode = new TreeNode()
@@ -151,7 +129,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     };
                     bookstoreNode.Nodes.Add(lagerSaldoNode);
                 }
-                viewBookstores.TreeViewBookstores.Nodes.Add(bookstoreNode);
+                viewTreeView.TreeView.Nodes.Add(bookstoreNode);
             }
         }
     }

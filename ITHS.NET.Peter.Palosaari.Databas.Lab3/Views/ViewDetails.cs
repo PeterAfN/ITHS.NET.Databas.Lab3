@@ -11,21 +11,19 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             InitializeComponent();
         }
 
-
-        public DataGridView DGVDetailsBookstore
+        public DataGridView DGVBookstore
         {
-            get { return dgvDetailsBookstore; }
-            set { dgvDetailsBookstore = value; }
+            get { return dgvBookstore; }
+            set { dgvBookstore = value; }
         }
 
-        public DataGridView DGVDetailsBook
+        public DataGridView DGVBook
         {
-            get { return dgvDetailsBook; }
-            set { dgvDetailsBook = value; }
+            get { return dgvBook; }
+            set { dgvBook = value; }
         }
 
-
-        public event EventHandler<BookstoreEventArgs> BookstoreDatabaseUpdated;
+        public event EventHandler<DetailsChangedEventArgs> DataGridViewUpdated;
 
         /// <summary>
         /// This event is triggered after a user has updated a datagrid cell value 
@@ -33,26 +31,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void TriggerEventBookstoreDatabaseUpdated(object sender, BookstoreEventArgs e)
+        public void TriggerEventDataGridViewUpdated(object sender, DetailsChangedEventArgs e)
         {
-            BookstoreDatabaseUpdated.Invoke(this, e);
-        }
-
-        public event EventHandler<BookEventArgs> BookDatabaseUpdated;
-
-        public void TriggerEventBookDatabaseUpdated(object sender, BookEventArgs e)
-        {
-            BookDatabaseUpdated.Invoke(this, e);
-        }
-
-        private void dgvDetailsBookstore_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dgvDetailsBookstore_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-
+            DataGridViewUpdated.Invoke(this, e);
         }
     }
 }

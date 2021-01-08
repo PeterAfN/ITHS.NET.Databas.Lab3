@@ -18,14 +18,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             Application.SetCompatibleTextRenderingDefault(false);
 
             //Views         
-            var viewBookstores = new ViewBookstores() { Dock = DockStyle.Fill };
+            var viewBookstores = new ViewTreeView() { Dock = DockStyle.Fill };
             var viewDetails = new ViewDetails() { Dock = DockStyle.Fill };
             var viewMain = new ViewMain(viewBookstores, viewDetails);
 
             //Presenters
             var PresenterMain = new PresenterMain(viewMain, viewBookstores, viewDetails);
             var PresenterDetails = new PresenterDetails(viewMain, viewBookstores, viewDetails);
-            var PresenterBookstores = new PresenterBookstores(viewMain, viewBookstores, viewDetails);
+            var PresenterBookstores = new PresenterTreeView(viewMain, viewBookstores, viewDetails);
 
             Application.Run(viewMain);
         }

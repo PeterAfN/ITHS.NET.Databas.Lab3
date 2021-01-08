@@ -5,10 +5,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 {
     public partial class ViewMain : Form, IViewMain
     {
-        private ViewBookstores viewBookstores;
+        private ViewTreeView viewBookstores;
         private ViewDetails viewDetails;
 
-        public ViewMain(ViewBookstores viewBookstores, ViewDetails viewDetails)
+        public ViewMain(ViewTreeView viewBookstores, ViewDetails viewDetails)
         {
             InitializeComponent();
 

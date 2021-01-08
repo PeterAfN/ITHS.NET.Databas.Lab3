@@ -6,11 +6,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
     class PresenterMain
     {
         private readonly IViewMain viewMain;
-        private readonly IViewBookstores viewBookstores;
+        private readonly IViewTreeView viewBookstores;
         private readonly IViewDetails viewDetails;
 
 
-        public PresenterMain(IViewMain viewMain, IViewBookstores viewBookstores, IViewDetails viewDetails)
+        public PresenterMain(IViewMain viewMain, IViewTreeView viewBookstores, IViewDetails viewDetails)
         {
             this.viewMain = viewMain;
             this.viewBookstores = viewBookstores;
