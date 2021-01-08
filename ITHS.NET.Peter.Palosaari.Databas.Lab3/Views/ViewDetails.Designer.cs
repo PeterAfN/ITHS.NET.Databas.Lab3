@@ -69,6 +69,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             // 
             // dgvDetailsBookstore
             // 
+            this.dgvDetailsBookstore.AllowUserToAddRows = false;
+            this.dgvDetailsBookstore.AllowUserToDeleteRows = false;
             this.dgvDetailsBookstore.AllowUserToResizeRows = false;
             this.dgvDetailsBookstore.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvDetailsBookstore.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;

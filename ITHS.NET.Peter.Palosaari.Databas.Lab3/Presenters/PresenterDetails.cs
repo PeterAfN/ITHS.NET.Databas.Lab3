@@ -68,6 +68,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 RestoreCellValue();
                 return;
             }
+
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
@@ -118,10 +119,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                         publisher.Epost = viewDetails.DGVDetailsBook[1, 10].Value.ToString();
                         args = new BookEventArgs(publisher);
                         break;
-                    case 12:
-                        //author.Förnamn = viewDetails.DGVDetailsBook[1, 11].Value.ToString();
+                    default:
+                        /*args = */CellAuthor(sender, e);
+                        return;
                         break;
                 }
+
+
                 try
                 {
                     db.SavedChanges += Db_SavedChanges;
@@ -144,6 +148,52 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewDetails.TriggerEventBookDatabaseUpdated(sender, args);
             }
             else Debug.WriteLine("Could not connect to database to read values.");
+        }
+
+
+        void CellAuthor(object sender, DataGridViewCellEventArgs e)
+        {
+            using var db = new Bokhandel_Lab2Context();
+            if (!db.Database.CanConnect()) return /*null*/;
+           
+            int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
+            int.TryParse(viewDetails.DGVDetailsBook[1, authorCellId].Value.ToString(), out int value);
+            var author = db.Författare.FirstOrDefault(b => b.Id == value);
+
+            switch (e.RowIndex % 4)
+            {
+                case 0:     //row 12, 16, 20, 24, 28...
+                    author.Förnamn = viewDetails.DGVDetailsBook[1, e.RowIndex].Value.ToString();
+                    break;
+                case 1:     //row 13, 17, 21, 25, 29...
+                    author.Efternamn = viewDetails.DGVDetailsBook[1, e.RowIndex].Value.ToString();
+                    break;
+                case 2:    //row 14, 18, 22, 26, 30...
+                    author.Födelsedatum = viewDetails.DGVDetailsBook[1, e.RowIndex].Value.ToString();
+                    break;
+            }           
+            BookEventArgs args = new BookEventArgs(author);
+
+            try
+            {
+                db.SavedChanges += Db_SavedChanges;
+                db.SaveChangesFailed += Db_SaveChangesFailed;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                db.Dispose();
+                RestoreCellValue();
+                return;
+            }
+            if (viewBookstores.TreeViewBookstores.SelectedNode.Parent == null)
+                args.IndexSelectedParentNode = viewBookstores.TreeViewBookstores.SelectedNode.Index;
+            else
+            {
+                args.IndexSelectedChildNode = viewBookstores.TreeViewBookstores.SelectedNode.Index;
+                args.IndexSelectedParentNode = viewBookstores.TreeViewBookstores.SelectedNode.Parent.Index;
+            }
+            viewDetails.TriggerEventBookDatabaseUpdated(sender, args);
         }
 
 
@@ -313,7 +363,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void CreateDGVDetailBookstore()
         {
-            viewDetails.DGVDetailsBookstore.Rows.Add(5);
+            viewDetails.DGVDetailsBookstore.Rows.Add(6);
             viewDetails.DGVDetailsBookstore[0, 0].Value = "Id:";
             viewDetails.DGVDetailsBookstore[0, 1].Value = "Name:";
             viewDetails.DGVDetailsBookstore[0, 2].Value = "Address:";
