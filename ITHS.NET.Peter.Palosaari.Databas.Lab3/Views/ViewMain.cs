@@ -7,13 +7,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
     {
         private ViewTreeView viewBookstores;
         private ViewDetails viewDetails;
+        private ViewNewBook viewNewBook;
 
-        public ViewMain(ViewTreeView viewBookstores, ViewDetails viewDetails)
+        public ViewMain(ViewTreeView viewBookstores, 
+            ViewDetails viewDetails,
+            ViewNewBook viewNewBook)
         {
             InitializeComponent();
 
             this.viewBookstores = viewBookstores;
             this.viewDetails = viewDetails;
+            this.viewNewBook = viewNewBook;
 
             AddControls();
         }

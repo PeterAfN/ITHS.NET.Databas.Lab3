@@ -31,9 +31,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.groupBoxBookstore = new System.Windows.Forms.GroupBox();
             this.dgvBookstore = new System.Windows.Forms.DataGridView();
             this.dgvTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,7 +43,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBook = new System.Windows.Forms.GroupBox();
             this.dgvBook = new System.Windows.Forms.DataGridView();
             this.dgvDetailsBookColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDetailsBookColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewLinkColumn();
             this.ColumnNotEditableCells = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnEditableCells = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,9 +62,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBookstore.Controls.Add(this.dgvBookstore);
             this.groupBoxBookstore.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxBookstore.Location = new System.Drawing.Point(3, 3);
+            this.groupBoxBookstore.MaximumSize = new System.Drawing.Size(0, 192);
             this.groupBoxBookstore.Name = "groupBoxBookstore";
             this.groupBoxBookstore.Padding = new System.Windows.Forms.Padding(11);
-            this.groupBoxBookstore.Size = new System.Drawing.Size(835, 208);
+            this.groupBoxBookstore.Size = new System.Drawing.Size(859, 192);
             this.groupBoxBookstore.TabIndex = 4;
             this.groupBoxBookstore.TabStop = false;
             this.groupBoxBookstore.Text = "Details Bookstore [click cell to edit information]";
@@ -95,7 +98,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvBookstore.RowHeadersVisible = false;
             this.dgvBookstore.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvBookstore.RowTemplate.Height = 25;
-            this.dgvBookstore.Size = new System.Drawing.Size(813, 170);
+            this.dgvBookstore.Size = new System.Drawing.Size(837, 154);
             this.dgvBookstore.TabIndex = 1;
             // 
             // dgvTextBoxColumn1
@@ -129,9 +132,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.tableLayoutPanelDetails.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelDetails.Name = "tableLayoutPanelDetails";
             this.tableLayoutPanelDetails.RowCount = 2;
-            this.tableLayoutPanelDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 32F));
-            this.tableLayoutPanelDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68F));
-            this.tableLayoutPanelDetails.Size = new System.Drawing.Size(841, 671);
+            this.tableLayoutPanelDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanelDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelDetails.Size = new System.Drawing.Size(865, 758);
             this.tableLayoutPanelDetails.TabIndex = 1;
             // 
             // groupBoxBook
@@ -140,11 +143,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBook.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBoxBook.Controls.Add(this.dgvBook);
             this.groupBoxBook.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBook.Location = new System.Drawing.Point(3, 217);
+            this.groupBoxBook.Location = new System.Drawing.Point(3, 203);
             this.groupBoxBook.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.groupBoxBook.Name = "groupBoxBook";
             this.groupBoxBook.Padding = new System.Windows.Forms.Padding(11, 14, 11, 11);
-            this.groupBoxBook.Size = new System.Drawing.Size(835, 454);
+            this.groupBoxBook.Size = new System.Drawing.Size(859, 555);
             this.groupBoxBook.TabIndex = 5;
             this.groupBoxBook.TabStop = false;
             this.groupBoxBook.Text = "Details Book [click cell to edit information]";
@@ -159,15 +162,16 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvBook.ColumnHeadersVisible = false;
             this.dgvBook.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvDetailsBookColumn1,
-            this.dgvDetailsBookColumn2});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvBook.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Column1,
+            this.Column3});
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvBook.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvBook.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvBook.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dgvBook.Location = new System.Drawing.Point(11, 30);
@@ -175,7 +179,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvBook.RowHeadersVisible = false;
             this.dgvBook.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvBook.RowTemplate.Height = 25;
-            this.dgvBook.Size = new System.Drawing.Size(813, 413);
+            this.dgvBook.Size = new System.Drawing.Size(837, 514);
             this.dgvBook.TabIndex = 0;
             // 
             // dgvDetailsBookColumn1
@@ -184,7 +188,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
             this.dgvDetailsBookColumn1.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvDetailsBookColumn1.Frozen = true;
             this.dgvDetailsBookColumn1.HeaderText = "Column1";
             this.dgvDetailsBookColumn1.MinimumWidth = 150;
             this.dgvDetailsBookColumn1.Name = "dgvDetailsBookColumn1";
@@ -193,17 +196,30 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvDetailsBookColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dgvDetailsBookColumn1.Width = 150;
             // 
-            // dgvDetailsBookColumn2
+            // Column1
             // 
-            this.dgvDetailsBookColumn2.HeaderText = "Column2";
-            this.dgvDetailsBookColumn2.Name = "dgvDetailsBookColumn2";
+            this.Column1.FillWeight = 12.01083F;
+            this.Column1.HeaderText = "Column1";
+            this.Column1.Name = "Column1";
+            this.Column1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Column3.FillWeight = 100.8909F;
+            this.Column3.HeaderText = "Column3";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 53;
             // 
             // ColumnNotEditableCells
             // 
             this.ColumnNotEditableCells.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ColumnNotEditableCells.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnNotEditableCells.DefaultCellStyle = dataGridViewCellStyle6;
             this.ColumnNotEditableCells.FillWeight = 121.8274F;
             this.ColumnNotEditableCells.HeaderText = "ColumnNotEditableCells";
             this.ColumnNotEditableCells.MinimumWidth = 165;
@@ -237,7 +253,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.Name = "ViewDetails";
-            this.Size = new System.Drawing.Size(841, 671);
+            this.Size = new System.Drawing.Size(865, 758);
             this.groupBoxBookstore.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvBookstore)).EndInit();
             this.tableLayoutPanelDetails.ResumeLayout(false);
@@ -258,9 +274,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnNotEditableCells;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnEditableCells;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDetailsBookColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDetailsBookColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDetailsBookColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewLinkColumn Column3;
     }
 }

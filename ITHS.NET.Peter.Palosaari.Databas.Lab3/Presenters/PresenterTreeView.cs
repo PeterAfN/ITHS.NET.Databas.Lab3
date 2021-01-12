@@ -64,6 +64,25 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewMain.AddControls();
             SelectTreeviewNode(0);
             viewDetails.DataGridViewUpdated += ViewDetails_DataGridViewUpdated;
+            viewTreeView.TreeView.MouseUp += TreeView_MouseUp;
+            viewTreeView.TreeView.MouseDown += TreeView_MouseDown;
+        }
+
+        private void TreeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            viewTreeView.TreeView.MouseDown += (sender, args) =>
+                viewTreeView.TreeView.SelectedNode = 
+                viewTreeView.TreeView.GetNodeAt(args.X, args.Y);
+        }
+
+        private void TreeView_MouseUp(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Right:
+                    viewTreeView.ContextMenuStripTreeView.Show(new Point(Control.MousePosition.X + 25, Control.MousePosition.Y + 20));
+                    break;
+            }
         }
 
         void SelectTreeviewNode(int parentNode, int childNode = -1)

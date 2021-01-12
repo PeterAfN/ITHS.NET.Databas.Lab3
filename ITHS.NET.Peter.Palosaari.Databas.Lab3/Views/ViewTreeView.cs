@@ -30,5 +30,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             get { return treeView; }
             set { treeView = value; }
         }
+
+
+        public ContextMenuStrip ContextMenuStripTreeView
+        {
+            get { return contextMenuStripTreeView; }
+            set { contextMenuStripTreeView = value; }
+        }
     }
 }

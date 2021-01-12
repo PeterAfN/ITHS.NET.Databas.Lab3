@@ -33,8 +33,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemAddAuthor = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemChangeAmountBooks = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEditAuthors = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMoveBookStore = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,30 +85,23 @@
             // tasksToolStripMenuItem
             // 
             this.tasksToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemAddAuthor,
-            this.toolStripMenuItemChangeAmountBooks,
+            this.toolStripMenuItemEditAuthors,
             this.toolStripMenuItemMoveBookStore});
             this.tasksToolStripMenuItem.Name = "tasksToolStripMenuItem";
             this.tasksToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.tasksToolStripMenuItem.Text = "Tasks";
             // 
-            // toolStripMenuItemAddAuthor
+            // toolStripMenuItemEditAuthors
             // 
-            this.toolStripMenuItemAddAuthor.Name = "toolStripMenuItemAddAuthor";
-            this.toolStripMenuItemAddAuthor.Size = new System.Drawing.Size(240, 22);
-            this.toolStripMenuItemAddAuthor.Text = "Add Author to Book";
-            // 
-            // toolStripMenuItemChangeAmountBooks
-            // 
-            this.toolStripMenuItemChangeAmountBooks.Name = "toolStripMenuItemChangeAmountBooks";
-            this.toolStripMenuItemChangeAmountBooks.Size = new System.Drawing.Size(240, 22);
-            this.toolStripMenuItemChangeAmountBooks.Text = "Change Book Amount for Store";
+            this.toolStripMenuItemEditAuthors.Name = "toolStripMenuItemEditAuthors";
+            this.toolStripMenuItemEditAuthors.Size = new System.Drawing.Size(216, 22);
+            this.toolStripMenuItemEditAuthors.Text = "Edit Authors";
             // 
             // toolStripMenuItemMoveBookStore
             // 
             this.toolStripMenuItemMoveBookStore.Name = "toolStripMenuItemMoveBookStore";
-            this.toolStripMenuItemMoveBookStore.Size = new System.Drawing.Size(240, 22);
-            this.toolStripMenuItemMoveBookStore.Text = "Move Book From Store";
+            this.toolStripMenuItemMoveBookStore.Size = new System.Drawing.Size(216, 22);
+            this.toolStripMenuItemMoveBookStore.Text = "Move book between stores";
             // 
             // aboutToolStripMenuItem
             // 
@@ -167,7 +159,7 @@
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Demo Bookstore Client - Connects to SQL Server database ";
+            this.Text = "Bookstore client - Communicates with SQL Server databases. ";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -190,8 +182,7 @@
         private System.Windows.Forms.ToolStripMenuItem tasksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAbout;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddAuthor;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChangeAmountBooks;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEditAuthors;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMoveBookStore;
         private System.Windows.Forms.SplitContainer splitContainerMain;
     }
