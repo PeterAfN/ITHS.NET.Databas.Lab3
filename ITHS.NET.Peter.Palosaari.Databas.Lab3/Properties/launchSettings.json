@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ITHS.NET.Peter.Palosaari.Databas.Lab3": {
+      "commandName": "Project",
+      "sqlDebugging": true,
+      "nativeDebugging": true
+    }
+  }
+}

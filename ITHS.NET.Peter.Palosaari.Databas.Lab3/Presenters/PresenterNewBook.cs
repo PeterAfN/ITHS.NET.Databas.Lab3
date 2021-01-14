@@ -6,17 +6,14 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Drawing;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
     public class PresenterNewBook
     {
-        DataGridViewComboBoxCell ComboBoxAuthorsCell = new DataGridViewComboBoxCell();
-        List<int> comboBoxAuthorIDs = new List<int>();
-
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DateOfBirth { get; set; } //change to date when database is changed
+        Queue<DataGridViewComboBoxCell> cb = new Queue<DataGridViewComboBoxCell>(200);
+        Dictionary<int, int> selectedIndexCB = new Dictionary<int, int>();
 
         private readonly IViewMain viewMain;
         private readonly IViewTreeView viewTreeView;
@@ -32,11 +29,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
             viewTreeView.ContextMenuStripTreeView.ItemClicked += ContextMenuStripTreeView_ItemClicked;
             viewNewBook.DGVNewBook.EditingControlShowing += DGVNewBook_EditingControlShowing;
+            viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
         }
+
 
         private void ContextMenuStripTreeView_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
         {
-            viewNewBook.DGVNewBook.Rows.Add(11);
+            viewNewBook.DGVNewBook.Rows.Add(10);
             viewNewBook.DGVNewBook[0, 0].Value = "Isbn [Required, 13 digits]:";
             viewNewBook.DGVNewBook[0, 1].Value = "Title:";
             viewNewBook.DGVNewBook[0, 2].Value = "Language";
@@ -48,112 +47,122 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewNewBook.DGVNewBook[0, 8].Value = "Publisher Phone Number:";
             viewNewBook.DGVNewBook[0, 9].Value = "Publisher Email:";
             viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[0].Cells[1];
-            viewNewBook.DGVNewBook.BeginEdit(true);
-            //viewNewBook.DGVNewBook[2, 10].Value = "Add author";
-            viewNewBook.DGVNewBook.CellContentClick += DGVNewBook_CellContentClick;
-            CreateAuthorCellWithComboBox();
+
             viewNewBook.Show();
+            viewNewBook.DGVNewBook.Rows.Add(1);
+            AuthorCellCreate();
         }
+
+        private void AuthorCellCreate()
+        {          
+            viewNewBook.DGVNewBook[1, 10].Value = "Please click here to add an author";
+        }
+
+        private void DGVNewBook_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (viewNewBook.DGVNewBook.CurrentCell.ColumnIndex == 1 && 
+                viewNewBook.DGVNewBook.RowCount == viewNewBook.DGVNewBook.CurrentCell.RowIndex + 1)
+            {
+                AddAuthorCell(viewNewBook.DGVNewBook.CurrentCell.RowIndex);
+            }
+        }
+
+        DataGridViewComboBoxCell cB = new DataGridViewComboBoxCell();
+
+        private void AddAuthorCell(int rowIndexNewCell, int selIndexCB = -1)
+        {
+            cB.Items.Clear();
+            var författare = GetDataFromDatabase();
+
+            foreach (Författare f in författare)
+            {
+                if (!selectedIndexCB.ContainsKey(f.Id)) //does the old combobox already have the authors?
+                {
+                    if (selIndexCB != f.Id)
+                        cB.Items.Add($"Id: {f.Id} - {f.Förnamn} {f.Efternamn} - BirthDate: {f.Födelsedatum}");
+                    else
+                        selectedIndexCB.Add(f.Id, selIndexCB);
+                }
+            }
+
+            viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1] = cB;
+            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[1].Cells[1];
+            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1];
+            viewNewBook.DGVNewBook.CellClick -= DGVNewBook_CellClick;
+        }
+
+        private void CB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine("ComboBox_SelectedIndexChanged");
+            DataGridViewComboBoxEditingControl dataGridViewB = sender as DataGridViewComboBoxEditingControl;
+            Debug.WriteLine("dataGridViewB.SelectedIndex=" + dataGridViewB.SelectedIndex);
+            Debug.WriteLine("dataGridViewB.SelectedItem=" + dataGridViewB.SelectedItem.ToString());
+            
+            viewNewBook.DGVNewBook.Rows[viewNewBook.DGVNewBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
+            viewNewBook.DGVNewBook[0, viewNewBook.DGVNewBook.CurrentRow.Index].Value = "Author:";
+            viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index].Value = dataGridViewB.SelectedItem.ToString();
+            enableCell(viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index], false);
+
+            viewNewBook.DGVNewBook.Rows.Add(1);
+            viewNewBook.DGVNewBook.FirstDisplayedScrollingRowIndex = viewNewBook.DGVNewBook.RowCount - 1; //scroll to bottom.
+            viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
+        }
+
+        ComboBox comboBox = new ComboBox();
 
         private void DGVNewBook_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            //when new cell gets focus.
-            if (viewNewBook.DGVNewBook.CurrentCell.ColumnIndex == 1 && 
-                viewNewBook.DGVNewBook.CurrentCell.RowIndex == 10 &&
+            if (viewNewBook.DGVNewBook.CurrentCell.ColumnIndex == 1 &&
+                viewNewBook.DGVNewBook.RowCount == viewNewBook.DGVNewBook.CurrentCell.RowIndex + 1 && //must be cell with highest row index
                 e.Control is ComboBox)
-            {
-                ComboBox comboBox = e.Control as ComboBox;
-                int index = comboBox.SelectedIndex;
-                comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;
-                comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
-            }
+                if (e.Control is ComboBox)
+                {
+                    comboBox = e.Control as ComboBox;
+                    comboBox.SelectedIndexChanged -= CB_SelectedIndexChanged;
+                    comboBox.SelectedIndexChanged += CB_SelectedIndexChanged;
+                }
         }
 
-        private void DGVNewBook_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void enableCell(DataGridViewCell dc, bool enabled)
         {
-            //Add author link clicked            
-            if (e.ColumnIndex == 2 && 
-                viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentCell.RowIndex].Value.ToString() == "Add author")
+            dc.ReadOnly = !enabled;
+            if (enabled)
             {
-                viewNewBook.DGVNewBook[0, 10].Value = "Author:";
-                CreateAuthorCellWithComboBox();
+                dc.Style.BackColor = dc.OwningColumn.DefaultCellStyle.BackColor;
+                dc.Style.ForeColor = dc.OwningColumn.DefaultCellStyle.ForeColor;
             }
-            else if (e.ColumnIndex == 2 &&
-                viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentCell.RowIndex].Value.ToString() == "Remove author")
+            else
             {
-                //viewNewBook.DGVNewBook.Rows.RemoveAt(viewNewBook.DGVNewBook.CurrentCell.RowIndex);
-                //viewNewBook.DGVNewBook.Rows.Add(1);
-                //ComboBoxAuthorsCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-
-                viewNewBook.DGVNewBook[0, viewNewBook.DGVNewBook.CurrentCell.RowIndex].Value = "";
-                //viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentCell.RowIndex].Value = "";
-                ComboBoxAuthorsCell.Value = "Please select an author:";
-                viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentCell.RowIndex].Value = "Add author";
+                dc.Style.BackColor = Color.LightGray;
+                dc.Style.ForeColor = Color.DarkGray;
             }
         }
 
-        private void CreateAuthorCellWithComboBox()
-        {
-            ComboBoxAuthorsCell.Items.Clear();
-            ComboBoxAuthorsCell.Items.Add("Please click here to add an author.");
-            ComboBoxAuthorsCell.Value = "Please click here to add an author.";
-            var författare = GetDataFromDatabase();
-            foreach (Författare f in författare)
-            {
-                ComboBoxAuthorsCell.Items.Add($"Id: {f.Id} - {f.Förnamn} {f.Efternamn} - BirthDate: {f.Födelsedatum}");
-            }
-            ComboBoxAuthorsCell.Items.Add("+add a new author");
-            //ComboBoxAuthorsCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
-            viewNewBook.DGVNewBook.Rows[10].Cells[1] = ComboBoxAuthorsCell;
-        }
 
         private ICollection<Författare> GetDataFromDatabase()
         {
             using var db = new Bokhandel_Lab2Context();
-            if (db.Database.CanConnect())
             {
-                Debug.WriteLine("Connected to database.");
-
-                ICollection<Författare> output = new List<Författare>();
-                comboBoxAuthorIDs.Clear();
-                foreach (Författare f in db.Författare)
+                if (db.Database.CanConnect())
                 {
-                    comboBoxAuthorIDs.Add(f.Id);
-                    output.Add(f);
+                    //Debug.WriteLine("Connected to database.");
+
+                    ICollection<Författare> output = new List<Författare>();
+                    foreach (Författare f in db.Författare)
+                    {
+                        output.Add(f);
+                    }
+                    return output;
                 }
-                return output;
-            }
-            else
-            {
-                Debug.WriteLine("Could not connect to database");
-                return null;
+                else
+                {
+                    //Debug.WriteLine("Could not connect to database");
+                    return null;
+                }
             }
         }
 
-        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DataGridViewComboBoxEditingControl dataGridViewComboBoxEditingControl = sender as DataGridViewComboBoxEditingControl;
-            object value = dataGridViewComboBoxEditingControl.SelectedValue;
-            int index = dataGridViewComboBoxEditingControl.SelectedIndex;
-            if (index == (dataGridViewComboBoxEditingControl.Items.Count-1))    //create new author selected
-            {
 
-            }
-            else if (index > 0)                                                 //existing author selected
-            {
-                ExtendCellExistingAuthor();
-                viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentCell.RowIndex].Value = "Remove author";
-            }
-
-        }
-
-        void ExtendCellExistingAuthor()
-        {
-            //viewNewBook.DGVNewBook.Rows.Add(2);
-            viewNewBook.DGVNewBook[0, 10].Value = "Author:";
-            //viewNewBook.DGVNewBook[0, 11].Value = "Author Last Name:";
-            //viewNewBook.DGVNewBook[0, 12].Value = "Author Date of Birth";
-        }
 
     }
 }

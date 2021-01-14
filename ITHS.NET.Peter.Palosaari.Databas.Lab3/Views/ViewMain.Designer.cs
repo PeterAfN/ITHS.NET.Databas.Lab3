@@ -53,7 +53,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(1308, 24);
+            this.panelTop.Size = new System.Drawing.Size(896, 24);
             this.panelTop.TabIndex = 0;
             // 
             // menuStrip1
@@ -64,7 +64,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1308, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(896, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -123,7 +123,7 @@
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 24);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1308, 626);
+            this.panelMain.Size = new System.Drawing.Size(896, 469);
             this.panelMain.TabIndex = 1;
             // 
             // splitContainerMain
@@ -141,15 +141,15 @@
             // 
             this.splitContainerMain.Panel2.Margin = new System.Windows.Forms.Padding(11);
             this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(3, 2, 11, 0);
-            this.splitContainerMain.Size = new System.Drawing.Size(1308, 626);
-            this.splitContainerMain.SplitterDistance = 415;
+            this.splitContainerMain.Size = new System.Drawing.Size(896, 469);
+            this.splitContainerMain.SplitterDistance = 284;
             this.splitContainerMain.TabIndex = 0;
             // 
             // ViewMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1308, 661);
+            this.ClientSize = new System.Drawing.Size(896, 504);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTop);
             this.DoubleBuffered = true;
