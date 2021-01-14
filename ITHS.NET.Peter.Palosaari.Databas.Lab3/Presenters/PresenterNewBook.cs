@@ -13,7 +13,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
     public class PresenterNewBook
     {
         Queue<DataGridViewComboBoxCell> cb = new Queue<DataGridViewComboBoxCell>(200);
-        Dictionary<int, int> selectedIndexCB = new Dictionary<int, int>();
+        Dictionary<int, int> storedIDs = new Dictionary<int, int>();
 
         private readonly IViewMain viewMain;
         private readonly IViewTreeView viewTreeView;
@@ -69,20 +69,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         DataGridViewComboBoxCell cB = new DataGridViewComboBoxCell();
 
-        private void AddAuthorCell(int rowIndexNewCell, int selIndexCB = -1)
+        private void AddAuthorCell(int rowIndexNewCell)
         {
             cB.Items.Clear();
             var författare = GetDataFromDatabase();
 
             foreach (Författare f in författare)
             {
-                if (!selectedIndexCB.ContainsKey(f.Id)) //does the old combobox already have the authors?
-                {
-                    if (selIndexCB != f.Id)
-                        cB.Items.Add($"Id: {f.Id} - {f.Förnamn} {f.Efternamn} - BirthDate: {f.Födelsedatum}");
-                    else
-                        selectedIndexCB.Add(f.Id, selIndexCB);
-                }
+                if (!storedIDs.ContainsKey(f.Id))
+                    cB.Items.Add($"Id: {f.Id} - {f.Förnamn} {f.Efternamn} - BirthDate: {f.Födelsedatum}");
             }
 
             viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1] = cB;
@@ -101,11 +96,20 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewNewBook.DGVNewBook.Rows[viewNewBook.DGVNewBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
             viewNewBook.DGVNewBook[0, viewNewBook.DGVNewBook.CurrentRow.Index].Value = "Author:";
             viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index].Value = dataGridViewB.SelectedItem.ToString();
-            enableCell(viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index], false);
+            EnableCell(viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index], false);
 
-            viewNewBook.DGVNewBook.Rows.Add(1);
-            viewNewBook.DGVNewBook.FirstDisplayedScrollingRowIndex = viewNewBook.DGVNewBook.RowCount - 1; //scroll to bottom.
-            viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
+            if (cB.Items.Count > 1)
+            {
+                viewNewBook.DGVNewBook.Rows.Add(1);
+                viewNewBook.DGVNewBook.FirstDisplayedScrollingRowIndex = viewNewBook.DGVNewBook.RowCount - 1; //scroll to bottom.
+                viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
+            }
+
+            string Index = new string(dataGridViewB.SelectedItem.ToString().
+                SkipWhile(c => !char.IsDigit(c)).TakeWhile(c => char.IsDigit(c)).ToArray());
+            int.TryParse(Index, out int selectedCBIndex);
+
+            if (!storedIDs.ContainsKey(selectedCBIndex)) storedIDs.Add(selectedCBIndex, -1);
         }
 
         ComboBox comboBox = new ComboBox();
@@ -123,7 +127,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
         }
 
-        private void enableCell(DataGridViewCell dc, bool enabled)
+        private void EnableCell(DataGridViewCell dc, bool enabled)
         {
             dc.ReadOnly = !enabled;
             if (enabled)
@@ -145,8 +149,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             {
                 if (db.Database.CanConnect())
                 {
-                    //Debug.WriteLine("Connected to database.");
-
                     ICollection<Författare> output = new List<Författare>();
                     foreach (Författare f in db.Författare)
                     {
@@ -154,15 +156,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     }
                     return output;
                 }
-                else
-                {
-                    //Debug.WriteLine("Could not connect to database");
-                    return null;
-                }
+                else  return null;
             }
         }
-
-
-
     }
 }
