@@ -36,14 +36,18 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.panelButtons = new System.Windows.Forms.Panel();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.dgvNewBook = new System.Windows.Forms.DataGridView();
+            this.panelLog = new System.Windows.Forms.Panel();
+            this.labelLog = new System.Windows.Forms.Label();
             this.panelData = new System.Windows.Forms.Panel();
+            this.dgvNewBook = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewLinkColumn();
             this.panelTop.SuspendLayout();
             this.panelButtons.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvNewBook)).BeginInit();
+            this.panelLog.SuspendLayout();
             this.panelData.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNewBook)).BeginInit();
             this.SuspendLayout();
             // 
             // panelTop
@@ -60,9 +64,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(362, 15);
+            this.label1.Size = new System.Drawing.Size(529, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Please add information. The book will be available in all bookstores.";
+            this.label1.Text = "Please add information. The book will be available in all bookstores. Author info" +
+    "rmation is optional.";
             // 
             // panelButtons
             // 
@@ -94,6 +99,40 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.buttonClose.Text = "Close";
             this.buttonClose.UseVisualStyleBackColor = true;
             // 
+            // panelLog
+            // 
+            this.panelLog.Controls.Add(this.labelLog);
+            this.panelLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelLog.Location = new System.Drawing.Point(0, 351);
+            this.panelLog.MaximumSize = new System.Drawing.Size(0, 10);
+            this.panelLog.MinimumSize = new System.Drawing.Size(0, 10);
+            this.panelLog.Name = "panelLog";
+            this.panelLog.Size = new System.Drawing.Size(639, 10);
+            this.panelLog.TabIndex = 11;
+            // 
+            // labelLog
+            // 
+            this.labelLog.AutoSize = true;
+            this.labelLog.Dock = System.Windows.Forms.DockStyle.Right;
+            this.labelLog.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelLog.Location = new System.Drawing.Point(212, 0);
+            this.labelLog.Name = "labelLog";
+            this.labelLog.Padding = new System.Windows.Forms.Padding(0, 0, 13, 0);
+            this.labelLog.Size = new System.Drawing.Size(427, 12);
+            this.labelLog.TabIndex = 0;
+            this.labelLog.Text = "The book has been added to the SQL database successfully. This window can be clos" +
+    "ed now.";
+            // 
+            // panelData
+            // 
+            this.panelData.AutoSize = true;
+            this.panelData.Controls.Add(this.dgvNewBook);
+            this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelData.Location = new System.Drawing.Point(0, 33);
+            this.panelData.Name = "panelData";
+            this.panelData.Size = new System.Drawing.Size(639, 318);
+            this.panelData.TabIndex = 13;
+            // 
             // dgvNewBook
             // 
             this.dgvNewBook.AllowUserToAddRows = false;
@@ -107,7 +146,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvNewBook.ColumnHeadersVisible = false;
             this.dgvNewBook.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
-            this.Column2});
+            this.Column2,
+            this.Column3});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -124,17 +164,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvNewBook.RowHeadersVisible = false;
             this.dgvNewBook.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvNewBook.RowTemplate.Height = 25;
-            this.dgvNewBook.Size = new System.Drawing.Size(639, 328);
+            this.dgvNewBook.Size = new System.Drawing.Size(639, 318);
             this.dgvNewBook.TabIndex = 1;
-            // 
-            // panelData
-            // 
-            this.panelData.Controls.Add(this.dgvNewBook);
-            this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelData.Location = new System.Drawing.Point(0, 33);
-            this.panelData.Name = "panelData";
-            this.panelData.Size = new System.Drawing.Size(639, 328);
-            this.panelData.TabIndex = 5;
             // 
             // Column1
             // 
@@ -158,6 +189,16 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Column3.HeaderText = "Column3";
+            this.Column3.LinkColor = System.Drawing.Color.Black;
+            this.Column3.Name = "Column3";
+            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column3.Width = 52;
+            // 
             // ViewNewBook
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -165,6 +206,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.ClientSize = new System.Drawing.Size(639, 418);
             this.ControlBox = false;
             this.Controls.Add(this.panelData);
+            this.Controls.Add(this.panelLog);
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.panelTop);
             this.DoubleBuffered = true;
@@ -182,9 +224,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelButtons.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvNewBook)).EndInit();
+            this.panelLog.ResumeLayout(false);
+            this.panelLog.PerformLayout();
             this.panelData.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNewBook)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -195,9 +240,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dgvNewBook;
+        private System.Windows.Forms.Panel panelLog;
+        private System.Windows.Forms.Label labelLog;
         private System.Windows.Forms.Panel panelData;
+        private System.Windows.Forms.DataGridView dgvNewBook;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewLinkColumn Column3;
     }
 }

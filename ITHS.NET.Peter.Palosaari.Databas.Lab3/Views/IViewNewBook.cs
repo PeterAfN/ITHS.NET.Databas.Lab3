@@ -12,5 +12,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         void Show();
 
         DataGridView DGVNewBook { get; set; }
+        Label LabelLog { get; set; }
+        Button ButtonAdd { get; set; }
+        Button ButtonClose { get; set; }
+
     }
 }

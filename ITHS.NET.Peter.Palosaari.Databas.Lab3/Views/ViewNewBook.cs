@@ -21,5 +21,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             set { dgvNewBook = value; }
         }
 
+        public Label LabelLog
+        {
+            get { return labelLog; }
+            set { labelLog = value; }
+        }
+
+        public Button ButtonAdd
+        {
+            get { return buttonAdd; }
+            set { buttonAdd = value; }
+        }
+
+        public Button ButtonClose
+        {
+            get { return buttonClose; }
+            set { buttonClose = value; }
+        }
     }
 }
