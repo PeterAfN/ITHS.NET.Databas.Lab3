@@ -28,7 +28,18 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             splitContainerMain.Panel2.Controls.Add(viewDetails);
         }
 
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        public ToolStripMenuItem ToolStripMenuItemAddBook
+        {
+            get { return toolStripMenuItemAddBook; }
+            set { toolStripMenuItemAddBook = value; }
+        }
+
+        private void ViewMain_Load(object sender, System.EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItemAddBook_Click(object sender, System.EventArgs e)
         {
 
         }

@@ -67,7 +67,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(896, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // fileToolStripMenuItem
             // 
@@ -103,6 +102,7 @@
             this.toolStripMenuItemAddBook.Name = "toolStripMenuItemAddBook";
             this.toolStripMenuItemAddBook.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemAddBook.Text = "Add book";
+            this.toolStripMenuItemAddBook.Click += new System.EventHandler(this.toolStripMenuItemAddBook_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -160,7 +160,8 @@
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Bookstore client - Communicates with SQL Server databases. ";
+            this.Text = "Bookstore demo client - Communicates with a SQL Server database. ";
+            this.Load += new System.EventHandler(this.ViewMain_Load);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.menuStrip1.ResumeLayout(false);

@@ -26,7 +26,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
 
-            viewTreeView.ContextMenuStripTreeView.ItemClicked += ContextMenuStripTreeView_ItemClicked;
+            viewMain.ToolStripMenuItemAddBook.Click += ToolStripMenuItemAddBook_Click;
             viewNewBook.DGVNewBook.EditingControlShowing += DGVNewBook_EditingControlShowing;
             viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
             viewNewBook.DGVNewBook.CellContentClick += DGVNewBook_CellContentClick;
@@ -35,6 +35,30 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewNewBook.ButtonAdd.Click += ButtonAdd_Click;
             viewNewBook.ButtonClose.Click += ButtonClose_Click;
             viewNewBook.LabelLog.Text = string.Empty;
+        }
+
+        private void ToolStripMenuItemAddBook_Click(object sender, EventArgs e)
+        {
+            if (viewNewBook.DGVNewBook.Rows.Count == 0)
+            {
+
+                viewNewBook.DGVNewBook.Rows.Add(6);
+                viewNewBook.DGVNewBook[0, 0].Value = "Isbn [Required, 13 digits]:";
+                viewNewBook.DGVNewBook[0, 1].Value = "Title:";
+                viewNewBook.DGVNewBook[0, 2].Value = "Language";
+                viewNewBook.DGVNewBook[0, 3].Value = "Price";
+                viewNewBook.DGVNewBook[0, 4].Value = "Release Date:";
+                viewNewBook.DGVNewBook[0, 5].Value = "Publisher:";
+                AddListOfPublishersToComboBox(5);
+                viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[0].Cells[1];
+                viewNewBook.DGVNewBook.Rows.Add(1);
+                viewNewBook.DGVNewBook[0, 6].Value = "Author:";
+                viewNewBook.DGVNewBook[1, 6].Value = "Optional: Click here to add an author";
+            }
+            using (Form form = new Form())
+            {
+                viewNewBook.ShowDialog();
+            }
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -98,7 +122,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     }
                     catch (Exception)
                     {
-                        string logText = "Error saving to the SQL database! Please verify the data and the functionality of the SQL server.";
+                        string logText = "Error saving to the SQL database! Please verify the inserted data and the functionality of the SQL server.";
                         _ = ShowLogTextAsync(logText, Color.Red, 5000);
                         dbContextTransaction.Rollback(); //not needed but good practice
                     }
@@ -143,30 +167,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         {
             if (viewNewBook?.DGVNewBook?.CurrentCell?.ColumnIndex == 0 || viewNewBook?.DGVNewBook?.CurrentCell?.ColumnIndex == 2)
                 viewNewBook.DGVNewBook.CurrentCell.Selected = false;
-        }
-
-        private void ContextMenuStripTreeView_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
-        {
-            if (viewNewBook.DGVNewBook.Rows.Count == 0)
-            {
-               
-                viewNewBook.DGVNewBook.Rows.Add(6);
-                viewNewBook.DGVNewBook[0, 0].Value = "Isbn [Required, 13 digits]:";
-                viewNewBook.DGVNewBook[0, 1].Value = "Title:";
-                viewNewBook.DGVNewBook[0, 2].Value = "Language";
-                viewNewBook.DGVNewBook[0, 3].Value = "Price";
-                viewNewBook.DGVNewBook[0, 4].Value = "Release Date:";
-                viewNewBook.DGVNewBook[0, 5].Value = "Publisher:";
-                AddListOfPublishersToComboBox(5);
-                viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[0].Cells[1];
-                viewNewBook.DGVNewBook.Rows.Add(1);
-                viewNewBook.DGVNewBook[0, 6].Value = "Author:";
-                viewNewBook.DGVNewBook[1, 6].Value = "Optional: Click here to add an author";
-            }
-            using (Form form = new Form())
-            {
-                viewNewBook.ShowDialog();
-            }
         }
 
         DataGridViewComboBoxCell cBPublishers = new DataGridViewComboBoxCell();

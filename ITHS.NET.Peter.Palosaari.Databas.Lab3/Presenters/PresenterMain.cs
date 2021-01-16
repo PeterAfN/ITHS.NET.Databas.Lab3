@@ -19,7 +19,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewMain.Load += ViewMain_Load;
         }
 
-
         private void ViewMain_Load(object sender, EventArgs e)
         {
         }

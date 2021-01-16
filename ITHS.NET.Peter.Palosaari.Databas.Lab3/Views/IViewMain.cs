@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 {
@@ -7,5 +8,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         event EventHandler Load;
 
         void AddControls();
+
+        ToolStripMenuItem ToolStripMenuItemAddBook { get; set; }
     }
 }
