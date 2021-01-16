@@ -103,11 +103,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             // 
             this.panelLog.Controls.Add(this.labelLog);
             this.panelLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelLog.Location = new System.Drawing.Point(0, 351);
-            this.panelLog.MaximumSize = new System.Drawing.Size(0, 10);
-            this.panelLog.MinimumSize = new System.Drawing.Size(0, 10);
+            this.panelLog.Location = new System.Drawing.Point(0, 347);
+            this.panelLog.MaximumSize = new System.Drawing.Size(0, 14);
+            this.panelLog.MinimumSize = new System.Drawing.Size(0, 14);
             this.panelLog.Name = "panelLog";
-            this.panelLog.Size = new System.Drawing.Size(639, 10);
+            this.panelLog.Size = new System.Drawing.Size(639, 14);
             this.panelLog.TabIndex = 11;
             // 
             // labelLog
@@ -120,7 +120,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.labelLog.Padding = new System.Windows.Forms.Padding(0, 0, 13, 0);
             this.labelLog.Size = new System.Drawing.Size(427, 12);
             this.labelLog.TabIndex = 0;
-            this.labelLog.Text = "The book has been added to the SQL database successfully. This window can be clos" +
+            this.labelLog.Text = "The book has been successfully added to the SQL database. This window can be clos" +
     "ed now.";
             // 
             // panelData
@@ -130,7 +130,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelData.Location = new System.Drawing.Point(0, 33);
             this.panelData.Name = "panelData";
-            this.panelData.Size = new System.Drawing.Size(639, 318);
+            this.panelData.Size = new System.Drawing.Size(639, 314);
             this.panelData.TabIndex = 13;
             // 
             // dgvNewBook
@@ -164,7 +164,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.dgvNewBook.RowHeadersVisible = false;
             this.dgvNewBook.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvNewBook.RowTemplate.Height = 25;
-            this.dgvNewBook.Size = new System.Drawing.Size(639, 318);
+            this.dgvNewBook.Size = new System.Drawing.Size(639, 314);
             this.dgvNewBook.TabIndex = 1;
             // 
             // Column1

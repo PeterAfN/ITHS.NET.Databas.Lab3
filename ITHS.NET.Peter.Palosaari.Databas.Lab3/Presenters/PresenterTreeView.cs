@@ -39,12 +39,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewMain viewMain;
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
+        private readonly IViewNewBook viewNewBook;
 
-        public PresenterTreeView(IViewMain viewMain, IViewTreeView viewBookstores, IViewDetails viewDetails)
+        public PresenterTreeView(IViewMain viewMain, IViewTreeView viewBookstores, IViewDetails viewDetails, IViewNewBook viewNewBook)
         {
             this.viewMain = viewMain;
             this.viewTreeView = viewBookstores;
             this.viewDetails = viewDetails;
+            this.viewNewBook = viewNewBook;
+
             this.viewTreeView.Load += ViewBookstores_Load;
         }
 
@@ -66,6 +69,21 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DataGridViewUpdated += ViewDetails_DataGridViewUpdated;
             viewTreeView.TreeView.MouseUp += TreeView_MouseUp;
             viewTreeView.TreeView.MouseDown += TreeView_MouseDown;
+            viewNewBook.NewBookSavedToDatabase += ViewNewBook_NewBookSavedToDatabase;
+        }
+
+        private void ViewNewBook_NewBookSavedToDatabase(object sender, EventArgs e)
+        {
+            DetailsChangedEventArgs args = new DetailsChangedEventArgs();
+
+            if (viewTreeView.TreeView.SelectedNode.Parent == null)
+                args.IndexSelectedParentNode = viewTreeView.TreeView.SelectedNode.Index;
+            else
+            {
+                args.IndexSelectedChildNode = viewTreeView.TreeView.SelectedNode.Index;
+                args.IndexSelectedParentNode = viewTreeView.TreeView.SelectedNode.Parent.Index;
+            }
+            UpdateTreeviewWithNewData(sender, args);
         }
 
         private void TreeView_MouseDown(object sender, MouseEventArgs e)
@@ -92,11 +110,16 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode];
             else
                 viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode].Nodes[childNode];
-            viewTreeView.TreeView.SelectedNode.EnsureVisible();
-            viewTreeView.TreeView.Focus();
+            viewTreeView.TreeView?.SelectedNode?.EnsureVisible();
+            viewTreeView.TreeView?.Focus();
         }
 
         private void ViewDetails_DataGridViewUpdated(object sender, DetailsChangedEventArgs e)
+        {
+            UpdateTreeviewWithNewData(sender, e);
+        }
+
+        private void UpdateTreeviewWithNewData(object sender, DetailsChangedEventArgs e)
         {
             viewTreeView.TreeView.BeginUpdate();
             Point ScrollPos = GetTreeViewScrollPos(viewTreeView.TreeView);

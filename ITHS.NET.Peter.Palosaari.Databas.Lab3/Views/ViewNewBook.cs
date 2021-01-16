@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
@@ -12,7 +7,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
     {
         public ViewNewBook()
         {
-            InitializeComponent();        
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            InitializeComponent();
         }
 
         public DataGridView DGVNewBook
@@ -37,6 +37,18 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         {
             get { return buttonClose; }
             set { buttonClose = value; }
+        }
+
+        public event EventHandler<EventArgs> NewBookSavedToDatabase;
+
+        /// <summary>
+        /// This event is triggered after a user has been successfully saved a book to the sql server database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void TriggerEventNewBookSavedToDatabase(object sender, EventArgs e)
+        {
+            NewBookSavedToDatabase.Invoke(this, e);
         }
     }
 }
