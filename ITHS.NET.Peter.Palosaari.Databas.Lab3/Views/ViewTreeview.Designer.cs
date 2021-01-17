@@ -33,9 +33,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBookstores = new System.Windows.Forms.GroupBox();
             this.treeView = new System.Windows.Forms.TreeView();
             this.contextMenuStripTreeView = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemAddBookstore = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDeleteBook = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemDeleteBookstore = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxBookstores.SuspendLayout();
             this.contextMenuStripTreeView.SuspendLayout();
             this.SuspendLayout();
@@ -65,29 +63,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             // contextMenuStripTreeView
             // 
             this.contextMenuStripTreeView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemAddBookstore,
-            this.toolStripMenuItemDeleteBook,
-            this.toolStripMenuItemDeleteBookstore});
+            this.toolStripMenuItemDeleteBook});
             this.contextMenuStripTreeView.Name = "contextMenuStripTreeView";
-            this.contextMenuStripTreeView.Size = new System.Drawing.Size(178, 70);
-            // 
-            // toolStripMenuItemAddBookstore
-            // 
-            this.toolStripMenuItemAddBookstore.Name = "toolStripMenuItemAddBookstore";
-            this.toolStripMenuItemAddBookstore.Size = new System.Drawing.Size(177, 22);
-            this.toolStripMenuItemAddBookstore.Text = "Add new bookstore";
+            this.contextMenuStripTreeView.Size = new System.Drawing.Size(138, 26);
             // 
             // toolStripMenuItemDeleteBook
             // 
             this.toolStripMenuItemDeleteBook.Name = "toolStripMenuItemDeleteBook";
-            this.toolStripMenuItemDeleteBook.Size = new System.Drawing.Size(177, 22);
+            this.toolStripMenuItemDeleteBook.Size = new System.Drawing.Size(137, 22);
             this.toolStripMenuItemDeleteBook.Text = "Delete Book";
-            // 
-            // toolStripMenuItemDeleteBookstore
-            // 
-            this.toolStripMenuItemDeleteBookstore.Name = "toolStripMenuItemDeleteBookstore";
-            this.toolStripMenuItemDeleteBookstore.Size = new System.Drawing.Size(177, 22);
-            this.toolStripMenuItemDeleteBookstore.Text = "Delete Bookstore";
             // 
             // ViewTreeView
             // 
@@ -107,8 +91,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         private System.Windows.Forms.GroupBox groupBoxBookstores;
         private System.Windows.Forms.TreeView treeView;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTreeView;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddBookstore;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeleteBookstore;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeleteBook;
     }
 }

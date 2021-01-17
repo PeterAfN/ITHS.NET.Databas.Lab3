@@ -29,8 +29,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelTop = new System.Windows.Forms.Panel();
             this.labelInfo = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
@@ -147,14 +147,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.Column1,
             this.Column2,
             this.Column3});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvNewBook.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvNewBook.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvNewBook.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvNewBook.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dgvNewBook.Location = new System.Drawing.Point(0, 0);
@@ -169,9 +169,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             // Column1
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.HeaderText = "Column1";
             this.Column1.MinimumWidth = 150;
             this.Column1.Name = "Column1";

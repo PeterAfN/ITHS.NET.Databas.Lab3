@@ -217,7 +217,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "ViewNewAuthor";
+            this.Text = "Add new author";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelButtons.ResumeLayout(false);

@@ -39,6 +39,7 @@
             this.ToolStripMenuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.panelMain = new System.Windows.Forms.Panel();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.toolStripMenuItemDeleteAuthor = new System.Windows.Forms.ToolStripMenuItem();
             this.panelTop.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -86,7 +87,8 @@
             // 
             this.tasksToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemAddAuthor,
-            this.toolStripMenuItemAddBook});
+            this.toolStripMenuItemAddBook,
+            this.toolStripMenuItemDeleteAuthor});
             this.tasksToolStripMenuItem.Name = "tasksToolStripMenuItem";
             this.tasksToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.tasksToolStripMenuItem.Text = "Tasks";
@@ -94,14 +96,14 @@
             // toolStripMenuItemAddAuthor
             // 
             this.toolStripMenuItemAddAuthor.Name = "toolStripMenuItemAddAuthor";
-            this.toolStripMenuItemAddAuthor.Size = new System.Drawing.Size(134, 22);
-            this.toolStripMenuItemAddAuthor.Text = "Add author";
+            this.toolStripMenuItemAddAuthor.Size = new System.Drawing.Size(159, 22);
+            this.toolStripMenuItemAddAuthor.Text = "Add new author";
             // 
             // toolStripMenuItemAddBook
             // 
             this.toolStripMenuItemAddBook.Name = "toolStripMenuItemAddBook";
-            this.toolStripMenuItemAddBook.Size = new System.Drawing.Size(134, 22);
-            this.toolStripMenuItemAddBook.Text = "Add book";
+            this.toolStripMenuItemAddBook.Size = new System.Drawing.Size(159, 22);
+            this.toolStripMenuItemAddBook.Text = "Add new book";
             this.toolStripMenuItemAddBook.Click += new System.EventHandler(this.toolStripMenuItemAddBook_Click);
             // 
             // aboutToolStripMenuItem
@@ -146,6 +148,12 @@
             this.splitContainerMain.SplitterDistance = 284;
             this.splitContainerMain.TabIndex = 0;
             // 
+            // toolStripMenuItemDeleteAuthor
+            // 
+            this.toolStripMenuItemDeleteAuthor.Name = "toolStripMenuItemDeleteAuthor";
+            this.toolStripMenuItemDeleteAuthor.Size = new System.Drawing.Size(159, 22);
+            this.toolStripMenuItemDeleteAuthor.Text = "Delete author";
+            // 
             // ViewMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -188,6 +196,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMoveBookStore;
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddBook;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeleteAuthor;
     }
 }
 

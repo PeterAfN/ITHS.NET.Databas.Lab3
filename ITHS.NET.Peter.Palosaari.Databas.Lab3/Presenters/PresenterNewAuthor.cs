@@ -42,8 +42,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewNewAuthor.DGVNewAuthor[0, 0].Value = "First name:";
                 viewNewAuthor.DGVNewAuthor[0, 1].Value = "Last name:";
                 viewNewAuthor.DGVNewAuthor[0, 2].Value = "Date of Birth:";
-                viewNewAuthor.DGVNewAuthor[0, 3].Value = "Author:";
-                viewNewAuthor.DGVNewAuthor[1, 3].Value = "Optional: Click here to add an author";
+                viewNewAuthor.DGVNewAuthor[0, 3].Value = "Book:";
+                viewNewAuthor.DGVNewAuthor[1, 3].Value = "Optional: Click here to add a book";
                 viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[0].Cells[1];
             }
             using (Form form = new Form())
@@ -131,7 +131,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     if (bookIDs.Remove(authorId))
                     {
                         viewNewAuthor.DGVNewAuthor.Rows.RemoveAt(e.RowIndex);
-                        if (viewNewAuthor.DGVNewAuthor[1, viewNewAuthor.DGVNewAuthor.RowCount - 1].Value.ToString() != "Click here to add an author")
+                        if (viewNewAuthor.DGVNewAuthor[1, viewNewAuthor.DGVNewAuthor.RowCount - 1].Value.ToString() != "Click here to add a book")
                             AddRowActivateClickEvent(viewNewAuthor.DGVNewAuthor.RowCount);
                     }
             }
@@ -193,8 +193,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewNewAuthor.DGVNewAuthor.FirstDisplayedScrollingRowIndex = viewNewAuthor.DGVNewAuthor.RowCount - 1; //scroll to bottom.
             viewNewAuthor.DGVNewAuthor.CellClick -= DGVNewAuthor_CellClick;
             viewNewAuthor.DGVNewAuthor.CellClick += DGVNewAuthor_CellClick;
-            viewNewAuthor.DGVNewAuthor[0, newRowIndex].Value = "Author:";
-            viewNewAuthor.DGVNewAuthor[1, newRowIndex].Value = "Click here to add an author";
+            viewNewAuthor.DGVNewAuthor[0, newRowIndex].Value = "Book:";
+            viewNewAuthor.DGVNewAuthor[1, newRowIndex].Value = "Click here to add a book";
         }
 
         string GetIndexFromString(string str)

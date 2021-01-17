@@ -6,7 +6,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -51,6 +54,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewTreeView.Load += ViewBookstores_Load;
         }
 
+        private string IDCurrentSelectedBook { get; set; }
 
         public ICollection<Butiker> Butiker { get; set; }
         public ICollection<Böcker> Böcker { get; set; }
@@ -70,6 +74,78 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewTreeView.TreeView.MouseUp += TreeView_MouseUp;
             viewTreeView.TreeView.MouseDown += TreeView_MouseDown;
             viewNewBook.NewBookSavedToDatabase += ViewNewBook_NewBookSavedToDatabase;
+            viewTreeView.ContextMenuStripTreeView.ItemClicked += ContextMenuStripTreeView_ItemClicked;
+            viewTreeView._TreeView_AfterSelect += ViewTreeView__TreeView_AfterSelect;
+        }
+
+        private void ViewTreeView__TreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (viewTreeView.TreeView.SelectedNode.Parent != null)
+                if (e.Node.Tag is LagerSaldo selectedLagerSaldo)
+                    IDCurrentSelectedBook = selectedLagerSaldo.Isbn.ToString();
+        }
+
+        private void ContextMenuStripTreeView_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.ToString() == "Delete Book")
+            {
+                var bookTitle = from Match match in Regex.Matches(viewTreeView.TreeView.SelectedNode.Text, "\".*?\"")
+                             select match.ToString();
+                viewTreeView.ContextMenuStripTreeView.Close();
+                DialogResult resultQuestion = 
+                    MessageBox.Show($"Do you want to delete the book {bookTitle.FirstOrDefault()} ? \n\n" +
+                    $"(The book will be removed from all bookstores.)",
+                    "Delete confirmation",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question);
+                if (resultQuestion == DialogResult.OK)
+                {
+                    using (var db = new Bokhandel_Lab2Context())
+                    {
+                        using (var dbContextTransaction = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                // 1. delete book from table 'LagerSaldo'
+
+                                //var lagerSaldo = db.LagerSaldon.FirstOrDefault(
+                                //b => b.Isbn == IDCurrentSelectedBook);
+                                //db.LagerSaldon.Remove(lagerSaldo);
+                                db.Database.ExecuteSqlInterpolated($"DELETE FROM dbo.LagerSaldo WHERE ISBN = ({IDCurrentSelectedBook})");
+                                db.SaveChanges(); //lock sql server
+                                dbContextTransaction.Commit();
+
+                                // 2. delete book from table 'FörfattareBöcker_Junction'
+
+                                //var FörfattareBöckerJunction = db.FörfattareBöckerJunction.FirstOrDefault(
+                                //    b => b.BokId == IDCurrentSelectedBook);
+                                //db.FörfattareBöckerJunction.Remove(FörfattareBöckerJunction);
+                                //db.FörfattareBöckerJunction.FromSqlInterpolated($"DELETE FROM [FörfattareBöcker_Junction] WHERE BokID = [{IDCurrentSelectedBook}]");
+                                //db.SaveChanges(); //lock sql server
+                                //dbContextTransaction.Commit();
+
+                                // 3. delete book from table 'böcker'
+
+                                //var böcker = db.Böcker.FirstOrDefault(
+                                //    b => b.Isbn13 == IDCurrentSelectedBook);
+                                //db.Böcker.Remove(böcker);
+                                //db.SaveChanges();
+                                //dbContextTransaction.Commit();
+
+                                ViewNewBook_NewBookSavedToDatabase(this, EventArgs.Empty);
+                                //string logText = "The book has been successfully deleted from the SQL database.";
+                                //_ = ShowLogTextAsync(logText, Color.Green, 5000);
+                            }
+                            catch (Exception)
+                            {
+                                dbContextTransaction.Rollback(); //not needed but good practice
+                                //string logText = "Error deleting from the SQL database! Please verify the functionality of the SQL server.";
+                                //_ = ShowLogTextAsync(logText, Color.Red, 5000);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void ViewNewBook_NewBookSavedToDatabase(object sender, EventArgs e)
@@ -98,7 +174,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             switch (e.Button)
             {
                 case MouseButtons.Right:
-                    viewTreeView.ContextMenuStripTreeView.Show(new Point(Control.MousePosition.X + 25, Control.MousePosition.Y + 20));
+                    if (viewTreeView.TreeView.SelectedNode.Parent == null)
+                        viewTreeView.ContextMenuStripTreeView.Items[0].Enabled = false;
+                    else viewTreeView.ContextMenuStripTreeView.Items[0].Enabled = true;                
+                    viewTreeView.ContextMenuStripTreeView.Show(
+                        new Point(Control.MousePosition.X + 25, Control.MousePosition.Y + 20));
                     break;
             }
         }
