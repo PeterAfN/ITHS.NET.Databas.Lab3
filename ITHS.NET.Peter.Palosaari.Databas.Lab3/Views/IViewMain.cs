@@ -10,5 +10,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         void AddControls();
 
         ToolStripMenuItem ToolStripMenuItemAddBook { get; set; }
+        ToolStripMenuItem ToolStripMenuItemAddAuthor { get; set; }
     }
 }

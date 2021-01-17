@@ -21,7 +21,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             var viewTreeView = new ViewTreeView() { Dock = DockStyle.Fill };
             var viewDetails = new ViewDetails() { Dock = DockStyle.Fill };
             var viewNewBook = new ViewNewBook() { Dock = DockStyle.Fill };
-            var viewMain = new ViewMain(viewTreeView, viewDetails, viewNewBook);
+            var viewNewAuthor = new ViewNewAuthor() { Dock = DockStyle.Fill };
+            var viewMain = new ViewMain(viewTreeView, viewDetails, viewNewBook, viewNewAuthor);
 
 
             //Presenters
@@ -29,6 +30,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             _ = new PresenterDetails(viewMain, viewTreeView, viewDetails);
             _ = new PresenterTreeView(viewMain, viewTreeView, viewDetails, viewNewBook);
             _ = new PresenterNewBook(viewMain, viewTreeView, viewDetails, viewNewBook);
+            _ = new PresenterNewAuthor(viewMain, viewTreeView, viewDetails, viewNewAuthor);
 
             Application.Run(viewMain);
         }

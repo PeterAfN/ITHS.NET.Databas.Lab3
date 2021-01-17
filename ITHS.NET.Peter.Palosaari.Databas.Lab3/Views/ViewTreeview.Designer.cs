@@ -47,7 +47,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.groupBoxBookstores.Location = new System.Drawing.Point(0, 0);
             this.groupBoxBookstores.Name = "groupBoxBookstores";
             this.groupBoxBookstores.Padding = new System.Windows.Forms.Padding(11, 14, 11, 11);
-            this.groupBoxBookstores.Size = new System.Drawing.Size(421, 545);
+            this.groupBoxBookstores.Size = new System.Drawing.Size(240, 611);
             this.groupBoxBookstores.TabIndex = 1;
             this.groupBoxBookstores.TabStop = false;
             this.groupBoxBookstores.Text = "Stock balance for bookstores [rightclick for options]";
@@ -59,7 +59,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.treeView.HideSelection = false;
             this.treeView.Location = new System.Drawing.Point(11, 30);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(399, 504);
+            this.treeView.Size = new System.Drawing.Size(218, 570);
             this.treeView.TabIndex = 0;
             // 
             // contextMenuStripTreeView
@@ -96,7 +96,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.Controls.Add(this.groupBoxBookstores);
             this.DoubleBuffered = true;
             this.Name = "ViewTreeView";
-            this.Size = new System.Drawing.Size(421, 545);
+            this.Size = new System.Drawing.Size(240, 611);
             this.groupBoxBookstores.ResumeLayout(false);
             this.contextMenuStripTreeView.ResumeLayout(false);
             this.ResumeLayout(false);

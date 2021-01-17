@@ -14,10 +14,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
 
-        public PresenterDetails(
-            IViewMain viewMain,
-            IViewTreeView viewTreeView, 
-            IViewDetails viewDetails)
+        public PresenterDetails(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails)
         {
             this.viewMain = viewMain;
             this.viewTreeView = viewTreeView;

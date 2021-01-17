@@ -10,8 +10,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
     public class PresenterNewBook
     {
-        private Queue<DataGridViewComboBoxCell> cb = new Queue<DataGridViewComboBoxCell>(200);
-        private ICollection<int> authorIDs = new List<int>();
+        private readonly ICollection<int> authorIDs = new List<int>();
         private int publisherIDs = -1;
 
         private readonly IViewMain viewMain;
@@ -116,15 +115,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
                         db.SaveChanges();
                         dbContextTransaction.Commit();
+                        viewNewBook.TriggerEventNewBookSavedToDatabase(sender, e);
                         string logText = "The book has been successfully added to the SQL database.";
                         _ = ShowLogTextAsync(logText, Color.Green, 5000);
-                        viewNewBook.TriggerEventNewBookSavedToDatabase(sender, e);
                     }
                     catch (Exception)
                     {
+                        dbContextTransaction.Rollback(); //not needed but good practice
                         string logText = "Error saving to the SQL database! Please verify the inserted data and the functionality of the SQL server.";
                         _ = ShowLogTextAsync(logText, Color.Red, 5000);
-                        dbContextTransaction.Rollback(); //not needed but good practice
                     }
                 }
             }

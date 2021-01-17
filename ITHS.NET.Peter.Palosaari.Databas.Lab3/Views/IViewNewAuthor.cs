@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 {
-    public interface IViewNewBook
+    public interface IViewNewAuthor
     {
         event EventHandler Load;
 
@@ -14,12 +14,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 
         DialogResult ShowDialog();
 
-        DataGridView DGVNewBook { get; set; }
+        DataGridView DGVNewAuthor { get; set; }
         Label LabelLog { get; set; }
         Button ButtonAdd { get; set; }
         Button ButtonClose { get; set; }
 
-        event EventHandler<EventArgs> NewBookSavedToDatabase;
-        void TriggerEventNewBookSavedToDatabase(object sender, EventArgs e);
+        event EventHandler<EventArgs> NewAuthorSavedToDatabase;
+        void TriggerEventNewAuthorSavedToDatabase(object sender, EventArgs e);
     }
 }
