@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -94,55 +93,36 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewTreeView.ContextMenuStripTreeView.Close();
                 DialogResult resultQuestion = 
                     MessageBox.Show($"Do you want to delete the book {bookTitle.FirstOrDefault()} ? \n\n" +
-                    $"(The book will be removed from all bookstores.)",
+                    $"(The book will be removed from all bookstores)",
                     "Delete confirmation",
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question);
                 if (resultQuestion == DialogResult.OK)
                 {
-                    using (var db = new Bokhandel_Lab2Context())
+                    using var db = new Bokhandel_Lab2Context();
+                    using var dbContextTransaction = db.Database.BeginTransaction();
+                    try
                     {
-                        using (var dbContextTransaction = db.Database.BeginTransaction())
-                        {
-                            try
-                            {
-                                // 1. delete book from table 'LagerSaldo'
+                        db.Database.ExecuteSqlInterpolated($"DELETE FROM dbo.LagerSaldo WHERE ISBN = ({IDCurrentSelectedBook})");               // 1. delete book from table 'LagerSaldo'
+                        db.SaveChanges();
 
-                                //var lagerSaldo = db.LagerSaldon.FirstOrDefault(
-                                //b => b.Isbn == IDCurrentSelectedBook);
-                                //db.LagerSaldon.Remove(lagerSaldo);
-                                db.Database.ExecuteSqlInterpolated($"DELETE FROM dbo.LagerSaldo WHERE ISBN = ({IDCurrentSelectedBook})");
-                                db.SaveChanges(); //lock sql server
-                                dbContextTransaction.Commit();
+                        db.Database.ExecuteSqlInterpolated($"DELETE FROM FörfattareBöcker_Junction WHERE BokID = ({IDCurrentSelectedBook})");   // 2. delete book from table 'FörfattareBöcker_Junction'
+                        db.SaveChanges();
 
-                                // 2. delete book from table 'FörfattareBöcker_Junction'
+                        var böcker = db.Böcker.FirstOrDefault(b => b.Isbn13 == IDCurrentSelectedBook);
+                        db.Böcker.Remove(böcker);                                                                                               // 3. delete book from table 'böcker'
+                        db.SaveChanges();
+                        dbContextTransaction.Commit();
 
-                                //var FörfattareBöckerJunction = db.FörfattareBöckerJunction.FirstOrDefault(
-                                //    b => b.BokId == IDCurrentSelectedBook);
-                                //db.FörfattareBöckerJunction.Remove(FörfattareBöckerJunction);
-                                //db.FörfattareBöckerJunction.FromSqlInterpolated($"DELETE FROM [FörfattareBöcker_Junction] WHERE BokID = [{IDCurrentSelectedBook}]");
-                                //db.SaveChanges(); //lock sql server
-                                //dbContextTransaction.Commit();
-
-                                // 3. delete book from table 'böcker'
-
-                                //var böcker = db.Böcker.FirstOrDefault(
-                                //    b => b.Isbn13 == IDCurrentSelectedBook);
-                                //db.Böcker.Remove(böcker);
-                                //db.SaveChanges();
-                                //dbContextTransaction.Commit();
-
-                                ViewNewBook_NewBookSavedToDatabase(this, EventArgs.Empty);
-                                //string logText = "The book has been successfully deleted from the SQL database.";
-                                //_ = ShowLogTextAsync(logText, Color.Green, 5000);
-                            }
-                            catch (Exception)
-                            {
-                                dbContextTransaction.Rollback(); //not needed but good practice
-                                //string logText = "Error deleting from the SQL database! Please verify the functionality of the SQL server.";
-                                //_ = ShowLogTextAsync(logText, Color.Red, 5000);
-                            }
-                        }
+                        ViewNewBook_NewBookSavedToDatabase(this, EventArgs.Empty);
+                        //string logText = "The book has been successfully deleted from the SQL database.";
+                        //_ = ShowLogTextAsync(logText, Color.Green, 5000);
+                    }
+                    catch (Exception)
+                    {
+                        dbContextTransaction.Rollback();
+                        //string logText = "Error deleting from the SQL database! Please verify the functionality of the SQL server.";
+                        //_ = ShowLogTextAsync(logText, Color.Red, 5000);
                     }
                 }
             }
