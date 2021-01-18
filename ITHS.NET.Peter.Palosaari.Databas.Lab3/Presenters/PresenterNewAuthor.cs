@@ -65,8 +65,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 {
                     try
                     {
-                        //1.save author to table 'FÖrfattare'
-
                         var author = new Författare
                         {
                             Förnamn = viewNewAuthor.DGVNewAuthor[1, 0].Value.ToString(),
@@ -74,14 +72,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             Födelsedatum = viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString(),
                         };
                         db.Författare.Add(author);
-                        db.SaveChanges(); //                                                                    <---- locks sql sever database until dbContextTransaction.Commit()
+                        db.SaveChanges(); 
 
-                        // 2. get the ID for the newly created 'Författare'
-
-                        int authorID = db.Författare.OrderBy(t => t.Id).LastOrDefault( //                       <---- OrderBy and LastOrDefault since the user can add authors with the exact same data. Therefore we sort the (isIdentity) 'ID' column first.
+                        int authorID = db.Författare.OrderBy(t => t.Id).LastOrDefault(
                             b => b.Förnamn == author.Förnamn && b.Efternamn == author.Efternamn && b.Födelsedatum == author.Födelsedatum).Id;
-
-                        // 3. save author and book(s) to table 'FörfattareBöcker_Junction'
 
                         foreach (var bookID in bookIDs)
                         {

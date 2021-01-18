@@ -3,7 +3,9 @@ using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
@@ -39,22 +41,44 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 using var db = new Bokhandel_Lab2Context();
                 if (db.Database.CanConnect())
                 {
-                    int.TryParse(viewDetails.DGVBook[1, e.RowIndex].Value.ToString(), out int författareId);
-                    var JunctionFörfattareBöcker = db.FörfattareBöckerJunction.FirstOrDefault(
-                    b => b.FörfattareId == författareId && b.BokId == viewDetails.DGVBook[1, 0].Value.ToString());
-                    db.FörfattareBöckerJunction.Remove(JunctionFörfattareBöcker);
-                    db.SavedChanges += Db_SavedChanges;
-                    db.SaveChangesFailed += Db_SaveChangesFailed;
-                    db.SaveChanges();
+                    try
+                    {
+                        int.TryParse(viewDetails.DGVBook[1, e.RowIndex].Value.ToString(), out int författareId);
+                        var JunctionFörfattareBöcker = db.FörfattareBöckerJunction.FirstOrDefault(
+                        b => b.FörfattareId == författareId && b.BokId == viewDetails.DGVBook[1, 0].Value.ToString());
+                        db.FörfattareBöckerJunction.Remove(JunctionFörfattareBöcker);
+                        db.SaveChanges();
 
-                    viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 3);
-                    viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex+2);
-                    viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex+1);
-                    viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex);
-                    DetailsChangedEventArgs args = new DetailsChangedEventArgs();
-                    TriggerEvent(sender, args);
+                        viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 3);
+                        viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 2);
+                        viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 1);
+                        viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex);
+                        DetailsChangedEventArgs args = new DetailsChangedEventArgs();
+                        TriggerEvent(sender, args);
+                        string logText = "The author has been successfully disassociated from the book in the SQL Server database.";
+                        _ = ShowLogTextAsync(logText, Color.Green, 3000);
+                    }
+                    catch (Exception)
+                    {
+                        string logText = "Error while disassociating the author from the book in the SQL Server database. Please verify the functionality of the SQL server.";
+                        _ = ShowLogTextAsync(logText, Color.Red, 3000);
+                    }
+                }
+                else
+                {
+                    string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                    _ = ShowLogTextAsync(logText, Color.Red, 3000);
                 }
             }
+        }
+
+        private async Task ShowLogTextAsync(string infoText, Color color, int showTime)
+        {
+            viewMain.LabelLog.Text = infoText;
+            viewMain.LabelLog.ForeColor = color;
+            viewMain.LabelLog.Visible = true;
+            await Task.Delay(showTime);
+            viewMain.LabelLog.Visible = false;
         }
 
         private string CellValueBeforeEdit { get; set; }
@@ -102,56 +126,60 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
-                int.TryParse(viewDetails.DGVBookstore[1, 0].Value.ToString(), out int butikID);
-                var stock = db.LagerSaldon.FirstOrDefault(
-                    b => b.ButikId == butikID && b.Isbn == viewDetails.DGVBook[1, 0].Value.ToString());
-                var books = db.Böcker.FirstOrDefault(
-                    b => b.Isbn13 == viewDetails.DGVBook[1, 0].Value.ToString());
-                int.TryParse(viewDetails.DGVBook[1, 6].Value.ToString(), out int _publisher);
-                var publisher = db.Förlag.FirstOrDefault(b => b.Id == _publisher);
-                DetailsChangedEventArgs args = new DetailsChangedEventArgs();
-
-                switch (e.RowIndex)
-                {
-                    case 1:
-                        books.Titel = viewDetails.DGVBook[1, 1].Value.ToString(); break;
-                    case 2:
-                        int.TryParse(viewDetails.DGVBook[1, 2].Value.ToString(), out int amount);
-                        stock.Antal = amount; break;
-                    case 3:
-                        books.Språk = viewDetails.DGVBook[1, 3].Value.ToString();  break;
-                    case 4:
-                        decimal.TryParse(viewDetails.DGVBook[1, 4].Value.ToString(), out decimal price);
-                        books.Pris = price; break;
-                    case 5: //todo: when sql database is changed to date instead this must be changed also to date
-                        books.Utgivningsdatum = viewDetails.DGVBook[1, 5].Value.ToString(); break;
-                    case 7:
-                        publisher.Namn = viewDetails.DGVBook[1, 7].Value.ToString(); break;
-                    case 8:
-                        publisher.Beskrivning = viewDetails.DGVBook[1, 8].Value.ToString(); break;
-                    case 9:
-                        publisher.Telefonnummer = viewDetails.DGVBook[1, 9].Value.ToString(); break;
-                    case 10:
-                        publisher.Epost = viewDetails.DGVBook[1, 10].Value.ToString();  break;
-                    default:
-                        CellAuthor(sender, e); return;
-                }
-
                 try
                 {
-                    db.SavedChanges += Db_SavedChanges;
-                    db.SaveChangesFailed += Db_SaveChangesFailed;
+                        int.TryParse(viewDetails.DGVBookstore[1, 0].Value.ToString(), out int butikID);
+                    var stock = db.LagerSaldon.FirstOrDefault(
+                        b => b.ButikId == butikID && b.Isbn == viewDetails.DGVBook[1, 0].Value.ToString());
+                    var books = db.Böcker.FirstOrDefault(
+                        b => b.Isbn13 == viewDetails.DGVBook[1, 0].Value.ToString());
+                    int.TryParse(viewDetails.DGVBook[1, 6].Value.ToString(), out int _publisher);
+                    var publisher = db.Förlag.FirstOrDefault(b => b.Id == _publisher);
+                    switch (e.RowIndex)
+                    {
+                        case 1:
+                            books.Titel = viewDetails.DGVBook[1, 1].Value.ToString(); break;
+                        case 2:
+                            int.TryParse(viewDetails.DGVBook[1, 2].Value.ToString(), out int amount);
+                            stock.Antal = amount; break;
+                        case 3:
+                            books.Språk = viewDetails.DGVBook[1, 3].Value.ToString();  break;
+                        case 4:
+                            decimal.TryParse(viewDetails.DGVBook[1, 4].Value.ToString(), out decimal price);
+                            books.Pris = price; break;
+                        case 5:
+                            books.Utgivningsdatum = viewDetails.DGVBook[1, 5].Value.ToString(); break;
+                        case 7:
+                            publisher.Namn = viewDetails.DGVBook[1, 7].Value.ToString(); break;
+                        case 8:
+                            publisher.Beskrivning = viewDetails.DGVBook[1, 8].Value.ToString(); break;
+                        case 9:
+                            publisher.Telefonnummer = viewDetails.DGVBook[1, 9].Value.ToString(); break;
+                        case 10:
+                            publisher.Epost = viewDetails.DGVBook[1, 10].Value.ToString();  break;
+                        default:
+                            CellAuthor(sender, e); return;
+                    }
                     db.SaveChanges();
+                    string logText = "The value has been successfully changed in the SQL Server database.";
+                    _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
                 {
+                    string logText = "Error while changing the value in the SQL Server database. Please verify the functionality of the SQL server and the inserted data.";
+                    _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
                     return;
                 }
+                DetailsChangedEventArgs args = new DetailsChangedEventArgs();
                 TriggerEvent(sender, args);
             }
-            else Debug.WriteLine("Could not connect to database to read values.");
+            else
+            {
+                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                _ = ShowLogTextAsync(logText, Color.Red, 3000);
+            }
         }
 
         void TriggerEvent(object sender, DetailsChangedEventArgs args)
@@ -169,39 +197,49 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         void CellAuthor(object sender, DataGridViewCellEventArgs e)
         {
             using var db = new Bokhandel_Lab2Context();
-            if (!db.Database.CanConnect()) return;
-           
-            int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
-            int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
-            var author = db.Författare.FirstOrDefault(b => b.Id == value);
-
-            switch (e.RowIndex % 4)
+            if (db.Database.CanConnect()) 
             {
-                case 0:     //row 12, 16, 20, 24, 28...
-                    author.Förnamn = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
-                    break;
-                case 1:     //row 13, 17, 21, 25, 29...
-                    author.Efternamn = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
-                    break;
-                case 2:     //row 14, 18, 22, 26, 30...
-                    author.Födelsedatum = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
-                    break;
-            }           
-            DetailsChangedEventArgs args = new DetailsChangedEventArgs();
+                try
+                {
+                    int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
+                    int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
+                    var author = db.Författare.FirstOrDefault(b => b.Id == value);
 
-            try
-            {
-                db.SavedChanges += Db_SavedChanges;
-                db.SaveChangesFailed += Db_SaveChangesFailed;
-                db.SaveChanges();
+                    switch (e.RowIndex % 4)
+                    {
+                        case 0:     //row 12, 16, 20, 24, 28...
+                            author.Förnamn = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
+                            break;
+                        case 1:     //row 13, 17, 21, 25, 29...
+                            author.Efternamn = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
+                            break;
+                        case 2:     //row 14, 18, 22, 26, 30...
+                            author.Födelsedatum = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
+                            break;
+                    }
+
+
+                    db.SaveChanges();
+                    string logText = "The value has been successfully changed in the SQL Server database.";
+                    _ = ShowLogTextAsync(logText, Color.Green, 3000);
+                }
+                catch (Exception)
+                {
+                    string logText = "Error while changing the value in the SQL Server database. Please verify the functionality of the SQL server and the inserted data.";
+                    _ = ShowLogTextAsync(logText, Color.Red, 3000);
+                    db.Dispose();
+                    RestoreCellValue();
+                    return;
+                }
+                DetailsChangedEventArgs args = new DetailsChangedEventArgs();
+                TriggerEvent(sender, args);
             }
-            catch (Exception)
+            else
             {
-                db.Dispose();
-                RestoreCellValue();
+                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                _ = ShowLogTextAsync(logText, Color.Red, 3000);
                 return;
             }
-            TriggerEvent(sender, args);
         }
 
 
@@ -216,39 +254,44 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
-                int.TryParse(viewDetails.DGVBookstore[1, 0].Value.ToString(), out int bookID);
-                var butiker = db.Butiker.FirstOrDefault(b => b.Id == bookID);
-                switch (e.RowIndex)
-                {
-                    case 1:
-                        butiker.Namn = viewDetails.DGVBookstore[1, 1].Value.ToString(); break;
-                    case 2:
-                        butiker.Adress = viewDetails.DGVBookstore[1, 2].Value.ToString(); break;
-                    case 3:
-                        int.TryParse(viewDetails.DGVBookstore[1, 3].Value.ToString(), out int postalNr);
-                        butiker.Postnummer = postalNr; break;
-                    case 4:
-                        butiker.Stad = viewDetails.DGVBookstore[1, 4].Value.ToString(); break;
-                    case 5:
-                        butiker.Land = viewDetails.DGVBookstore[1, 5].Value.ToString(); break;
-                }
                 try
                 {
-                    db.SavedChanges += Db_SavedChanges;
-                    db.SaveChangesFailed += Db_SaveChangesFailed;
+                    int.TryParse(viewDetails.DGVBookstore[1, 0].Value.ToString(), out int bookID);
+                    var butiker = db.Butiker.FirstOrDefault(b => b.Id == bookID);
+                    switch (e.RowIndex)
+                    {
+                        case 1:
+                            butiker.Namn = viewDetails.DGVBookstore[1, 1].Value.ToString(); break;
+                        case 2:
+                            butiker.Adress = viewDetails.DGVBookstore[1, 2].Value.ToString(); break;
+                        case 3:
+                            int.TryParse(viewDetails.DGVBookstore[1, 3].Value.ToString(), out int postalNr);
+                            butiker.Postnummer = postalNr; break;
+                        case 4:
+                            butiker.Stad = viewDetails.DGVBookstore[1, 4].Value.ToString(); break;
+                        case 5:
+                            butiker.Land = viewDetails.DGVBookstore[1, 5].Value.ToString(); break;
+                    }
                     db.SaveChanges();
+                    string logText = "The value has been successfully changed in the SQL Server database.";
+                    _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
                 {
+                    string logText = "Error while changing the value in the SQL Server database. Please verify the functionality of the SQL server and the inserted data.";
+                    _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
                     return;
                 }
-
                 DetailsChangedEventArgs args = new DetailsChangedEventArgs();
                 TriggerEvent(sender, args);
             }
-            else Debug.WriteLine("Could not connect to database to set values.");
+            else
+            {
+                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                _ = ShowLogTextAsync(logText, Color.Red, 3000);
+            }
         }
 
 
@@ -257,16 +300,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBookstore.CellValueChanged -= DGVBookstore_CellValueChanged;
             viewDetails.DGVBookstore.CurrentCell.Value = CellValueBeforeEdit;
             viewDetails.DGVBookstore.CellValueChanged += DGVBookstore_CellValueChanged;
-        }
-
-        private void Db_SaveChangesFailed(object sender, SaveChangesFailedEventArgs e)
-        {
-            Debug.WriteLine("save failed!");
-        }
-
-        private void Db_SavedChanges(object sender, SavedChangesEventArgs e)
-        {
-            Debug.WriteLine("save succeeded!");
         }
 
         bool userNavigating = false;
@@ -402,9 +435,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         void SetDGVCellsReadOnly()
         {
-            viewDetails.DGVBookstore[1, 0].ReadOnly = true;  //id
-            viewDetails.DGVBook[1, 0].ReadOnly = true;       //isbn
-            viewDetails.DGVBook[1, 6].ReadOnly = true;       //publisher id
+            viewDetails.DGVBookstore[1, 0].ReadOnly = true;                                         //id
+            viewDetails.DGVBook[1, 0].ReadOnly = true;                                              //isbn
+            viewDetails.DGVBook[1, 6].ReadOnly = true;                                              //publisher id
             if (viewDetails.DGVBook.RowCount > 11) viewDetails.DGVBook[1, 11].ReadOnly = true;      //author id
         }
     }

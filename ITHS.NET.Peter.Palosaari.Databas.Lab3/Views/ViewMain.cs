@@ -9,11 +9,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         private ViewDetails viewDetails;
         private ViewNewBook viewNewBook;
         private ViewNewAuthor viewNewAuthor;
+        private ViewDeleteAuthor viewDeleteAuthor;
 
         public ViewMain(ViewTreeView viewBookstores, 
             ViewDetails viewDetails,
             ViewNewBook viewNewBook,
-            ViewNewAuthor viewNewAuthor)
+            ViewNewAuthor viewNewAuthor,
+            ViewDeleteAuthor viewDeleteAuthor
+            )
         {
             InitializeComponent();
 
@@ -21,6 +24,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
             this.viewNewAuthor = viewNewAuthor;
+            this.viewDeleteAuthor = viewDeleteAuthor;
 
             AddControls();
         }
@@ -29,6 +33,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         {
             splitContainerMain.Panel1.Controls.Add(viewBookstores);
             splitContainerMain.Panel2.Controls.Add(viewDetails);
+            viewDetails.BringToFront();
         }
 
         public ToolStripMenuItem ToolStripMenuItemAddBook
@@ -41,6 +46,18 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         {
             get { return toolStripMenuItemAddAuthor; }
             set { toolStripMenuItemAddAuthor = value; }
+        }
+
+        public ToolStripMenuItem ToolStripMenuItemDeleteAuthor
+        {
+            get { return toolStripMenuItemDeleteAuthor; }
+            set { toolStripMenuItemDeleteAuthor = value; }
+        }
+
+        public Label LabelLog
+        {
+            get { return labelLog; }
+            set { labelLog = value; }
         }
 
         private void ViewMain_Load(object sender, System.EventArgs e)

@@ -295,9 +295,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
         }
 
-        //todo: create generic class for getting data from database.
         private void DGVNewBook_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
 
+        //todo: create generic class for getting data from database.
         private ICollection<Författare> GetAuthorsFromDatabase()
         {
             using var db = new Bokhandel_Lab2Context();

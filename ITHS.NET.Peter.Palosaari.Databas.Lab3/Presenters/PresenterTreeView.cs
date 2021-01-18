@@ -9,46 +9,32 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
     class PresenterTreeView
     {
-        #region Native Methods - Win32
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        public static extern int GetScrollPos(IntPtr hWnd, int nBar);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        public static extern int SetScrollPos(IntPtr hWnd, int nBar, int nPos, bool bRedraw);
-
-        private const int SB_HORZ = 0x0;
-        private const int SB_VERT = 0x1;
-
-        private Point GetTreeViewScrollPos(TreeView treeView)
-        {
-            return new Point(
-                GetScrollPos(treeView.Handle, SB_HORZ),
-                GetScrollPos(treeView.Handle, SB_VERT));
-        }
-
-        private void SetTreeViewScrollPos(TreeView treeView, Point scrollPosition)
-        {
-            SetScrollPos((IntPtr)treeView.Handle, SB_HORZ, scrollPosition.X, true);
-            SetScrollPos((IntPtr)treeView.Handle, SB_VERT, scrollPosition.Y, true);
-        }
-        #endregion Native Methods - Win32
-
         private readonly IViewMain viewMain;
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
         private readonly IViewNewBook viewNewBook;
+        private readonly IViewDeleteAuthor viewDeleteAuthor;
+        private readonly IViewNewAuthor viewNewAuthor;
 
-        public PresenterTreeView(IViewMain viewMain, IViewTreeView viewBookstores, IViewDetails viewDetails, IViewNewBook viewNewBook)
+        public PresenterTreeView(IViewMain viewMain, 
+            IViewTreeView viewBookstores, 
+            IViewDetails viewDetails, 
+            IViewNewBook viewNewBook,
+            IViewDeleteAuthor viewDeleteAuthor,
+            IViewNewAuthor viewNewAuthor)
         {
             this.viewMain = viewMain;
             this.viewTreeView = viewBookstores;
             this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
+            this.viewDeleteAuthor = viewDeleteAuthor;
+            this.viewNewAuthor = viewNewAuthor;
 
             this.viewTreeView.Load += ViewBookstores_Load;
         }
@@ -75,6 +61,27 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewNewBook.NewBookSavedToDatabase += ViewNewBook_NewBookSavedToDatabase;
             viewTreeView.ContextMenuStripTreeView.ItemClicked += ContextMenuStripTreeView_ItemClicked;
             viewTreeView._TreeView_AfterSelect += ViewTreeView__TreeView_AfterSelect;
+            viewDeleteAuthor.AuthorDeletedFromDatabase += ViewDeleteAuthor_AuthorDeletedFromDatabase;
+            viewNewAuthor.NewAuthorSavedToDatabase += ViewNewAuthor_NewAuthorSavedToDatabase;
+        }
+
+        private void ViewNewAuthor_NewAuthorSavedToDatabase(object sender, EventArgs e)
+        {
+            ViewDeleteAuthor_AuthorDeletedFromDatabase(sender, EventArgs.Empty);
+        }
+
+        private void ViewDeleteAuthor_AuthorDeletedFromDatabase(object sender, EventArgs e)
+        {
+            DetailsChangedEventArgs args = new DetailsChangedEventArgs();
+
+            if (viewTreeView.TreeView.SelectedNode.Parent == null)
+                args.IndexSelectedParentNode = viewTreeView.TreeView.SelectedNode.Index;
+            else
+            {
+                args.IndexSelectedChildNode = viewTreeView.TreeView.SelectedNode.Index;
+                args.IndexSelectedParentNode = viewTreeView.TreeView.SelectedNode.Parent.Index;
+            }
+            UpdateTreeviewWithNewData(sender, args);
         }
 
         private void ViewTreeView__TreeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -115,17 +122,26 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                         dbContextTransaction.Commit();
 
                         ViewNewBook_NewBookSavedToDatabase(this, EventArgs.Empty);
-                        //string logText = "The book has been successfully deleted from the SQL database.";
-                        //_ = ShowLogTextAsync(logText, Color.Green, 5000);
+                        string logText = "The book has been successfully deleted from the SQL database.";
+                        _ = ShowLogTextAsync(logText, Color.Green, 5000);
                     }
                     catch (Exception)
                     {
                         dbContextTransaction.Rollback();
-                        //string logText = "Error deleting from the SQL database! Please verify the functionality of the SQL server.";
-                        //_ = ShowLogTextAsync(logText, Color.Red, 5000);
+                        string logText = "Error while deleting from the SQL database! Please verify the functionality of the SQL server.";
+                        _ = ShowLogTextAsync(logText, Color.Red, 5000);
                     }
                 }
             }
+        }
+
+        private async Task ShowLogTextAsync(string infoText, Color color, int showTime)
+        {
+            viewMain.LabelLog.Text = infoText;
+            viewMain.LabelLog.ForeColor = color;
+            viewMain.LabelLog.Visible = true;
+            await Task.Delay(showTime);
+            viewMain.LabelLog.Visible = false;
         }
 
         private void ViewNewBook_NewBookSavedToDatabase(object sender, EventArgs e)
@@ -199,7 +215,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
-                Debug.WriteLine("Connected to database.");
+                string logText = "Connected to the SQL Server database.";
+                _ = ShowLogTextAsync(logText, Color.Green, 5000);
                 Böcker = db.Böcker.ToList();
                 Butiker = db.Butiker.ToList();
                 LagerSaldo = db.LagerSaldon.ToList();
@@ -208,7 +225,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 Förlag = db.Förlag.ToList();
                 db.ChangeTracker.Clear();
             }
-            else Debug.WriteLine("Could not connect to database to read values");
+            else
+            {
+                string logText = "Could not connect to the SQL Server database! Please verify the functionality of the SQL server.";
+                _ = ShowLogTextAsync(logText, Color.Red, 5000);
+            }
         }
 
         public void AddNodesToTreeview(ICollection<Butiker> bookstores)
@@ -234,5 +255,29 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewTreeView.TreeView.Nodes.Add(bookstoreNode);
             }
         }
+
+        #region Native Methods - Win32
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        public static extern int GetScrollPos(IntPtr hWnd, int nBar);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        public static extern int SetScrollPos(IntPtr hWnd, int nBar, int nPos, bool bRedraw);
+
+        private const int SB_HORZ = 0x0;
+        private const int SB_VERT = 0x1;
+
+        private Point GetTreeViewScrollPos(TreeView treeView)
+        {
+            return new Point(
+                GetScrollPos(treeView.Handle, SB_HORZ),
+                GetScrollPos(treeView.Handle, SB_VERT));
+        }
+
+        private void SetTreeViewScrollPos(TreeView treeView, Point scrollPosition)
+        {
+            SetScrollPos((IntPtr)treeView.Handle, SB_HORZ, scrollPosition.X, true);
+            SetScrollPos((IntPtr)treeView.Handle, SB_VERT, scrollPosition.Y, true);
+        }
+        #endregion Native Methods - Win32
     }
 }
