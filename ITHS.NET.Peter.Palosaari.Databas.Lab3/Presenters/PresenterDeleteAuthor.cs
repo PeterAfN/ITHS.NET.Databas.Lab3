@@ -18,7 +18,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewDetails viewDetails;
         private readonly IViewDeleteAuthor viewDeleteAuthor;
 
-
         public PresenterDeleteAuthor(IViewMain viewMain, 
             IViewTreeView viewBookstores, 
             IViewDetails viewDetails,
@@ -32,7 +31,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewMain.ToolStripMenuItemDeleteAuthor.Click += ToolStripMenuItemDeleteAuthor_Click;
             this.viewDeleteAuthor.ButtonClose.Click += ButtonClose_Click;
             this.viewDeleteAuthor.ButtonDelete.Click += ButtonDelete_Click;
-            this.viewDeleteAuthor.ComboBoxDeleteAuthor.Click += ComboBoxDeleteAuthor_Click;
             this.viewDeleteAuthor.ComboBoxDeleteAuthor.SelectedIndexChanged += ComboBoxDeleteAuthor_SelectedIndexChanged;
         }
 
@@ -46,10 +44,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             str = new string(str.SkipWhile(c => !char.IsDigit(c)).TakeWhile(c => char.IsDigit(c)).ToArray());
             long.TryParse(str, out long index);
             return index;
-        }
-
-        private void ComboBoxDeleteAuthor_Click(object sender, EventArgs e)
-        {
         }
 
         private void ButtonDelete_Click(object sender, EventArgs e)
