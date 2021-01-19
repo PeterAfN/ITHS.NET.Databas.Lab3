@@ -58,9 +58,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             this.labelInfo.AutoSize = true;
             this.labelInfo.Location = new System.Drawing.Point(11, 12);
             this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(206, 15);
+            this.labelInfo.Size = new System.Drawing.Size(179, 15);
             this.labelInfo.TabIndex = 0;
-            this.labelInfo.Text = "Please select the author to be deleted:";
+            this.labelInfo.Text = "Please select an author to delete:";
             // 
             // panelButtons
             // 

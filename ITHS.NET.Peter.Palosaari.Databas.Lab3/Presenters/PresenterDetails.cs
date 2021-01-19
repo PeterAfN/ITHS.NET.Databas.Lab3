@@ -63,6 +63,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBook.CellValueChanged += DGVBook_CellValueChanged;
             viewDetails.DGVBookstore.CellBeginEdit += DGVBookstore_CellBeginEdit;
             viewDetails.DGVBook.CellBeginEdit += DGVBook_CellBeginEdit;
+            viewDetails.DGVBook.EditingControlShowing += DGVBook_EditingControlShowing;
+            viewDetails.DGVBook.DataError += DGVBook_DataError;
         }
 
         private void DGVBook_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -356,7 +358,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         bool userNavigating = false;
 
-        private void ViewTreeView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
+        private void ViewTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             userNavigating = true;
 
@@ -385,7 +387,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         void ExtendDGVWithNewAuthorCells(LagerSaldo lagerSaldo)
         {
-            authorIDs.Clear();
+            userNavigating = true;
+
+            authorsConnectedToCurrentBook.Clear();
             int i = 0;
             foreach (var item in lagerSaldo.IsbnNavigation.FörfattareBöckerJunction)
             {
@@ -395,7 +399,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewDetails.DGVBook[0, 13 + (i * 4)].Value = "Author Last Name:";
                 viewDetails.DGVBook[0, 14 + (i * 4)].Value = "Author Date of Birth";
                 viewDetails.DGVBook[1, 11 + (i * 4)].Value = item.FörfattareId;
-                authorIDs.Add(item.FörfattareId);
+                authorsConnectedToCurrentBook.Add(item.FörfattareId);
                 viewDetails.DGVBook[2, 11 + (i * 4)].Value = "remove";
                 viewDetails.DGVBook[1, 11 + (i * 4)].ReadOnly = true;
                 viewDetails.DGVBook[1, 12 + (i * 4)].Value = item.Författare.Förnamn;
@@ -403,23 +407,39 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewDetails.DGVBook[1, 14 + (i * 4)].Value = item.Författare.Födelsedatum;
                 i++;
             }
+
+            userNavigating = false;
         }
 
-
+        void ExtendDGVWithNewAuthorCells(int authorId, string bookId, int startIndexNewAuthor)
+        {
+            viewDetails.DGVBook.Rows.Add(3);
+            viewDetails.DGVBook[0, startIndexNewAuthor].Value = "Author Id:";
+            viewDetails.DGVBook[0, startIndexNewAuthor + 1].Value = "Author First Name:";
+            viewDetails.DGVBook[0, startIndexNewAuthor + 2].Value = "Author Last Name:";
+            viewDetails.DGVBook[0, startIndexNewAuthor + 3].Value = "Author Date of Birth";
+            viewDetails.DGVBook[1, startIndexNewAuthor].Value = authorId;
+            viewDetails.DGVBook[1, startIndexNewAuthor].ReadOnly = true;
+            viewDetails.DGVBook[2, startIndexNewAuthor].Value = "remove";
+            viewDetails.DGVBook[1, startIndexNewAuthor + 1].Value = authorsAll.FirstOrDefault(a => a.Id == authorId).Förnamn;
+            viewDetails.DGVBook[1, startIndexNewAuthor + 2].Value = authorsAll.FirstOrDefault(a => a.Id == authorId).Efternamn;
+            viewDetails.DGVBook[1, startIndexNewAuthor + 3].Value = authorsAll.FirstOrDefault(a => a.Id == authorId).Födelsedatum;
+            viewDetails.DGVBook[1, startIndexNewAuthor + 3].Selected = true;
+        }
 
         //NEW
         //**********************************************************************************************************************************
         //**********************************************************************************************************************************
         //**********************************************************************************************************************************
 
-        private ICollection<Författare> authors = new List<Författare>();
-        private readonly ICollection<int> authorIDs = new List<int>();
+        private ICollection<Författare> authorsAll = new List<Författare>();
+        private ICollection<int> authorsConnectedToCurrentBook = new List<int>();
 
-        //1. add author row (no combobox)
+        //1. add author row (no combobox). Is run everytime a user select a treeview node.
         void AddAuthorCell(int newRowIndex)
         {
-            authors = GetAuthorsFromDatabase();
-            if (authors.Count() == authorIDs.Count()) return;
+            authorsAll = GetAuthorsFromDatabase();
+            if (authorsAll.Count() == authorsConnectedToCurrentBook.Count()) return;
 
             viewDetails.DGVBook.Rows.Add(1);
             viewDetails.DGVBook.FirstDisplayedScrollingRowIndex = viewDetails.DGVBook.RowCount - 1; //scroll to bottom.
@@ -429,22 +449,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBook[1, newRowIndex].Value = "Click here to add an author";
         }
 
-        DataGridViewComboBoxCell cBAuthors;
+        DataGridViewComboBoxCell cBAuthorsCell;
 
-        //2. add combobox to the author row.
+        //2. add combobox to the author row. This method is only run when user clicks a cell "Click here to add an author"
         private void AddComboboxToAuthorCell(int rowIndexNewCell)
         {
-            cBAuthors = null;
-            cBAuthors = new DataGridViewComboBoxCell();
-            cBAuthors.Items.Clear();
+            cBAuthorsCell = null;
+            cBAuthorsCell = new DataGridViewComboBoxCell();
+            cBAuthorsCell.Items.Clear();
 
-            foreach (Författare a in authors)
+            foreach (Författare a in authorsAll)
             {
-                if (!authorIDs.Contains(a.Id))
-                    cBAuthors.Items.Add($"Id: {a.Id} - {a.Förnamn} {a.Efternamn} - BirthDate: {a.Födelsedatum}");
+                if (!authorsConnectedToCurrentBook.Contains(a.Id))
+                    cBAuthorsCell.Items.Add($"Id: {a.Id} - {a.Förnamn} {a.Efternamn} - BirthDate: {a.Födelsedatum}");
             }
 
-            viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1] = cBAuthors;
+            viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1] = cBAuthorsCell;
             viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[1].Cells[1];               //only way to update cell
             viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1]; //only way to update cell
             viewDetails.DGVBook.CellClick -= DGVBook_CellClick;
@@ -477,6 +497,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     db.FörfattareBöckerJunction.Remove(JunctionFörfattareBöcker);
                     db.SaveChanges();
 
+                    if ((viewDetails.DGVBook.RowCount-1) % 4 == 3) viewDetails.DGVBook?.Rows.RemoveAt(viewDetails.DGVBook.RowCount-1);
+
                     viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 3);
                     viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 2);
                     viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 1);
@@ -485,6 +507,9 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     TriggerEvent(sender, args);
                     string logText = "The author has been successfully disassociated from the book in the SQL Server database.";
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
+
+                    if (authorsConnectedToCurrentBook.Contains(författareId)) authorsConnectedToCurrentBook.Remove(författareId);
+                    AddAuthorCell(viewDetails.DGVBook.RowCount);
                 }
                 catch (Exception)
                 {
@@ -497,6 +522,56 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
                 _ = ShowLogTextAsync(logText, Color.Red, 3000);
             }         
+        }
+
+        ComboBox comboBoxAuthors = new ComboBox();
+
+        //This method exists only for creating author-comboBox SelectedIndexChanged events.
+        private void DGVBook_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (viewDetails.DGVBook.CurrentCell.ColumnIndex == 1 &&
+                viewDetails.DGVBook.RowCount == viewDetails.DGVBook.CurrentCell.RowIndex + 1 &&
+                e.Control is ComboBox)
+            {
+                comboBoxAuthors = e.Control as ComboBox;
+                comboBoxAuthors.SelectedIndexChanged -= AuthorSelectedIndexChanged;
+                comboBoxAuthors.SelectedIndexChanged += AuthorSelectedIndexChanged;
+            }
+        }
+
+        //Handle when author-combobox selected index has changed.
+        private void AuthorSelectedIndexChanged(object sender, EventArgs e)
+        {
+            //if (cBAuthorsCell.Items.Count > 1) AddAuthorCell(viewDetails.DGVBook.CurrentRow.Index + 1);
+
+            //var selected = viewTreeView.TreeView.SelectedNode;
+            //viewTreeView.TreeView.SelectedNode = null;
+            //viewTreeView.TreeView.SelectedNode = selected;
+
+            DataGridViewComboBoxEditingControl dGVCB = sender as DataGridViewComboBoxEditingControl;
+
+            int authorIdFromCBSelection = GetIDFromString(dGVCB.SelectedItem.ToString());
+            string bookId = viewDetails.DGVBook[1, 0].Value.ToString();
+
+            if (SaveAuthorToDatabase(authorIdFromCBSelection, bookId))
+            {
+                //DetailsChangedEventArgs args = new DetailsChangedEventArgs();
+                //TriggerEvent(sender, args); //  <--  this triggers method ViewDetails_DataGridViewUpdated() in PresenterTreeView
+
+                viewDetails.DGVBook.Rows[viewDetails.DGVBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
+                ExtendDGVWithNewAuthorCells(authorIdFromCBSelection, bookId, viewDetails.DGVBook.CurrentRow.Index);
+            }
+
+            viewDetails.DGVBook[2, viewDetails.DGVBook.CurrentRow.Index].Value = "remove";
+            //viewDetails.DGVBook[1, viewDetails.DGVBook.CurrentRow.Index].Value = dGVCB.SelectedItem.ToString();
+            //EnableCell(viewDetails.DGVBook[1, viewDetails.DGVBook.CurrentRow.Index], false);
+
+            //int selectedCBIndex = GetIndexFromString(dGVCB.SelectedItem.ToString());
+            if (!authorsConnectedToCurrentBook.Contains(authorIdFromCBSelection)) authorsConnectedToCurrentBook.Add(authorIdFromCBSelection);
+
+            viewDetails.DGVBook.Columns[2].Visible = true;
+
+            AddAuthorCell(viewDetails.DGVBook.RowCount);
         }
 
         private void DGVNewBook_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -516,59 +591,56 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             //}
         }
 
-        private void AuthorSelectedIndexChanged(object sender, EventArgs e)
+
+        //Save the author selected in the comboBox 
+        private bool SaveAuthorToDatabase(int authorId, string bookId)
         {
-            //if (cBAuthors.Items.Count > 1) AddRowActivateClickEvent(viewNewBook.DGVNewBook.CurrentRow.Index + 1);
-            //DataGridViewComboBoxEditingControl dGVCB = sender as DataGridViewComboBoxEditingControl;
-            //viewNewBook.DGVNewBook.Rows[viewNewBook.DGVNewBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
-            //viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentRow.Index].Value = "remove";
-            //viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index].Value = dGVCB.SelectedItem.ToString();
-            //EnableCell(viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index], false);
-
-            //int selectedCBIndex = GetIndexFromString(dGVCB.SelectedItem.ToString());
-            //if (!authorIDs.Contains(selectedCBIndex)) authorIDs.Add(selectedCBIndex);
-
-            //viewNewBook.DGVNewBook.Columns[2].Visible = true;
+            using var db = new Bokhandel_Lab2Context();
+            using var dbContextTransaction = db.Database.BeginTransaction();
+            try
+            {
+                db.Database.ExecuteSqlInterpolated(
+                    $"INSERT INTO FörfattareBöcker_Junction VALUES (({authorId}), ({bookId}))");
+                db.SaveChanges();
+                dbContextTransaction.Commit();
+                string logText = "The author has been successfully added to the SQL database.";
+                _ = ShowLogTextAsync(logText, Color.Green, 5000);
+                return true;
+            }
+            catch (Exception)
+            {
+                dbContextTransaction.Rollback();
+                string logText = "Error while adding the author to the SQL database! Please verify the functionality of the SQL server.";
+                _ = ShowLogTextAsync(logText, Color.Red, 5000);
+                return false;
+            }
         }
 
-        int GetIndexFromString(string str)
+        int GetIDFromString(string str)
         {
             str = new string(str.SkipWhile(c => !char.IsDigit(c)).TakeWhile(c => char.IsDigit(c)).ToArray());
             int.TryParse(str, out int index);
             return index;
         }
 
-        ComboBox comboBoxAuthors = new ComboBox();
 
-
-        private void DGVNewBook_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            //if (viewNewBook.DGVNewBook.CurrentCell.ColumnIndex == 1 &&
-            //    viewNewBook.DGVNewBook.RowCount == viewNewBook.DGVNewBook.CurrentCell.RowIndex + 1 &&
-            //    e.Control is ComboBox)
-            //{
-            //    comboBoxAuthors = e.Control as ComboBox;
-            //    comboBoxAuthors.SelectedIndexChanged -= AuthorSelectedIndexChanged;
-            //    comboBoxAuthors.SelectedIndexChanged += AuthorSelectedIndexChanged;
-            //}
-        }
 
         private void EnableCell(DataGridViewCell dc, bool enabled)
         {
-            //dc.ReadOnly = !enabled;
-            //if (enabled)
-            //{
-            //    dc.Style.BackColor = dc.OwningColumn.DefaultCellStyle.BackColor;
-            //    dc.Style.ForeColor = dc.OwningColumn.DefaultCellStyle.ForeColor;
-            //}
-            //else
-            //{
-            //    dc.Style.BackColor = Color.LightGray;
-            //    dc.Style.ForeColor = Color.DarkGray;
-            //}
+            dc.ReadOnly = !enabled;
+            if (enabled)
+            {
+                dc.Style.BackColor = dc.OwningColumn.DefaultCellStyle.BackColor;
+                dc.Style.ForeColor = dc.OwningColumn.DefaultCellStyle.ForeColor;
+            }
+            else
+            {
+                dc.Style.BackColor = Color.LightGray;
+                dc.Style.ForeColor = Color.DarkGray;
+            }
         }
 
-        private void DGVNewAuthor_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
+        private void DGVBook_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
 
         private ICollection<Författare> GetAuthorsFromDatabase()
         {
