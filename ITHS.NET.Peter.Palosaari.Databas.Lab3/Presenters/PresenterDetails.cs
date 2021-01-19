@@ -513,6 +513,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 catch (Exception)
                 {
+                    string temp;
                     string logText = "Error while disassociating the author from the book in the SQL Server database. Please verify the functionality of the SQL server.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                 }
