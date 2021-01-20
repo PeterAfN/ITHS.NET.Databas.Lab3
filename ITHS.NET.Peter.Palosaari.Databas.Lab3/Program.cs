@@ -28,7 +28,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 
             //Presenters
             _ = new PresenterMain(viewMain, viewTreeView, viewDetails);
-            _ = new PresenterDetails(viewMain, viewTreeView, viewDetails);
+            _ = new PresenterDetails(viewMain, viewTreeView, viewDetails, viewNewAuthor);
             _ = new PresenterTreeView(viewMain, viewTreeView, viewDetails, viewNewBook, viewDeleteAuthor, viewNewAuthor);
             _ = new PresenterNewBook(viewMain, viewTreeView, viewDetails, viewNewBook);
             _ = new PresenterNewAuthor(viewMain, viewTreeView, viewDetails, viewNewAuthor);

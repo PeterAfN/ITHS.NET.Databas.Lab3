@@ -65,20 +65,20 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
                         dbContextTransaction.Commit();
                         viewDeleteAuthor.TriggerEventAuthorDeletedFromDatabase(sender, e);
-                        string logText = "The author has been successfully deleted from the SQL database.";
+                        string logText = "Save ok.";
                         UpdateItemsCombobox();
                         _ = ShowLogTextAsync(logText, Color.Green, 5000);
                     }
                     catch (Exception)
                     {
                         dbContextTransaction.Rollback(); //not needed but good practice
-                        string logText = "Error deleteting author from the SQL database! Please verify functionality of the SQL server.";
+                        string logText = "Error while saving.";
                         _ = ShowLogTextAsync(logText, Color.Red, 5000);
                     }
                 }
                 else
                 {
-                    string logText = "Error while connecting to the SQL database! Please verify functionality of the SQL server.";
+                    string logText = "Error while connecting to the SQL database.";
                     _ = ShowLogTextAsync(logText, Color.Red, 5000);
                 }
             }
@@ -125,7 +125,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 else
                 {
-                    string logText = "Could not connect to the SQL Server database! Please verify the functionality of the SQL server.";
+                    string logText = "Could not connect to the SQL Server database.";
                     _ = ShowLogTextAsync(logText, Color.Red, 5000);
                     return null;
                 }

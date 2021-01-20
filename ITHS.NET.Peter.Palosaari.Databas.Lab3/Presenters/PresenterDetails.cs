@@ -16,18 +16,21 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewMain viewMain;
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
+        private readonly IViewNewAuthor viewNewAuthor;
 
-        public PresenterDetails(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails)
+        public PresenterDetails(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails, IViewNewAuthor viewNewAuthor)
         {
             this.viewMain = viewMain;
             this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
+            this.viewNewAuthor = viewNewAuthor;
 
             this.viewDetails.DGVBook.SelectionChanged += DGVBook_SelectionChanged;
             this.viewDetails.DGVBook.CellContentClick += DGVBook_CellContentClick;
             this.viewDetails.DGVBookstore.SelectionChanged += DGVBookstore_SelectionChanged;
             this.viewTreeView._TreeView_AfterSelect += ViewTreeView_AfterSelect;
             this.viewDetails.Load += ViewDetails_Load;
+            this.viewNewAuthor.NewAuthorSavedToDatabase += ViewNewAuthor_NewAuthorSavedToDatabase;
 
             viewDetails.DGVBook.AllowUserToAddRows = false;
             AddNewDGVBookstoreCells();
@@ -125,12 +128,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             CellAuthor(sender, e); return;
                     }
                     db.SaveChanges();
-                    string logText = "The value has been successfully changed in the SQL Server database.";
+                    string logText = "Save ok.";
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
                 {
-                    string logText = "Error while changing the value in the SQL Server database. Please verify the functionality of the SQL server and the inserted data.";
+                    throw;
+                    string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
@@ -141,7 +145,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             else
             {
-                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                string logText = "Could not connect to the SQL Server database.";
                 _ = ShowLogTextAsync(logText, Color.Red, 3000);
             }
         }
@@ -160,13 +164,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         void CellAuthor(object sender, DataGridViewCellEventArgs e)
         {
+            int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
+            if (viewDetails.DGVBook[1, authorCellId].Value == null) return;
+            int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
+
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect()) 
             {
                 try
                 {
-                    int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
-                    int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
+                    //int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
+                    //int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
                     var author = db.Författare.FirstOrDefault(b => b.Id == value);
 
                     switch (e.RowIndex % 4)
@@ -183,12 +191,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     }
 
                     db.SaveChanges();
-                    string logText = "The value has been successfully changed in the SQL Server database.";
+                    string logText = "Save ok.";
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
                 {
-                    string logText = "Error while changing the value in the SQL Server database. Please verify the functionality of the SQL server and the inserted data.";
+                    throw;
+                    string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
@@ -199,7 +208,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             else
             {
-                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                string logText = "Could not connect to the SQL Server database.";
                 _ = ShowLogTextAsync(logText, Color.Red, 3000);
                 return;
             }
@@ -236,12 +245,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             butiker.Land = viewDetails.DGVBookstore[1, 5].Value.ToString(); break;
                     }
                     db.SaveChanges();
-                    string logText = "The value has been successfully changed in the SQL Server database.";
+                    string logText = "Save ok.";
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
                 {
-                    string logText = "Error while changing the value in the SQL Server database. Please verify the functionality of the SQL server and the inserted data.";
+                    string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
@@ -252,7 +261,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             else
             {
-                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                string logText = "Could not connect to the SQL Server database.";
                 _ = ShowLogTextAsync(logText, Color.Red, 3000);
             }
         }
@@ -361,13 +370,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void ViewTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             userNavigating = true;
-
-            if (e.Node.Tag is Butiker selectedOrder)
+            if (e.Node.Tag is Butiker butiker)
             {
                 ClearDeleteLinks();
                 ClearBook();
                 viewDetails.DGVBook.Enabled = false;
-                UpdateBookstore(selectedOrder);
+                UpdateBookstore(butiker);
             }
             else if (e.Node.Tag is LagerSaldo lagerSaldo)
             {
@@ -377,42 +385,54 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     UpdateBookstore(parentOrder);
                     UpdateBook(lagerSaldo);
                     ClearDataFromAllBookAuthorCells();
-                    ExtendDGVWithNewAuthorCells(lagerSaldo);
+
+                    GetDataFromDatabase();
+                    //var författare = GetAuthorsFromDatabase();
+                    var authorBookJunction = FörfattareBöckerJunction;/*GetAuthorBookJunctionFromDatabase();*/
+                    //ExtendDGVWithNewAuthorCells(lagerSaldo);
+                    ExtendDGVWithNewAuthorCells(authorBookJunction, lagerSaldo.Isbn);
+
+                    DeActivateEvent_CellValueChanged();
                     AddAuthorCell(viewDetails.DGVBook.RowCount);
+                    ReActivateEvent_CellValueChanged();
                 }
             }
             SetDGVCellsReadOnly();
+            if (viewDetails.DGVBook.FirstDisplayedScrollingRowIndex != -1)
+                viewDetails.DGVBook.FirstDisplayedScrollingRowIndex = 0;
             userNavigating = false;
         }
 
-        void ExtendDGVWithNewAuthorCells(LagerSaldo lagerSaldo)
+        void ExtendDGVWithNewAuthorCells(ICollection<FörfattareBöckerJunction> authorBookJunction, string bookID)
         {
             userNavigating = true;
-
             authorsConnectedToCurrentBook.Clear();
             int i = 0;
-            foreach (var item in lagerSaldo.IsbnNavigation.FörfattareBöckerJunction)
+            foreach (var j in authorBookJunction)
             {
-                viewDetails.DGVBook.Rows.Add(4);
-                viewDetails.DGVBook[0, 11 + (i * 4)].Value = "Author Id:";
-                viewDetails.DGVBook[0, 12 + (i * 4)].Value = "Author First Name:";
-                viewDetails.DGVBook[0, 13 + (i * 4)].Value = "Author Last Name:";
-                viewDetails.DGVBook[0, 14 + (i * 4)].Value = "Author Date of Birth";
-                viewDetails.DGVBook[1, 11 + (i * 4)].Value = item.FörfattareId;
-                authorsConnectedToCurrentBook.Add(item.FörfattareId);
-                viewDetails.DGVBook[2, 11 + (i * 4)].Value = "remove";
-                viewDetails.DGVBook[1, 11 + (i * 4)].ReadOnly = true;
-                viewDetails.DGVBook[1, 12 + (i * 4)].Value = item.Författare.Förnamn;
-                viewDetails.DGVBook[1, 13 + (i * 4)].Value = item.Författare.Efternamn;
-                viewDetails.DGVBook[1, 14 + (i * 4)].Value = item.Författare.Födelsedatum;
-                i++;
+                if (j.BokId == bookID)
+                {
+                    viewDetails.DGVBook.Rows.Add(4);
+                    viewDetails.DGVBook[0, 11 + (i * 4)].Value = "Author Id:";
+                    viewDetails.DGVBook[0, 12 + (i * 4)].Value = "Author First Name:";
+                    viewDetails.DGVBook[0, 13 + (i * 4)].Value = "Author Last Name:";
+                    viewDetails.DGVBook[0, 14 + (i * 4)].Value = "Author Date of Birth";
+                    viewDetails.DGVBook[1, 11 + (i * 4)].Value = j.FörfattareId/*item.FörfattareId*/;
+                    authorsConnectedToCurrentBook.Add(j.FörfattareId);
+                    viewDetails.DGVBook[2, 11 + (i * 4)].Value = "remove";
+                    viewDetails.DGVBook[1, 11 + (i * 4)].ReadOnly = true;
+                    viewDetails.DGVBook[1, 12 + (i * 4)].Value = j.Författare.Förnamn/*a.Författare.Förnamn*/;
+                    viewDetails.DGVBook[1, 13 + (i * 4)].Value = j.Författare.Efternamn/*a.Författare.Efternamn*/;
+                    viewDetails.DGVBook[1, 14 + (i * 4)].Value = j.Författare.Födelsedatum/*a.Författare.Födelsedatum*/;
+                    i++;
+                }
             }
-
             userNavigating = false;
         }
 
         void ExtendDGVWithNewAuthorCells(int authorId, string bookId, int startIndexNewAuthor)
         {
+            userNavigating = true;
             viewDetails.DGVBook.Rows.Add(3);
             viewDetails.DGVBook[0, startIndexNewAuthor].Value = "Author Id:";
             viewDetails.DGVBook[0, startIndexNewAuthor + 1].Value = "Author First Name:";
@@ -425,6 +445,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBook[1, startIndexNewAuthor + 2].Value = authorsAll.FirstOrDefault(a => a.Id == authorId).Efternamn;
             viewDetails.DGVBook[1, startIndexNewAuthor + 3].Value = authorsAll.FirstOrDefault(a => a.Id == authorId).Födelsedatum;
             viewDetails.DGVBook[1, startIndexNewAuthor + 3].Selected = true;
+            userNavigating = false;
+        }
+
+        private void ViewNewAuthor_NewAuthorSavedToDatabase(object sender, EventArgs e)
+        {
+            //todo: When user adds new author to a book which is already selected in the treeeview, the new author is not visible. 
+            //The user has to select another book and the select the book again for the author to show.
         }
 
         //NEW
@@ -454,7 +481,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         //2. add combobox to the author row. This method is only run when user clicks a cell "Click here to add an author"
         private void AddComboboxToAuthorCell(int rowIndexNewCell)
         {
-            cBAuthorsCell = null;
+            Debug.WriteLine("AddComboboxToAuthorCell");
             cBAuthorsCell = new DataGridViewComboBoxCell();
             cBAuthorsCell.Items.Clear();
 
@@ -465,19 +492,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
 
             viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1] = cBAuthorsCell;
-            viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[1].Cells[1];               //only way to update cell
-            viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1]; //only way to update cell
+            viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[1].Cells[1];
+            viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1];
             viewDetails.DGVBook.CellClick -= DGVBook_CellClick;
         }
 
         //handle clicks on the author cell (when user decides to add an author to book)
         private void DGVBook_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            Debug.WriteLine("DGVBook_CellClick");
             if (viewDetails.DGVBook.CurrentCell.ColumnIndex == 1 &&
                 viewDetails.DGVBook.RowCount == viewDetails.DGVBook.CurrentCell.RowIndex + 1)
             {
+                userNavigating = true;
                 viewDetails.DGVBook.Columns[2].Visible = false;
                 AddComboboxToAuthorCell(viewDetails.DGVBook.CurrentCell.RowIndex);
+                userNavigating = false;
             }
         }
 
@@ -485,7 +515,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void DGVBook_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex != 2) return;
-
+            DeActivateEvent_CellValueChanged();
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
@@ -505,7 +535,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex);
                     DetailsChangedEventArgs args = new DetailsChangedEventArgs();
                     TriggerEvent(sender, args);
-                    string logText = "The author has been successfully disassociated from the book in the SQL Server database.";
+                    string logText = "Save ok.";
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
 
                     if (authorsConnectedToCurrentBook.Contains(författareId)) authorsConnectedToCurrentBook.Remove(författareId);
@@ -513,16 +543,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 catch (Exception)
                 {
-                    string temp;
-                    string logText = "Error while disassociating the author from the book in the SQL Server database. Please verify the functionality of the SQL server.";
+                    throw;
+                    string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                 }
             }
             else
             {
-                string logText = "Could not connect to the SQL Server database. Please verify the functionality of the SQL server.";
+                string logText = "Could not connect to the SQL Server database.";
                 _ = ShowLogTextAsync(logText, Color.Red, 3000);
-            }         
+            }
+            ReActivateEvent_CellValueChanged();
         }
 
         ComboBox comboBoxAuthors = new ComboBox();
@@ -540,58 +571,27 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
         }
 
+        DataGridViewComboBoxEditingControl dGVCB;
+
         //Handle when author-combobox selected index has changed.
         private void AuthorSelectedIndexChanged(object sender, EventArgs e)
         {
-            //if (cBAuthorsCell.Items.Count > 1) AddAuthorCell(viewDetails.DGVBook.CurrentRow.Index + 1);
-
-            //var selected = viewTreeView.TreeView.SelectedNode;
-            //viewTreeView.TreeView.SelectedNode = null;
-            //viewTreeView.TreeView.SelectedNode = selected;
-
-            DataGridViewComboBoxEditingControl dGVCB = sender as DataGridViewComboBoxEditingControl;
+            dGVCB = sender as DataGridViewComboBoxEditingControl;
 
             int authorIdFromCBSelection = GetIDFromString(dGVCB.SelectedItem.ToString());
             string bookId = viewDetails.DGVBook[1, 0].Value.ToString();
 
             if (SaveAuthorToDatabase(authorIdFromCBSelection, bookId))
             {
-                //DetailsChangedEventArgs args = new DetailsChangedEventArgs();
-                //TriggerEvent(sender, args); //  <--  this triggers method ViewDetails_DataGridViewUpdated() in PresenterTreeView
-
                 viewDetails.DGVBook.Rows[viewDetails.DGVBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
                 ExtendDGVWithNewAuthorCells(authorIdFromCBSelection, bookId, viewDetails.DGVBook.CurrentRow.Index);
             }
 
             viewDetails.DGVBook[2, viewDetails.DGVBook.CurrentRow.Index].Value = "remove";
-            //viewDetails.DGVBook[1, viewDetails.DGVBook.CurrentRow.Index].Value = dGVCB.SelectedItem.ToString();
-            //EnableCell(viewDetails.DGVBook[1, viewDetails.DGVBook.CurrentRow.Index], false);
-
-            //int selectedCBIndex = GetIndexFromString(dGVCB.SelectedItem.ToString());
             if (!authorsConnectedToCurrentBook.Contains(authorIdFromCBSelection)) authorsConnectedToCurrentBook.Add(authorIdFromCBSelection);
-
             viewDetails.DGVBook.Columns[2].Visible = true;
-
             AddAuthorCell(viewDetails.DGVBook.RowCount);
         }
-
-        private void DGVNewBook_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentRow.Index].Value.ToString() == "remove")
-            //{
-            //    int authorId =
-            //        GetIndexFromString(viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index].Value.ToString());
-
-            //    if (authorIDs.Contains(authorId))
-            //        if (authorIDs.Remove(authorId))
-            //        {
-            //            viewNewBook.DGVNewBook.Rows.RemoveAt(e.RowIndex);
-            //            if (viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.RowCount - 1].Value.ToString() != "Click here to add an author")
-            //                AddRowActivateClickEvent(viewNewBook.DGVNewBook.RowCount);
-            //        }
-            //}
-        }
-
 
         //Save the author selected in the comboBox 
         private bool SaveAuthorToDatabase(int authorId, string bookId)
@@ -604,14 +604,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     $"INSERT INTO FörfattareBöcker_Junction VALUES (({authorId}), ({bookId}))");
                 db.SaveChanges();
                 dbContextTransaction.Commit();
-                string logText = "The author has been successfully added to the SQL database.";
+                string logText = "Save ok.";
                 _ = ShowLogTextAsync(logText, Color.Green, 5000);
                 return true;
             }
             catch (Exception)
             {
+                throw;
                 dbContextTransaction.Rollback();
-                string logText = "Error while adding the author to the SQL database! Please verify the functionality of the SQL server.";
+                string logText = "Error while saving.";
                 _ = ShowLogTextAsync(logText, Color.Red, 5000);
                 return false;
             }
@@ -623,8 +624,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             int.TryParse(str, out int index);
             return index;
         }
-
-
 
         private void EnableCell(DataGridViewCell dc, bool enabled)
         {
@@ -658,6 +657,61 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 else return null;
             }
+        }
+
+        private ICollection<FörfattareBöckerJunction> GetAuthorBookJunctionFromDatabase()
+        {
+            using var db = new Bokhandel_Lab2Context();
+            {
+                if (db.Database.CanConnect())
+                {
+                    ICollection<FörfattareBöckerJunction> output = new List<FörfattareBöckerJunction>();
+                    foreach (FörfattareBöckerJunction f in db.FörfattareBöckerJunction)
+                    {
+                        output.Add(f);
+                    }
+                    return output;
+                }
+                else return null;
+            }
+        }
+
+        private void GetDataFromDatabase()
+        {
+            using var db = new Bokhandel_Lab2Context();
+            if (db.Database.CanConnect())
+            {
+                Böcker = db.Böcker.ToList();
+                Butiker = db.Butiker.ToList();
+                LagerSaldo = db.LagerSaldon.ToList();
+                FörfattareBöckerJunction = db.FörfattareBöckerJunction.ToList();
+                Författare = db.Författare.ToList();
+                Förlag = db.Förlag.ToList();
+                db.ChangeTracker.Clear();
+            }
+            else
+            {
+                string logText = "Could not connect to the SQL Server database.";
+                _ = ShowLogTextAsync(logText, Color.Red, 5000);
+            }
+        }
+
+        public ICollection<Butiker> Butiker { get; set; }
+        public ICollection<Böcker> Böcker { get; set; }
+        public ICollection<LagerSaldo> LagerSaldo { get; set; }
+        public ICollection<FörfattareBöckerJunction> FörfattareBöckerJunction { get; set; }
+        public ICollection<Författare> Författare { get; set; }
+        public ICollection<Förlag> Förlag { get; set; }
+
+        void DeActivateEvent_CellValueChanged()
+        {
+            viewDetails.DGVBook.CellValueChanged -= DGVBook_CellValueChanged;
+        }
+
+        void ReActivateEvent_CellValueChanged()
+        {
+            viewDetails.DGVBook.CellValueChanged -= DGVBook_CellValueChanged;
+            viewDetails.DGVBook.CellValueChanged += DGVBook_CellValueChanged;
         }
     }
 }

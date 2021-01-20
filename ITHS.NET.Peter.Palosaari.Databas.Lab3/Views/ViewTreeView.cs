@@ -10,6 +10,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             CreateEvents();
         }
 
+
         private void CreateEvents()
         {
             treeView.AfterSelect += TreeView_AfterSelect;
@@ -37,5 +38,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             get { return contextMenuStripTreeView; }
             set { contextMenuStripTreeView = value; }
         }
+
     }
 }

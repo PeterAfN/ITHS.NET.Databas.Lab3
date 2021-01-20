@@ -62,12 +62,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewTreeView.ContextMenuStripTreeView.ItemClicked += ContextMenuStripTreeView_ItemClicked;
             viewTreeView._TreeView_AfterSelect += ViewTreeView__TreeView_AfterSelect;
             viewDeleteAuthor.AuthorDeletedFromDatabase += ViewDeleteAuthor_AuthorDeletedFromDatabase;
-            viewNewAuthor.NewAuthorSavedToDatabase += ViewNewAuthor_NewAuthorSavedToDatabase;
+            viewTreeView.TreeView.BeforeCollapse += TreeView_BeforeCollapse;
         }
 
-        private void ViewNewAuthor_NewAuthorSavedToDatabase(object sender, EventArgs e)
+        private void TreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            ViewDeleteAuthor_AuthorDeletedFromDatabase(sender, EventArgs.Empty);
+            e.Cancel = true;
         }
 
         private void ViewDeleteAuthor_AuthorDeletedFromDatabase(object sender, EventArgs e)
@@ -86,7 +86,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void ViewTreeView__TreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (viewTreeView.TreeView.SelectedNode.Parent != null)
+            if (viewTreeView.TreeView?.SelectedNode?.Parent != null)
                 if (e.Node.Tag is LagerSaldo selectedLagerSaldo)
                     IDCurrentSelectedBook = selectedLagerSaldo.Isbn.ToString();
         }
@@ -122,13 +122,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                         dbContextTransaction.Commit();
 
                         ViewNewBook_NewBookSavedToDatabase(this, EventArgs.Empty);
-                        string logText = "The book has been successfully deleted from the SQL database.";
+                        string logText = "Save ok.";
                         _ = ShowLogTextAsync(logText, Color.Green, 5000);
                     }
                     catch (Exception)
                     {
                         dbContextTransaction.Rollback();
-                        string logText = "Error while deleting from the SQL database! Please verify the functionality of the SQL server.";
+                        string logText = "Error while saving.";
                         _ = ShowLogTextAsync(logText, Color.Red, 5000);
                     }
                 }
@@ -183,11 +183,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         {
             viewTreeView.TreeView.ExpandAll();
             if (childNode == -1)
+            {
                 viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode];
+                viewTreeView.TreeView?.SelectedNode?.EnsureVisible();
+                viewTreeView.TreeView?.Focus();
+            }
             else
+            {
                 viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode].Nodes[childNode];
-            viewTreeView.TreeView?.SelectedNode?.EnsureVisible();
-            viewTreeView.TreeView?.Focus();
+            }
+
+
         }
 
         private void ViewDetails_DataGridViewUpdated(object sender, DetailsChangedEventArgs e)
@@ -198,15 +204,15 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void UpdateTreeviewWithNewData(object sender, DetailsChangedEventArgs e)
         {
             viewTreeView.TreeView.BeginUpdate();
-            Point ScrollPos = GetTreeViewScrollPos(viewTreeView.TreeView);
 
+            Point ScrollPos = GetTreeViewScrollPos(viewTreeView.TreeView);
             viewTreeView.PreventEvent = true;
             GetDataFromDatabase();
             AddNodesToTreeview(Butiker);
             SelectTreeviewNode(e.IndexSelectedParentNode, e.IndexSelectedChildNode);
             viewTreeView.PreventEvent = false;
-
             SetTreeViewScrollPos(viewTreeView.TreeView, ScrollPos);
+
             viewTreeView.TreeView.EndUpdate();
         }
 
@@ -215,8 +221,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             using var db = new Bokhandel_Lab2Context();
             if (db.Database.CanConnect())
             {
-                string logText = "Connected to the SQL Server database.";
-                _ = ShowLogTextAsync(logText, Color.Green, 5000);
                 Böcker = db.Böcker.ToList();
                 Butiker = db.Butiker.ToList();
                 LagerSaldo = db.LagerSaldon.ToList();
@@ -227,7 +231,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             else
             {
-                string logText = "Could not connect to the SQL Server database! Please verify the functionality of the SQL server.";
+                string logText = "Could not connect to the SQL Server database.";
                 _ = ShowLogTextAsync(logText, Color.Red, 5000);
             }
         }

@@ -90,13 +90,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                         db.SaveChanges();
                         dbContextTransaction.Commit();
                         viewNewAuthor.TriggerEventNewAuthorSavedToDatabase(sender, e);
-                        string logText = "The author has been successfully added to the SQL database.";
+                        string logText = "Save ok.";
                         _ = ShowLogTextAsync(logText, Color.Green, 5000);
                     }
                     catch (Exception)
                     {
                         dbContextTransaction.Rollback(); //not needed but good practice
-                        string logText = "Error saving to the SQL database! Please verify the inserted data and the functionality of the SQL server.";
+                        string logText = "Error while saving.";
                         _ = ShowLogTextAsync(logText, Color.Red, 5000);
                     }
                 }
