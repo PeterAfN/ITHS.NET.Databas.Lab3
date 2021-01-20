@@ -31,13 +31,11 @@
             this.panelTop = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddAuthor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddBook = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDeleteAuthor = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.panelMain = new System.Windows.Forms.Panel();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.panelLog = new System.Windows.Forms.Panel();
@@ -58,34 +56,34 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(896, 24);
+            this.panelTop.Size = new System.Drawing.Size(1109, 24);
             this.panelTop.TabIndex = 0;
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.tasksToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.tasksToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(896, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1109, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem});
+            this.toolStripMenuItemExit});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
-            // exitToolStripMenuItem
+            // toolStripMenuItemExit
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
+            this.toolStripMenuItemExit.Name = "toolStripMenuItemExit";
+            this.toolStripMenuItemExit.Size = new System.Drawing.Size(93, 22);
+            this.toolStripMenuItemExit.Text = "E&xit";
+            this.toolStripMenuItemExit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // tasksToolStripMenuItem
             // 
@@ -108,7 +106,6 @@
             this.toolStripMenuItemAddBook.Name = "toolStripMenuItemAddBook";
             this.toolStripMenuItemAddBook.Size = new System.Drawing.Size(159, 22);
             this.toolStripMenuItemAddBook.Text = "Add new book";
-            this.toolStripMenuItemAddBook.Click += new System.EventHandler(this.toolStripMenuItemAddBook_Click);
             // 
             // toolStripMenuItemDeleteAuthor
             // 
@@ -116,27 +113,13 @@
             this.toolStripMenuItemDeleteAuthor.Size = new System.Drawing.Size(159, 22);
             this.toolStripMenuItemDeleteAuthor.Text = "Delete author";
             // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItemAbout});
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-            this.aboutToolStripMenuItem.Text = "About";
-            // 
-            // ToolStripMenuItemAbout
-            // 
-            this.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout";
-            this.ToolStripMenuItemAbout.Size = new System.Drawing.Size(107, 22);
-            this.ToolStripMenuItemAbout.Text = "About";
-            // 
             // panelMain
             // 
             this.panelMain.Controls.Add(this.splitContainerMain);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 24);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(896, 469);
+            this.panelMain.Size = new System.Drawing.Size(1109, 634);
             this.panelMain.TabIndex = 1;
             // 
             // splitContainerMain
@@ -155,17 +138,17 @@
             this.splitContainerMain.Panel2.Controls.Add(this.panelLog);
             this.splitContainerMain.Panel2.Margin = new System.Windows.Forms.Padding(11);
             this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(3, 2, 11, 0);
-            this.splitContainerMain.Size = new System.Drawing.Size(896, 469);
-            this.splitContainerMain.SplitterDistance = 284;
+            this.splitContainerMain.Size = new System.Drawing.Size(1109, 634);
+            this.splitContainerMain.SplitterDistance = 351;
             this.splitContainerMain.TabIndex = 0;
             // 
             // panelLog
             // 
             this.panelLog.Controls.Add(this.labelLog);
             this.panelLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelLog.Location = new System.Drawing.Point(3, 454);
+            this.panelLog.Location = new System.Drawing.Point(3, 619);
             this.panelLog.Name = "panelLog";
-            this.panelLog.Size = new System.Drawing.Size(594, 15);
+            this.panelLog.Size = new System.Drawing.Size(740, 15);
             this.panelLog.TabIndex = 1;
             // 
             // labelLog
@@ -173,7 +156,7 @@
             this.labelLog.AutoSize = true;
             this.labelLog.Dock = System.Windows.Forms.DockStyle.Right;
             this.labelLog.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelLog.Location = new System.Drawing.Point(586, 0);
+            this.labelLog.Location = new System.Drawing.Point(732, 0);
             this.labelLog.Name = "labelLog";
             this.labelLog.Size = new System.Drawing.Size(8, 12);
             this.labelLog.TabIndex = 1;
@@ -183,7 +166,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 504);
+            this.ClientSize = new System.Drawing.Size(1109, 669);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTop);
             this.DoubleBuffered = true;
@@ -194,7 +177,6 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bookstore demo client - Communicates with a SQL Server database. ";
-            this.Load += new System.EventHandler(this.ViewMain_Load);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -216,10 +198,8 @@
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
         private System.Windows.Forms.ToolStripMenuItem tasksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAbout;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddAuthor;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMoveBookStore;
         private System.Windows.Forms.SplitContainer splitContainerMain;

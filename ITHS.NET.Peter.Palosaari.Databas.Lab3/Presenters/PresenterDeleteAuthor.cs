@@ -1,6 +1,5 @@
 ﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -17,6 +16,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
         private readonly IViewDeleteAuthor viewDeleteAuthor;
+        SqlData sqlData;
 
         public PresenterDeleteAuthor(IViewMain viewMain, 
             IViewTreeView viewBookstores, 
@@ -27,6 +27,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewTreeView = viewBookstores;
             this.viewDetails = viewDetails;
             this.viewDeleteAuthor = viewDeleteAuthor;
+
+            sqlData = new SqlData();
 
             viewMain.ToolStripMenuItemDeleteAuthor.Click += ToolStripMenuItemDeleteAuthor_Click;
             this.viewDeleteAuthor.ButtonClose.Click += ButtonClose_Click;
@@ -84,51 +86,23 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e)
-        {
-            viewDeleteAuthor.Hide();
-        }
+        private void ButtonClose_Click(object sender, EventArgs e) => viewDeleteAuthor.Hide();
 
         private void ToolStripMenuItemDeleteAuthor_Click(object sender, EventArgs e)
         {
             UpdateItemsCombobox();
-
-            using (Form form = new Form())
-            {
-                viewDeleteAuthor.ShowDialog();
-            }
+            using Form form = new Form();
+            viewDeleteAuthor.ShowDialog();
         }
 
         void UpdateItemsCombobox()
         {
-            var authors = GetAuthorsFromDatabase();
+            sqlData.Update(); var authors = sqlData.Författare;
             viewDeleteAuthor.ComboBoxDeleteAuthor.Items.Clear();
 
             foreach (Författare f in authors)
             {
                 viewDeleteAuthor.ComboBoxDeleteAuthor.Items.Add($"Id:{f.Id} - {f.Förnamn} {f.Efternamn} - {f.Födelsedatum}");
-            }
-        }
-
-        private ICollection<Författare> GetAuthorsFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<Författare> output = new List<Författare>();
-                    foreach (Författare f in db.Författare)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else
-                {
-                    string logText = "Could not connect to the SQL Server database.";
-                    _ = ShowLogTextAsync(logText, Color.Red, 5000);
-                    return null;
-                }
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 {
     public class SqlData

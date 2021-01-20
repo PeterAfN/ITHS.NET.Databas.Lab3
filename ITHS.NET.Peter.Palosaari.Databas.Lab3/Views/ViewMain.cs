@@ -54,18 +54,19 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             set { toolStripMenuItemDeleteAuthor = value; }
         }
 
+        public ToolStripMenuItem ToolStripMenuItemExit
+        {
+            get { return toolStripMenuItemExit; }
+            set { toolStripMenuItemExit = value; }
+        }
+
         public Label LabelLog
         {
             get { return labelLog; }
             set { labelLog = value; }
         }
 
-        private void ViewMain_Load(object sender, System.EventArgs e)
-        {
-
-        }
-
-        private void toolStripMenuItemAddBook_Click(object sender, System.EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
 
         }
