@@ -3,7 +3,6 @@ using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +16,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
         private readonly IViewNewAuthor viewNewAuthor;
+        SqlData sqlData;
 
         public PresenterDetails(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails, IViewNewAuthor viewNewAuthor)
         {
@@ -24,6 +24,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
             this.viewNewAuthor = viewNewAuthor;
+
+            sqlData = new SqlData();
 
             this.viewDetails.DGVBook.SelectionChanged += DGVBook_SelectionChanged;
             this.viewDetails.DGVBook.CellContentClick += DGVBook_CellContentClick;
@@ -173,8 +175,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             {
                 try
                 {
-                    //int authorCellId = e.RowIndex - (e.RowIndex - 11) % 4;
-                    //int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
                     var author = db.Författare.FirstOrDefault(b => b.Id == value);
 
                     switch (e.RowIndex % 4)
@@ -213,7 +213,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 return;
             }
         }
-
 
         private void DGVBookstore_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -265,7 +264,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 _ = ShowLogTextAsync(logText, Color.Red, 3000);
             }
         }
-
 
         private void RestoreCellValue()
         {
@@ -360,11 +358,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBook[1, 6].ReadOnly = true;                                              //publisher id
         }
 
-        //**********************************************************************************************************************************
-        //**********************************************************************************************************************************
-        //**********************************************************************************************************************************
-        //**********************************************************************************************************************************
-
         bool userNavigating = false;
 
         private void ViewTreeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -379,19 +372,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             else if (e.Node.Tag is LagerSaldo lagerSaldo)
             {
-                if (e.Node.Parent.Tag is Butiker parentOrder)
+                if (e.Node.Parent.Tag is Butiker butik)
                 {
                     viewDetails.DGVBook.Enabled = true;
-                    UpdateBookstore(parentOrder);
+                    UpdateBookstore(butik);
                     UpdateBook(lagerSaldo);
                     ClearDataFromAllBookAuthorCells();
-
-                    GetDataFromDatabase();
-                    //var författare = GetAuthorsFromDatabase();
-                    var authorBookJunction = FörfattareBöckerJunction;/*GetAuthorBookJunctionFromDatabase();*/
-                    //ExtendDGVWithNewAuthorCells(lagerSaldo);
-                    ExtendDGVWithNewAuthorCells(authorBookJunction, lagerSaldo.Isbn);
-
+                    sqlData.Update();
+                    ExtendDGVWithNewAuthorCells(sqlData.FörfattareBöckerJunction, lagerSaldo.Isbn);
                     DeActivateEvent_CellValueChanged();
                     AddAuthorCell(viewDetails.DGVBook.RowCount);
                     ReActivateEvent_CellValueChanged();
@@ -417,13 +405,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     viewDetails.DGVBook[0, 12 + (i * 4)].Value = "Author First Name:";
                     viewDetails.DGVBook[0, 13 + (i * 4)].Value = "Author Last Name:";
                     viewDetails.DGVBook[0, 14 + (i * 4)].Value = "Author Date of Birth";
-                    viewDetails.DGVBook[1, 11 + (i * 4)].Value = j.FörfattareId/*item.FörfattareId*/;
+                    viewDetails.DGVBook[1, 11 + (i * 4)].Value = j.FörfattareId;
                     authorsConnectedToCurrentBook.Add(j.FörfattareId);
                     viewDetails.DGVBook[2, 11 + (i * 4)].Value = "remove";
                     viewDetails.DGVBook[1, 11 + (i * 4)].ReadOnly = true;
-                    viewDetails.DGVBook[1, 12 + (i * 4)].Value = j.Författare.Förnamn/*a.Författare.Förnamn*/;
-                    viewDetails.DGVBook[1, 13 + (i * 4)].Value = j.Författare.Efternamn/*a.Författare.Efternamn*/;
-                    viewDetails.DGVBook[1, 14 + (i * 4)].Value = j.Författare.Födelsedatum/*a.Författare.Födelsedatum*/;
+                    viewDetails.DGVBook[1, 12 + (i * 4)].Value = j.Författare.Förnamn;
+                    viewDetails.DGVBook[1, 13 + (i * 4)].Value = j.Författare.Efternamn;
+                    viewDetails.DGVBook[1, 14 + (i * 4)].Value = j.Författare.Födelsedatum;
                     i++;
                 }
             }
@@ -454,18 +442,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             //The user has to select another book and the select the book again for the author to show.
         }
 
-        //NEW
-        //**********************************************************************************************************************************
-        //**********************************************************************************************************************************
-        //**********************************************************************************************************************************
-
         private ICollection<Författare> authorsAll = new List<Författare>();
         private ICollection<int> authorsConnectedToCurrentBook = new List<int>();
 
         //1. add author row (no combobox). Is run everytime a user select a treeview node.
         void AddAuthorCell(int newRowIndex)
         {
-            authorsAll = GetAuthorsFromDatabase();
+            sqlData.Update();
+            authorsAll = sqlData.Författare;
             if (authorsAll.Count() == authorsConnectedToCurrentBook.Count()) return;
 
             viewDetails.DGVBook.Rows.Add(1);
@@ -481,7 +465,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         //2. add combobox to the author row. This method is only run when user clicks a cell "Click here to add an author"
         private void AddComboboxToAuthorCell(int rowIndexNewCell)
         {
-            Debug.WriteLine("AddComboboxToAuthorCell");
             cBAuthorsCell = new DataGridViewComboBoxCell();
             cBAuthorsCell.Items.Clear();
 
@@ -500,7 +483,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         //handle clicks on the author cell (when user decides to add an author to book)
         private void DGVBook_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            Debug.WriteLine("DGVBook_CellClick");
             if (viewDetails.DGVBook.CurrentCell.ColumnIndex == 1 &&
                 viewDetails.DGVBook.RowCount == viewDetails.DGVBook.CurrentCell.RowIndex + 1)
             {
@@ -586,7 +568,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewDetails.DGVBook.Rows[viewDetails.DGVBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
                 ExtendDGVWithNewAuthorCells(authorIdFromCBSelection, bookId, viewDetails.DGVBook.CurrentRow.Index);
             }
-
             viewDetails.DGVBook[2, viewDetails.DGVBook.CurrentRow.Index].Value = "remove";
             if (!authorsConnectedToCurrentBook.Contains(authorIdFromCBSelection)) authorsConnectedToCurrentBook.Add(authorIdFromCBSelection);
             viewDetails.DGVBook.Columns[2].Visible = true;
@@ -642,71 +623,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void DGVBook_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
 
-        private ICollection<Författare> GetAuthorsFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<Författare> output = new List<Författare>();
-                    foreach (Författare f in db.Författare)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else return null;
-            }
-        }
-
-        private ICollection<FörfattareBöckerJunction> GetAuthorBookJunctionFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<FörfattareBöckerJunction> output = new List<FörfattareBöckerJunction>();
-                    foreach (FörfattareBöckerJunction f in db.FörfattareBöckerJunction)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else return null;
-            }
-        }
-
-        private void GetDataFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            if (db.Database.CanConnect())
-            {
-                Böcker = db.Böcker.ToList();
-                Butiker = db.Butiker.ToList();
-                LagerSaldo = db.LagerSaldon.ToList();
-                FörfattareBöckerJunction = db.FörfattareBöckerJunction.ToList();
-                Författare = db.Författare.ToList();
-                Förlag = db.Förlag.ToList();
-                db.ChangeTracker.Clear();
-            }
-            else
-            {
-                string logText = "Could not connect to the SQL Server database.";
-                _ = ShowLogTextAsync(logText, Color.Red, 5000);
-            }
-        }
-
-        public ICollection<Butiker> Butiker { get; set; }
-        public ICollection<Böcker> Böcker { get; set; }
-        public ICollection<LagerSaldo> LagerSaldo { get; set; }
-        public ICollection<FörfattareBöckerJunction> FörfattareBöckerJunction { get; set; }
-        public ICollection<Författare> Författare { get; set; }
-        public ICollection<Förlag> Förlag { get; set; }
-
-        void DeActivateEvent_CellValueChanged()
-        {
-            viewDetails.DGVBook.CellValueChanged -= DGVBook_CellValueChanged;
-        }
+        void DeActivateEvent_CellValueChanged() => viewDetails.DGVBook.CellValueChanged -= DGVBook_CellValueChanged;
 
         void ReActivateEvent_CellValueChanged()
         {
