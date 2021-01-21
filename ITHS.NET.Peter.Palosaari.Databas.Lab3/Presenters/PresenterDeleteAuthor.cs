@@ -19,12 +19,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewDeleteAuthor viewDeleteAuthor;
 
         public PresenterDeleteAuthor(IViewMain viewMain, 
-            IViewTreeView viewBookstores, 
+            IViewTreeView viewTreeView, 
             IViewDetails viewDetails,
             IViewDeleteAuthor viewDeleteAuthor)
         {
             this.viewMain = viewMain;
-            this.viewTreeView = viewBookstores;
+            this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
             this.viewDeleteAuthor = viewDeleteAuthor;
 
@@ -93,10 +93,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         {
             UpdateItemsCombobox();
 
-            using (Form form = new Form())
-            {
-                viewDeleteAuthor.ShowDialog();
-            }
+            using Form form = new Form();
+            viewDeleteAuthor.ShowDialog();
         }
 
         void UpdateItemsCombobox()

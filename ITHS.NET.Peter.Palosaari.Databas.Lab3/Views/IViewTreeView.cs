@@ -10,7 +10,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
         ContextMenuStrip ContextMenuStripTreeView { get; set; }
 
         event EventHandler Load;
-        event TreeViewEventHandler _TreeView_AfterSelect;
+        event TreeViewEventHandler TreeViewAfterSelect;
 
         bool PreventEvent { get; set; }
     }

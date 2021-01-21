@@ -20,7 +20,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewNewBook viewNewBook;
         private readonly IViewDeleteAuthor viewDeleteAuthor;
         private readonly IViewNewAuthor viewNewAuthor;
-        SqlData sqlData;
+        private readonly SqlData sqlData;
 
         public PresenterTreeView(IViewMain viewMain, 
             IViewTreeView viewBookstores, 
@@ -53,7 +53,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewTreeView.TreeView.MouseDown += TreeView_MouseDown;
             viewNewBook.NewBookSavedToDatabase += ViewNewBook_NewBookSavedToDatabase;
             viewTreeView.ContextMenuStripTreeView.ItemClicked += ContextMenuStripTreeView_ItemClicked;
-            viewTreeView._TreeView_AfterSelect += ViewTreeView__TreeView_AfterSelect;
+            viewTreeView.TreeViewAfterSelect += ViewTreeView__TreeView_AfterSelect;
             viewDeleteAuthor.AuthorDeletedFromDatabase += ViewDeleteAuthor_AuthorDeletedFromDatabase;
             viewTreeView.TreeView.BeforeCollapse += TreeView_BeforeCollapse;
         }

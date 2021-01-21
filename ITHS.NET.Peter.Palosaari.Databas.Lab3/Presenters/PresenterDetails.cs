@@ -16,7 +16,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
         private readonly IViewNewAuthor viewNewAuthor;
-        SqlData sqlData;
+        private readonly SqlData sqlData;
 
         public PresenterDetails(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails, IViewNewAuthor viewNewAuthor)
         {
@@ -30,7 +30,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewDetails.DGVBook.SelectionChanged += DGVBook_SelectionChanged;
             this.viewDetails.DGVBook.CellContentClick += DGVBook_CellContentClick;
             this.viewDetails.DGVBookstore.SelectionChanged += DGVBookstore_SelectionChanged;
-            this.viewTreeView._TreeView_AfterSelect += ViewTreeView_AfterSelect;
+            this.viewTreeView.TreeViewAfterSelect += ViewTreeView_AfterSelect;
             this.viewDetails.Load += ViewDetails_Load;
             this.viewNewAuthor.NewAuthorSavedToDatabase += ViewNewAuthor_NewAuthorSavedToDatabase;
 
@@ -139,7 +139,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
-                    throw;
                     return;
                 }
                 DetailsChangedEventArgs args = new DetailsChangedEventArgs();
@@ -200,7 +199,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
-                    throw;
                     return;
                 }
                 DetailsChangedEventArgs args = new DetailsChangedEventArgs();
@@ -443,7 +441,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         }
 
         private ICollection<Författare> authorsAll = new List<Författare>();
-        private ICollection<int> authorsConnectedToCurrentBook = new List<int>();
+        private readonly ICollection<int> authorsConnectedToCurrentBook = new List<int>();
 
         //1. add author row (no combobox). Is run everytime a user select a treeview node.
         void AddAuthorCell(int newRowIndex)
@@ -525,7 +523,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 catch (Exception)
                 {
-                    throw;
                     string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                 }
@@ -591,7 +588,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             catch (Exception)
             {
-                throw;
                 dbContextTransaction.Rollback();
                 string logText = "Error while saving.";
                 _ = ShowLogTextAsync(logText, Color.Red, 5000);
@@ -604,21 +600,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             str = new string(str.SkipWhile(c => !char.IsDigit(c)).TakeWhile(c => char.IsDigit(c)).ToArray());
             int.TryParse(str, out int index);
             return index;
-        }
-
-        private void EnableCell(DataGridViewCell dc, bool enabled)
-        {
-            dc.ReadOnly = !enabled;
-            if (enabled)
-            {
-                dc.Style.BackColor = dc.OwningColumn.DefaultCellStyle.BackColor;
-                dc.Style.ForeColor = dc.OwningColumn.DefaultCellStyle.ForeColor;
-            }
-            else
-            {
-                dc.Style.BackColor = Color.LightGray;
-                dc.Style.ForeColor = Color.DarkGray;
-            }
         }
 
         private void DGVBook_DataError(object sender, DataGridViewDataErrorEventArgs e) { }

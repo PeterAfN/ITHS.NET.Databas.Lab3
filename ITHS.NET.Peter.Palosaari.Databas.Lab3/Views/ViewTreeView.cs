@@ -18,11 +18,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 
         public bool PreventEvent { get; set; }
 
-        public event TreeViewEventHandler _TreeView_AfterSelect;
+        public event TreeViewEventHandler TreeViewAfterSelect;
 
         private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (!PreventEvent) _TreeView_AfterSelect?.Invoke(TreeView, e);
+            if (!PreventEvent) TreeViewAfterSelect?.Invoke(TreeView, e);
         }
 
 

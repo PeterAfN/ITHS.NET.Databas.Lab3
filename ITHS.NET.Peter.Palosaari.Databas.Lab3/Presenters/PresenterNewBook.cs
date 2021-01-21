@@ -54,10 +54,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewNewBook.DGVNewBook[0, 6].Value = "Author:";
                 viewNewBook.DGVNewBook[1, 6].Value = "Optional: Click here to add an author";
             }
-            using (Form form = new Form())
-            {
-                viewNewBook.ShowDialog();
-            }
+            using Form form = new Form();
+            viewNewBook.ShowDialog();
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -67,65 +65,61 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            using (var db = new Bokhandel_Lab2Context())
+            using var db = new Bokhandel_Lab2Context();
+            using var dbContextTransaction = db.Database.BeginTransaction();
+            try
             {
-                using (var dbContextTransaction = db.Database.BeginTransaction())
+                //1.save book to table 'Böcker'
+
+                decimal.TryParse(viewNewBook.DGVNewBook[1, 3].Value.ToString(), out decimal price);
+                var böcker = new Böcker
                 {
-                    try
+                    Isbn13 = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
+                    Titel = viewNewBook.DGVNewBook[1, 1].Value.ToString(),
+                    Språk = viewNewBook.DGVNewBook[1, 2].Value.ToString(),
+                    Pris = price,
+                    Utgivningsdatum = DateTime.Parse(viewNewBook.DGVNewBook[1, 4].Value.ToString()),
+                    FörlagId = publisherIDs,
+                };
+                db.Böcker.Add(böcker);
+
+                // 2. save book and author(s) to table 'FörfattareBöcker_Junction'
+
+                foreach (var authorID in authorIDs)
+                {
+                    var FörfattareBöckerJunction = new FörfattareBöckerJunction
                     {
-                        //1.save book to table 'Böcker'
-
-                        decimal.TryParse(viewNewBook.DGVNewBook[1, 3].Value.ToString(), out decimal price);
-                        var böcker = new Böcker
-                        {
-                            Isbn13 = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
-                            Titel = viewNewBook.DGVNewBook[1, 1].Value.ToString(),
-                            Språk = viewNewBook.DGVNewBook[1, 2].Value.ToString(),
-                            Pris = price,
-                            Utgivningsdatum = DateTime.Parse(viewNewBook.DGVNewBook[1, 4].Value.ToString()),
-                            FörlagId = publisherIDs,
-                        };
-                        db.Böcker.Add(böcker);
-
-                        // 2. save book and author(s) to table 'FörfattareBöcker_Junction'
-
-                        foreach (var authorID in authorIDs)
-                        {
-                            var FörfattareBöckerJunction = new FörfattareBöckerJunction
-                            {
-                                BokId = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
-                                FörfattareId = authorID
-                            };
-                            db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
-                        }
-
-                        // 3. save book to table 'LagerSaldo'
-
-                        var stores = GetStoresFromDatabase();
-                        foreach (Butiker s in stores)
-                        {
-                            var lagerSaldo = new LagerSaldo
-                            {
-                                ButikId = s.Id,
-                                Isbn = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
-                                Antal = 0,
-                            };
-                            db.LagerSaldon.Add(lagerSaldo);
-                        }
-
-                        db.SaveChanges();
-                        dbContextTransaction.Commit();
-                        viewNewBook.TriggerEventNewBookSavedToDatabase(sender, e);
-                        string logText = "Save ok.";
-                        _ = ShowLogTextAsync(logText, Color.Green, 5000);
-                    }
-                    catch (Exception)
-                    {
-                        dbContextTransaction.Rollback(); //not needed but good practice
-                        string logText = "Error while saving.";
-                        _ = ShowLogTextAsync(logText, Color.Red, 5000);
-                    }
+                        BokId = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
+                        FörfattareId = authorID
+                    };
+                    db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
                 }
+
+                // 3. save book to table 'LagerSaldo'
+
+                var stores = GetStoresFromDatabase();
+                foreach (Butiker s in stores)
+                {
+                    var lagerSaldo = new LagerSaldo
+                    {
+                        ButikId = s.Id,
+                        Isbn = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
+                        Antal = 0,
+                    };
+                    db.LagerSaldon.Add(lagerSaldo);
+                }
+
+                db.SaveChanges();
+                dbContextTransaction.Commit();
+                viewNewBook.TriggerEventNewBookSavedToDatabase(sender, e);
+                string logText = "Save ok.";
+                _ = ShowLogTextAsync(logText, Color.Green, 5000);
+            }
+            catch (Exception)
+            {
+                dbContextTransaction.Rollback(); //not needed but good practice
+                string logText = "Error while saving.";
+                _ = ShowLogTextAsync(logText, Color.Red, 5000);
             }
         }
 
@@ -168,7 +162,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewNewBook.DGVNewBook.CurrentCell.Selected = false;
         }
 
-        DataGridViewComboBoxCell cBPublishers = new DataGridViewComboBoxCell();
+        readonly DataGridViewComboBoxCell cBPublishers = new DataGridViewComboBoxCell();
 
         private void AddListOfPublishersToComboBox(int rowIndex)
         {
@@ -204,7 +198,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
         }
 
-        DataGridViewComboBoxCell cBAuthors = new DataGridViewComboBoxCell();
+        readonly DataGridViewComboBoxCell cBAuthors = new DataGridViewComboBoxCell();
 
         private void AddAuthorCell(int rowIndexNewCell)
         {

@@ -46,10 +46,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewNewAuthor.DGVNewAuthor[1, 3].Value = "Optional: Click here to add a book";
                 viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[0].Cells[1];
             }
-            using (Form form = new Form())
-            {
-                viewNewAuthor.ShowDialog();
-            }
+            using Form form = new Form();
+            viewNewAuthor.ShowDialog();
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -59,47 +57,43 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            using (var db = new Bokhandel_Lab2Context())
+            using var db = new Bokhandel_Lab2Context();
+            using var dbContextTransaction = db.Database.BeginTransaction();
+            try
             {
-                using (var dbContextTransaction = db.Database.BeginTransaction())
+                var author = new Författare
                 {
-                    try
+                    Förnamn = viewNewAuthor.DGVNewAuthor[1, 0].Value.ToString(),
+                    Efternamn = viewNewAuthor.DGVNewAuthor[1, 1].Value.ToString(),
+                    Födelsedatum = DateTime.Parse(viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString()),
+                };
+                db.Författare.Add(author);
+                db.SaveChanges();
+
+                int authorID = db.Författare.OrderBy(t => t.Id).LastOrDefault(
+                    b => b.Förnamn == author.Förnamn && b.Efternamn == author.Efternamn && b.Födelsedatum == author.Födelsedatum).Id;
+
+                foreach (var bookID in bookIDs)
+                {
+                    var FörfattareBöckerJunction = new FörfattareBöckerJunction
                     {
-                        var author = new Författare
-                        {
-                            Förnamn = viewNewAuthor.DGVNewAuthor[1, 0].Value.ToString(),
-                            Efternamn = viewNewAuthor.DGVNewAuthor[1, 1].Value.ToString(),
-                            Födelsedatum = DateTime.Parse(viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString()),
-                        };
-                        db.Författare.Add(author);
-                        db.SaveChanges(); 
-
-                        int authorID = db.Författare.OrderBy(t => t.Id).LastOrDefault(
-                            b => b.Förnamn == author.Förnamn && b.Efternamn == author.Efternamn && b.Födelsedatum == author.Födelsedatum).Id;
-
-                        foreach (var bookID in bookIDs)
-                        {
-                            var FörfattareBöckerJunction = new FörfattareBöckerJunction
-                            {
-                                BokId = bookID,
-                                FörfattareId = authorID,
-                            };
-                            db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
-                        }
-
-                        db.SaveChanges();
-                        dbContextTransaction.Commit();
-                        viewNewAuthor.TriggerEventNewAuthorSavedToDatabase(sender, e);
-                        string logText = "Save ok.";
-                        _ = ShowLogTextAsync(logText, Color.Green, 5000);
-                    }
-                    catch (Exception)
-                    {
-                        dbContextTransaction.Rollback(); //not needed but good practice
-                        string logText = "Error while saving.";
-                        _ = ShowLogTextAsync(logText, Color.Red, 5000);
-                    }
+                        BokId = bookID,
+                        FörfattareId = authorID,
+                    };
+                    db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
                 }
+
+                db.SaveChanges();
+                dbContextTransaction.Commit();
+                viewNewAuthor.TriggerEventNewAuthorSavedToDatabase(sender, e);
+                string logText = "Save ok.";
+                _ = ShowLogTextAsync(logText, Color.Green, 5000);
+            }
+            catch (Exception)
+            {
+                dbContextTransaction.Rollback(); //not needed but good practice
+                string logText = "Error while saving.";
+                _ = ShowLogTextAsync(logText, Color.Red, 5000);
             }
         }
 

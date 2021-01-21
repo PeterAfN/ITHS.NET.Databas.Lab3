@@ -200,7 +200,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
         private System.Windows.Forms.ToolStripMenuItem tasksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddAuthor;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMoveBookStore;
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddBook;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeleteAuthor;
