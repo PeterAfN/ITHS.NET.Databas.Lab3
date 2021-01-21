@@ -4,14 +4,16 @@ using ITHS.NET.Peter.Palosaari.Databas.Lab3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Migrations
 {
     [DbContext(typeof(Bokhandel_Lab2Context))]
-    partial class Bokhandel_Lab2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210121193206_addDataForAllTables")]
+    partial class addDataForAllTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
