@@ -117,7 +117,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             decimal.TryParse(viewDetails.DGVBook[1, 4].Value.ToString(), out decimal price);
                             books.Pris = price; break;
                         case 5:
-                            books.Utgivningsdatum = viewDetails.DGVBook[1, 5].Value.ToString(); break;
+                            books.Utgivningsdatum = DateTime.Parse(viewDetails.DGVBook[1, 5].Value.ToString()); break;
                         case 7:
                             publisher.Namn = viewDetails.DGVBook[1, 7].Value.ToString(); break;
                         case 8:
@@ -134,12 +134,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
-                {
-                    throw;
+                {                 
                     string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
+                    throw;
                     return;
                 }
                 DetailsChangedEventArgs args = new DetailsChangedEventArgs();
@@ -186,7 +186,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             author.Efternamn = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
                             break;
                         case 2:     //row 14, 18, 22, 26, 30...
-                            author.Födelsedatum = viewDetails.DGVBook[1, e.RowIndex].Value.ToString();
+                            author.Födelsedatum = DateTime.Parse(viewDetails.DGVBook[1, e.RowIndex].Value.ToString());
                             break;
                     }
 
@@ -196,11 +196,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 catch (Exception)
                 {
-                    throw;
                     string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
                     RestoreCellValue();
+                    throw;
                     return;
                 }
                 DetailsChangedEventArgs args = new DetailsChangedEventArgs();

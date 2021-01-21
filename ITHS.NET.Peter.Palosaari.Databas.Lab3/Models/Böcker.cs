@@ -10,8 +10,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         public Böcker()
         {
             FörfattareBöckerJunctions = new HashSet<FörfattareBöckerJunction>();
-            LagerSaldos = new HashSet<LagerSaldo>();
-            OrderDetaljers = new HashSet<OrderDetaljer>();
+            LagerSaldon = new HashSet<LagerSaldo>();
+            OrderDetaljer = new HashSet<OrderDetaljer>();
         }
 
         public string Isbn13 { get; set; }
@@ -23,7 +23,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 
         public virtual Förlag Förlag { get; set; }
         public virtual ICollection<FörfattareBöckerJunction> FörfattareBöckerJunctions { get; set; }
-        public virtual ICollection<LagerSaldo> LagerSaldos { get; set; }
-        public virtual ICollection<OrderDetaljer> OrderDetaljers { get; set; }
+        public virtual ICollection<LagerSaldo> LagerSaldon { get; set; }
+        public virtual ICollection<OrderDetaljer> OrderDetaljer { get; set; }
     }
 }

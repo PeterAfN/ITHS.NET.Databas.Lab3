@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 #nullable disable
 
@@ -14,7 +15,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         public int Id { get; set; }
         public int ButikId { get; set; }
         public string KundId { get; set; }
-        public string Datum { get; set; }
+        public DateTime? Datum { get; set; }
         public string FörsäljarId { get; set; }
         public double? Fraktavgift { get; set; }
         public string Adress { get; set; }

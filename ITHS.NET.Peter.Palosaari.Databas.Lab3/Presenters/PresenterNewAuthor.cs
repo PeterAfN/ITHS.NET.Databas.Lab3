@@ -69,7 +69,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                         {
                             Förnamn = viewNewAuthor.DGVNewAuthor[1, 0].Value.ToString(),
                             Efternamn = viewNewAuthor.DGVNewAuthor[1, 1].Value.ToString(),
-                            Födelsedatum = viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString(),
+                            Födelsedatum = DateTime.Parse(viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString()),
                         };
                         db.Författare.Add(author);
                         db.SaveChanges(); 

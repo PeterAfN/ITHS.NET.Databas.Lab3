@@ -82,7 +82,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             Titel = viewNewBook.DGVNewBook[1, 1].Value.ToString(),
                             Språk = viewNewBook.DGVNewBook[1, 2].Value.ToString(),
                             Pris = price,
-                            Utgivningsdatum = viewNewBook.DGVNewBook[1, 4].Value.ToString(),
+                            Utgivningsdatum = DateTime.Parse(viewNewBook.DGVNewBook[1, 4].Value.ToString()),
                             FörlagId = publisherIDs,
                         };
                         db.Böcker.Add(böcker);
