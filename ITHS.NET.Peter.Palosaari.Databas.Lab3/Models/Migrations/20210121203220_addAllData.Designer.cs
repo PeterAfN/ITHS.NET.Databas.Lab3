@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Migrations
 {
     [DbContext(typeof(Bokhandel_Lab2Context))]
-    [Migration("20210121202018_removeSomeData")]
-    partial class removeSomeData
+    [Migration("20210121203220_addAllData")]
+    partial class addAllData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
