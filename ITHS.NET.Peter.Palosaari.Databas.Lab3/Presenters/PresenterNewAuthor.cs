@@ -15,7 +15,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
         private readonly IViewNewAuthor viewNewAuthor;
-        SqlData sqlData;
 
         public PresenterNewAuthor(IViewMain viewMain, IViewTreeView viewTreeView, ViewDetails viewDetails, IViewNewAuthor viewNewAuthor)
         {
@@ -23,8 +22,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
             this.viewNewAuthor = viewNewAuthor;
-
-            sqlData = new SqlData();
 
             viewMain.ToolStripMenuItemAddAuthor.Click += ToolStripMenuItemAddAuthor_Click;
             viewNewAuthor.DGVNewAuthor.EditingControlShowing += DGVNewAuthor_EditingControlShowing;
@@ -49,51 +46,60 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewNewAuthor.DGVNewAuthor[1, 3].Value = "Optional: Click here to add a book";
                 viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[0].Cells[1];
             }
-            using Form form = new Form();
-            viewNewAuthor.ShowDialog();
+            using (Form form = new Form())
+            {
+                viewNewAuthor.ShowDialog();
+            }
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e) => viewNewAuthor.Hide();
+        private void ButtonClose_Click(object sender, EventArgs e)
+        {
+            viewNewAuthor.Hide();
+        }
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            using var db = new Bokhandel_Lab2Context();
-            using var dbContextTransaction = db.Database.BeginTransaction();
-            try
+            using (var db = new Bokhandel_Lab2Context())
             {
-                var author = new Författare
+                using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
-                    Förnamn = viewNewAuthor.DGVNewAuthor[1, 0].Value.ToString(),
-                    Efternamn = viewNewAuthor.DGVNewAuthor[1, 1].Value.ToString(),
-                    Födelsedatum = viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString(),
-                };
-                db.Författare.Add(author);
-                db.SaveChanges();
-
-                int authorID = db.Författare.OrderBy(t => t.Id).LastOrDefault(
-                    b => b.Förnamn == author.Förnamn && b.Efternamn == author.Efternamn && b.Födelsedatum == author.Födelsedatum).Id;
-
-                foreach (var bookID in bookIDs)
-                {
-                    var FörfattareBöckerJunction = new FörfattareBöckerJunction
+                    try
                     {
-                        BokId = bookID,
-                        FörfattareId = authorID,
-                    };
-                    db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
-                }
+                        var author = new Författare
+                        {
+                            Förnamn = viewNewAuthor.DGVNewAuthor[1, 0].Value.ToString(),
+                            Efternamn = viewNewAuthor.DGVNewAuthor[1, 1].Value.ToString(),
+                            Födelsedatum = viewNewAuthor.DGVNewAuthor[1, 2].Value.ToString(),
+                        };
+                        db.Författare.Add(author);
+                        db.SaveChanges(); 
 
-                db.SaveChanges();
-                dbContextTransaction.Commit();
-                viewNewAuthor.TriggerEventNewAuthorSavedToDatabase(sender, e);
-                string logText = "Save ok.";
-                _ = ShowLogTextAsync(logText, Color.Green, 5000);
-            }
-            catch (Exception)
-            {
-                dbContextTransaction.Rollback(); //not needed but good practice
-                string logText = "Error while saving.";
-                _ = ShowLogTextAsync(logText, Color.Red, 5000);
+                        int authorID = db.Författare.OrderBy(t => t.Id).LastOrDefault(
+                            b => b.Förnamn == author.Förnamn && b.Efternamn == author.Efternamn && b.Födelsedatum == author.Födelsedatum).Id;
+
+                        foreach (var bookID in bookIDs)
+                        {
+                            var FörfattareBöckerJunction = new FörfattareBöckerJunction
+                            {
+                                BokId = bookID,
+                                FörfattareId = authorID,
+                            };
+                            db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
+                        }
+
+                        db.SaveChanges();
+                        dbContextTransaction.Commit();
+                        viewNewAuthor.TriggerEventNewAuthorSavedToDatabase(sender, e);
+                        string logText = "Save ok.";
+                        _ = ShowLogTextAsync(logText, Color.Green, 5000);
+                    }
+                    catch (Exception)
+                    {
+                        dbContextTransaction.Rollback(); //not needed but good practice
+                        string logText = "Error while saving.";
+                        _ = ShowLogTextAsync(logText, Color.Red, 5000);
+                    }
+                }
             }
         }
 
@@ -146,16 +152,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void AddBookCell(int rowIndexNewCell)
         {
             cBBooks.Items.Clear();
-            sqlData.Update(); var books = sqlData.Böcker;
+            var books = GetBooksFromDatabase();
 
             foreach (Böcker b in books)
             {
-                if (!bookIDs.Contains(b.Isbn13)) cBBooks.Items.Add($"Id: {b.Isbn13} - {b.Titel} - {b.Språk}");
+                if (!bookIDs.Contains(b.Isbn13))
+                    cBBooks.Items.Add($"Id: {b.Isbn13} - {b.Titel} - {b.Språk}");
             }
 
             viewNewAuthor.DGVNewAuthor.Rows[rowIndexNewCell].Cells[1] = cBBooks;
-            viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[1].Cells[1];     
-            viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[rowIndexNewCell].Cells[1];
+            viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[1].Cells[1];               //only way to update cell
+            viewNewAuthor.DGVNewAuthor.CurrentCell = viewNewAuthor.DGVNewAuthor.Rows[rowIndexNewCell].Cells[1]; //only way to update cell
             viewNewAuthor.DGVNewAuthor.CellClick -= DGVNewAuthor_CellClick;
         }
 
@@ -184,7 +191,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewNewAuthor.DGVNewAuthor[1, newRowIndex].Value = "Click here to add a book";
         }
 
-        string GetIndexFromString(string str) => new string(str.SkipWhile(c => !char.IsDigit(c)).TakeWhile(c => char.IsDigit(c)).ToArray());
+        string GetIndexFromString(string str)
+        {
+            return new string(str.SkipWhile(c => !char.IsDigit(c)).TakeWhile(c => char.IsDigit(c)).ToArray());
+        }
 
         ComboBox comboBoxBooks = new ComboBox();
 
@@ -216,5 +226,24 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         }
 
         private void DGVNewAuthor_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
+
+        //todo: create generic class for getting data from database.
+        private ICollection<Böcker> GetBooksFromDatabase()
+        {
+            using var db = new Bokhandel_Lab2Context();
+            {
+                if (db.Database.CanConnect())
+                {
+                    ICollection<Böcker> output = new List<Böcker>();
+                    foreach (Böcker f in db.Böcker)
+                    {
+                        output.Add(f);
+                    }
+                    return output;
+                }
+                else return null;
+            }
+        }
+
     }
 }

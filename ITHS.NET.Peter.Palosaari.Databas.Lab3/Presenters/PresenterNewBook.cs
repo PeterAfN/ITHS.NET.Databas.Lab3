@@ -11,13 +11,12 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
     public class PresenterNewBook
     {
         private readonly ICollection<int> authorIDs = new List<int>();
+        private int publisherIDs = -1;
+
         private readonly IViewMain viewMain;
         private readonly IViewTreeView viewTreeView;
         private readonly IViewDetails viewDetails;
         private readonly IViewNewBook viewNewBook;
-        private readonly SqlData sqlData;
-
-        private int publisherIDs = -1;
 
         public PresenterNewBook(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails, IViewNewBook viewNewBook)
         {
@@ -25,8 +24,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
-
-            sqlData = new SqlData();
 
             viewMain.ToolStripMenuItemAddBook.Click += ToolStripMenuItemAddBook_Click;
             viewNewBook.DGVNewBook.EditingControlShowing += DGVNewBook_EditingControlShowing;
@@ -57,8 +54,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewNewBook.DGVNewBook[0, 6].Value = "Author:";
                 viewNewBook.DGVNewBook[1, 6].Value = "Optional: Click here to add an author";
             }
-            using Form form = new Form();
-            viewNewBook.ShowDialog();
+            using (Form form = new Form())
+            {
+                viewNewBook.ShowDialog();
+            }
         }
 
         private void ButtonClose_Click(object sender, EventArgs e)
@@ -68,55 +67,65 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            using var db = new Bokhandel_Lab2Context();
-            using var dbContextTransaction = db.Database.BeginTransaction();
-            try
+            using (var db = new Bokhandel_Lab2Context())
             {
-                decimal.TryParse(viewNewBook.DGVNewBook[1, 3].Value.ToString(), out decimal price);
-                var böcker = new Böcker
+                using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
-                    Isbn13 = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
-                    Titel = viewNewBook.DGVNewBook[1, 1].Value.ToString(),
-                    Språk = viewNewBook.DGVNewBook[1, 2].Value.ToString(),
-                    Pris = price,
-                    Utgivningsdatum = viewNewBook.DGVNewBook[1, 4].Value.ToString(),
-                    FörlagId = publisherIDs,
-                };
-                db.Böcker.Add(böcker);
-
-                foreach (var authorID in authorIDs)
-                {
-                    var FörfattareBöckerJunction = new FörfattareBöckerJunction
+                    try
                     {
-                        BokId = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
-                        FörfattareId = authorID
-                    };
-                    db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
-                }
+                        //1.save book to table 'Böcker'
 
-                sqlData.Update(); var stores = sqlData.Butiker;
-                foreach (Butiker s in stores)
-                {
-                    var lagerSaldo = new LagerSaldo
+                        decimal.TryParse(viewNewBook.DGVNewBook[1, 3].Value.ToString(), out decimal price);
+                        var böcker = new Böcker
+                        {
+                            Isbn13 = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
+                            Titel = viewNewBook.DGVNewBook[1, 1].Value.ToString(),
+                            Språk = viewNewBook.DGVNewBook[1, 2].Value.ToString(),
+                            Pris = price,
+                            Utgivningsdatum = viewNewBook.DGVNewBook[1, 4].Value.ToString(),
+                            FörlagId = publisherIDs,
+                        };
+                        db.Böcker.Add(böcker);
+
+                        // 2. save book and author(s) to table 'FörfattareBöcker_Junction'
+
+                        foreach (var authorID in authorIDs)
+                        {
+                            var FörfattareBöckerJunction = new FörfattareBöckerJunction
+                            {
+                                BokId = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
+                                FörfattareId = authorID
+                            };
+                            db.FörfattareBöckerJunction.Add(FörfattareBöckerJunction);
+                        }
+
+                        // 3. save book to table 'LagerSaldo'
+
+                        var stores = GetStoresFromDatabase();
+                        foreach (Butiker s in stores)
+                        {
+                            var lagerSaldo = new LagerSaldo
+                            {
+                                ButikId = s.Id,
+                                Isbn = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
+                                Antal = 0,
+                            };
+                            db.LagerSaldon.Add(lagerSaldo);
+                        }
+
+                        db.SaveChanges();
+                        dbContextTransaction.Commit();
+                        viewNewBook.TriggerEventNewBookSavedToDatabase(sender, e);
+                        string logText = "Save ok.";
+                        _ = ShowLogTextAsync(logText, Color.Green, 5000);
+                    }
+                    catch (Exception)
                     {
-                        ButikId = s.Id,
-                        Isbn = viewNewBook.DGVNewBook[1, 0].Value.ToString(),
-                        Antal = 0,
-                    };
-                    db.LagerSaldon.Add(lagerSaldo);
+                        dbContextTransaction.Rollback(); //not needed but good practice
+                        string logText = "Error while saving.";
+                        _ = ShowLogTextAsync(logText, Color.Red, 5000);
+                    }
                 }
-
-                db.SaveChanges();
-                dbContextTransaction.Commit();
-                viewNewBook.TriggerEventNewBookSavedToDatabase(sender, e);
-                string logText = "Save ok.";
-                _ = ShowLogTextAsync(logText, Color.Green, 5000);
-            }
-            catch (Exception)
-            {
-                dbContextTransaction.Rollback(); //not needed but good practice
-                string logText = "Error while saving.";
-                _ = ShowLogTextAsync(logText, Color.Red, 5000);
             }
         }
 
@@ -163,7 +172,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void AddListOfPublishersToComboBox(int rowIndex)
         {
-            sqlData.Update(); var publishers = sqlData.Förlag;
+            var publishers = GetPublishersFromDatabase();
             cBPublishers.Items.Clear();
 
             foreach (Förlag p in publishers)
@@ -200,17 +209,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void AddAuthorCell(int rowIndexNewCell)
         {
             cBAuthors.Items.Clear();
-            sqlData.Update(); var authors = sqlData.Författare;
+            var författare = GetAuthorsFromDatabase();
 
-            foreach (Författare f in authors)
+            foreach (Författare f in författare)
             {
                 if (!authorIDs.Contains(f.Id))
                     cBAuthors.Items.Add($"Id: {f.Id} - {f.Förnamn} {f.Efternamn} - BirthDate: {f.Födelsedatum}");
             }
 
             viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1] = cBAuthors;
-            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[1].Cells[1]; 
-            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1];
+            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[1].Cells[1];               //only way to update cell
+            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1]; //only way to update cell
             viewNewBook.DGVNewBook.CellClick -= DGVNewBook_CellClick;
         }
 
@@ -287,5 +296,57 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         }
 
         private void DGVNewBook_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
+
+        //todo: create generic class for getting data from database.
+        private ICollection<Författare> GetAuthorsFromDatabase()
+        {
+            using var db = new Bokhandel_Lab2Context();
+            {
+                if (db.Database.CanConnect())
+                {
+                    ICollection<Författare> output = new List<Författare>();
+                    foreach (Författare f in db.Författare)
+                    {
+                        output.Add(f);
+                    }
+                    return output;
+                }
+                else  return null;
+            }
+        }
+
+        private ICollection<Förlag> GetPublishersFromDatabase()
+        {
+            using var db = new Bokhandel_Lab2Context();
+            {
+                if (db.Database.CanConnect())
+                {
+                    ICollection<Förlag> output = new List<Förlag>();
+                    foreach (Förlag f in db.Förlag)
+                    {
+                        output.Add(f);
+                    }
+                    return output;
+                }
+                else return null;
+            }
+        }
+
+        private ICollection<Butiker> GetStoresFromDatabase()
+        {
+            using var db = new Bokhandel_Lab2Context();
+            {
+                if (db.Database.CanConnect())
+                {
+                    ICollection<Butiker> output = new List<Butiker>();
+                    foreach (Butiker f in db.Butiker)
+                    {
+                        output.Add(f);
+                    }
+                    return output;
+                }
+                else return null;
+            }
+        }
     }
 }

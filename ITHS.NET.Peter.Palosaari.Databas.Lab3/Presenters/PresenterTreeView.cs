@@ -100,14 +100,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 using var dbContextTransaction = db.Database.BeginTransaction();
                 try
                 {
-                    db.Database.ExecuteSqlInterpolated($"DELETE FROM dbo.LagerSaldo WHERE ISBN = ({IDCurrentSelectedBook})");
+                    db.Database.ExecuteSqlInterpolated($"DELETE FROM dbo.LagerSaldo WHERE ISBN = ({IDCurrentSelectedBook})");               // 1. delete book from table 'LagerSaldo'
                     db.SaveChanges();
 
-                    db.Database.ExecuteSqlInterpolated($"DELETE FROM FörfattareBöcker_Junction WHERE BokID = ({IDCurrentSelectedBook})");
+                    db.Database.ExecuteSqlInterpolated($"DELETE FROM FörfattareBöcker_Junction WHERE BokID = ({IDCurrentSelectedBook})");   // 2. delete book from table 'FörfattareBöcker_Junction'
                     db.SaveChanges();
 
                     var böcker = db.Böcker.FirstOrDefault(b => b.Isbn13 == IDCurrentSelectedBook);
-                    db.Böcker.Remove(böcker); 
+                    db.Böcker.Remove(böcker);                                                                                               // 3. delete book from table 'böcker'
                     db.SaveChanges();
                     dbContextTransaction.Commit();
 
