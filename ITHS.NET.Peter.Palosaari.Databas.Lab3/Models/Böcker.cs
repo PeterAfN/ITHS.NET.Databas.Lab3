@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 #nullable disable
 
@@ -8,21 +9,21 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
     {
         public Böcker()
         {
-            FörfattareBöckerJunction = new HashSet<FörfattareBöckerJunction>();
-            LagerSaldon = new HashSet<LagerSaldo>();
-            OrderDetaljer = new HashSet<OrderDetaljer>();
+            FörfattareBöckerJunctions = new HashSet<FörfattareBöckerJunction>();
+            LagerSaldos = new HashSet<LagerSaldo>();
+            OrderDetaljers = new HashSet<OrderDetaljer>();
         }
 
         public string Isbn13 { get; set; }
         public string Titel { get; set; }
         public string Språk { get; set; }
         public decimal? Pris { get; set; }
-        public string Utgivningsdatum { get; set; }
+        public DateTime? Utgivningsdatum { get; set; }
         public int FörlagId { get; set; }
 
         public virtual Förlag Förlag { get; set; }
-        public virtual ICollection<FörfattareBöckerJunction> FörfattareBöckerJunction { get; set; }
-        public virtual ICollection<LagerSaldo> LagerSaldon { get; set; }
-        public virtual ICollection<OrderDetaljer> OrderDetaljer { get; set; }
+        public virtual ICollection<FörfattareBöckerJunction> FörfattareBöckerJunctions { get; set; }
+        public virtual ICollection<LagerSaldo> LagerSaldos { get; set; }
+        public virtual ICollection<OrderDetaljer> OrderDetaljers { get; set; }
     }
 }

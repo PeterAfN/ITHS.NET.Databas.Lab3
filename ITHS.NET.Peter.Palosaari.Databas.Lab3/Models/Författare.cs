@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 #nullable disable
 
@@ -14,7 +15,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
         public int Id { get; set; }
         public string Förnamn { get; set; }
         public string Efternamn { get; set; }
-        public string Födelsedatum { get; set; }
+        public DateTime? Födelsedatum { get; set; }
 
         public virtual ICollection<FörfattareBöckerJunction> FörfattareBöckerJunctions { get; set; }
     }
