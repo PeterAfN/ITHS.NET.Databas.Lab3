@@ -1,10 +1,10 @@
 ﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -14,26 +14,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private int publisherIDs = -1;
 
         private readonly IViewMain viewMain;
-        private readonly IViewTreeView viewTreeView;
-        private readonly IViewDetails viewDetails;
         private readonly IViewNewBook viewNewBook;
 
-        public PresenterNewBook(IViewMain viewMain, IViewTreeView viewTreeView, IViewDetails viewDetails, IViewNewBook viewNewBook)
+        public PresenterNewBook(IViewMain viewMain, IViewNewBook viewNewBook)
         {
             this.viewMain = viewMain;
-            this.viewTreeView = viewTreeView;
-            this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
 
-            viewMain.ToolStripMenuItemAddBook.Click += ToolStripMenuItemAddBook_Click;
-            viewNewBook.DGVNewBook.EditingControlShowing += DGVNewBook_EditingControlShowing;
-            viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
-            viewNewBook.DGVNewBook.CellContentClick += DGVNewBook_CellContentClick;
-            viewNewBook.DGVNewBook.SelectionChanged += DGVNewBook_SelectionChanged;
-            viewNewBook.DGVNewBook.DataError += DGVNewBook_DataError;
-            viewNewBook.ButtonAdd.Click += ButtonAdd_Click;
-            viewNewBook.ButtonClose.Click += ButtonClose_Click;
-            viewNewBook.LabelLog.Text = string.Empty;
+            this.viewMain.ToolStripMenuItemAddBook.Click += ToolStripMenuItemAddBook_Click;
+            this.viewNewBook.DGVNewBook.EditingControlShowing += DGVNewBook_EditingControlShowing;
+            this.viewNewBook.DGVNewBook.CellClick += DGVNewBook_CellClick;
+            this.viewNewBook.DGVNewBook.CellContentClick += DGVNewBook_CellContentClick;
+            this.viewNewBook.DGVNewBook.SelectionChanged += DGVNewBook_SelectionChanged;
+            this.viewNewBook.DGVNewBook.DataError += DGVNewBook_DataError;
+            this.viewNewBook.ButtonAdd.Click += ButtonAdd_Click;
+            this.viewNewBook.ButtonClose.Click += ButtonClose_Click;
+            this.viewNewBook.LabelLog.Text = string.Empty;
         }
 
         private void ToolStripMenuItemAddBook_Click(object sender, EventArgs e)
@@ -138,11 +134,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
             if (viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentRow.Index].Value.ToString() == "remove")
             {
-                int authorId = 
+                int authorId =
                     GetIndexFromString(viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index].Value.ToString());
 
-                if (authorIDs.Contains(authorId)) 
-                    if (authorIDs.Remove(authorId)) 
+                if (authorIDs.Contains(authorId))
+                    if (authorIDs.Remove(authorId))
                     {
                         viewNewBook.DGVNewBook.Rows.RemoveAt(e.RowIndex);
                         if (viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.RowCount - 1].Value.ToString() != "Click here to add an author")
@@ -190,7 +186,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void DGVNewBook_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (viewNewBook.DGVNewBook.CurrentCell.ColumnIndex == 1 && 
+            if (viewNewBook.DGVNewBook.CurrentCell.ColumnIndex == 1 &&
                 viewNewBook.DGVNewBook.RowCount == viewNewBook.DGVNewBook.CurrentCell.RowIndex + 1)
             {
                 viewNewBook.DGVNewBook.Columns[2].Visible = false;
@@ -220,7 +216,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void AuthorSelectedIndexChanged(object sender, EventArgs e)
         {
             if (cBAuthors.Items.Count > 1) AddRowActivateClickEvent(viewNewBook.DGVNewBook.CurrentRow.Index + 1);
-            DataGridViewComboBoxEditingControl dGVCB = sender as DataGridViewComboBoxEditingControl;          
+            DataGridViewComboBoxEditingControl dGVCB = sender as DataGridViewComboBoxEditingControl;
             viewNewBook.DGVNewBook.Rows[viewNewBook.DGVNewBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
             viewNewBook.DGVNewBook[2, viewNewBook.DGVNewBook.CurrentRow.Index].Value = "remove";
             viewNewBook.DGVNewBook[1, viewNewBook.DGVNewBook.CurrentRow.Index].Value = dGVCB.SelectedItem.ToString();
@@ -305,7 +301,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     }
                     return output;
                 }
-                else  return null;
+                else return null;
             }
         }
 

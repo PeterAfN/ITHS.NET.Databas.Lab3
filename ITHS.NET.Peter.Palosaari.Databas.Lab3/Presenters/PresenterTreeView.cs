@@ -1,14 +1,14 @@
 ﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
 using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -19,22 +19,20 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly IViewDetails viewDetails;
         private readonly IViewNewBook viewNewBook;
         private readonly IViewDeleteAuthor viewDeleteAuthor;
-        private readonly IViewNewAuthor viewNewAuthor;
         private readonly SqlData sqlData;
 
-        public PresenterTreeView(IViewMain viewMain, 
-            IViewTreeView viewBookstores, 
-            IViewDetails viewDetails, 
+        public PresenterTreeView(IViewMain viewMain,
+            IViewTreeView viewBookstores,
+            IViewDetails viewDetails,
             IViewNewBook viewNewBook,
-            IViewDeleteAuthor viewDeleteAuthor,
-            IViewNewAuthor viewNewAuthor)
+            IViewDeleteAuthor viewDeleteAuthor)
         {
             this.viewMain = viewMain;
             this.viewTreeView = viewBookstores;
             this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
             this.viewDeleteAuthor = viewDeleteAuthor;
-            this.viewNewAuthor = viewNewAuthor;
+
             this.viewTreeView.Load += ViewBookstores_Load;
 
             sqlData = new SqlData();
@@ -150,7 +148,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void TreeView_MouseDown(object sender, MouseEventArgs e)
         {
             viewTreeView.TreeView.MouseDown += (sender, args) =>
-                viewTreeView.TreeView.SelectedNode = 
+                viewTreeView.TreeView.SelectedNode =
                 viewTreeView.TreeView.GetNodeAt(args.X, args.Y);
         }
 
@@ -161,7 +159,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 case MouseButtons.Right:
                     if (viewTreeView.TreeView.SelectedNode.Parent == null)
                         viewTreeView.ContextMenuStripTreeView.Items[0].Enabled = false;
-                    else viewTreeView.ContextMenuStripTreeView.Items[0].Enabled = true;                
+                    else viewTreeView.ContextMenuStripTreeView.Items[0].Enabled = true;
                     viewTreeView.ContextMenuStripTreeView.Show(
                         new Point(Control.MousePosition.X + 25, Control.MousePosition.Y + 20));
                     break;

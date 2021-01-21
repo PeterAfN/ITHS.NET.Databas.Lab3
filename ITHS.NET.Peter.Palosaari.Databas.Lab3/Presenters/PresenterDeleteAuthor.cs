@@ -1,11 +1,11 @@
 ﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
@@ -14,28 +14,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         public long CurrentlySelectedAuthorID { get; set; }
 
         private readonly IViewMain viewMain;
-        private readonly IViewTreeView viewTreeView;
-        private readonly IViewDetails viewDetails;
         private readonly IViewDeleteAuthor viewDeleteAuthor;
 
-        public PresenterDeleteAuthor(IViewMain viewMain, 
-            IViewTreeView viewTreeView, 
-            IViewDetails viewDetails,
+        public PresenterDeleteAuthor(IViewMain viewMain,
             IViewDeleteAuthor viewDeleteAuthor)
         {
             this.viewMain = viewMain;
-            this.viewTreeView = viewTreeView;
-            this.viewDetails = viewDetails;
             this.viewDeleteAuthor = viewDeleteAuthor;
 
-            viewMain.ToolStripMenuItemDeleteAuthor.Click += ToolStripMenuItemDeleteAuthor_Click;
+            this.viewMain.ToolStripMenuItemDeleteAuthor.Click += ToolStripMenuItemDeleteAuthor_Click;
             this.viewDeleteAuthor.ButtonClose.Click += ButtonClose_Click;
             this.viewDeleteAuthor.ButtonDelete.Click += ButtonDelete_Click;
             this.viewDeleteAuthor.ComboBoxDeleteAuthor.SelectedIndexChanged += ComboBoxDeleteAuthor_SelectedIndexChanged;
         }
 
         private void ComboBoxDeleteAuthor_SelectedIndexChanged(object sender, EventArgs e)
-        {           
+        {
             CurrentlySelectedAuthorID = GetIndexFromString(viewDeleteAuthor.ComboBoxDeleteAuthor.SelectedItem.ToString());
         }
 

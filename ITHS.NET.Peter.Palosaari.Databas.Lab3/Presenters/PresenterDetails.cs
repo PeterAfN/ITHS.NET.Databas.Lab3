@@ -52,13 +52,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void DGVBookstore_SelectionChanged(object sender, EventArgs e)
         {
-            if (viewDetails.DGVBookstore.CurrentCell.ColumnIndex == 0) 
+            if (viewDetails.DGVBookstore.CurrentCell.ColumnIndex == 0)
                 viewDetails.DGVBookstore.CurrentCell.Selected = false;
         }
 
         private void DGVBook_SelectionChanged(object sender, EventArgs e)
         {
-            if (viewDetails.DGVBook.CurrentCell.ColumnIndex == 0) 
+            if (viewDetails.DGVBook.CurrentCell.ColumnIndex == 0)
                 viewDetails.DGVBook.CurrentCell.Selected = false;
         }
 
@@ -112,7 +112,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                             int.TryParse(viewDetails.DGVBook[1, 2].Value.ToString(), out int amount);
                             stock.Antal = amount; break;
                         case 3:
-                            books.Språk = viewDetails.DGVBook[1, 3].Value.ToString();  break;
+                            books.Språk = viewDetails.DGVBook[1, 3].Value.ToString(); break;
                         case 4:
                             decimal.TryParse(viewDetails.DGVBook[1, 4].Value.ToString(), out decimal price);
                             books.Pris = price; break;
@@ -125,7 +125,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                         case 9:
                             publisher.Telefonnummer = viewDetails.DGVBook[1, 9].Value.ToString(); break;
                         case 10:
-                            publisher.Epost = viewDetails.DGVBook[1, 10].Value.ToString();  break;
+                            publisher.Epost = viewDetails.DGVBook[1, 10].Value.ToString(); break;
                         default:
                             CellAuthor(sender, e); return;
                     }
@@ -134,7 +134,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     _ = ShowLogTextAsync(logText, Color.Green, 3000);
                 }
                 catch (Exception)
-                {                 
+                {
                     string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 3000);
                     db.Dispose();
@@ -170,7 +170,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             int.TryParse(viewDetails.DGVBook[1, authorCellId].Value.ToString(), out int value);
 
             using var db = new Bokhandel_Lab2Context();
-            if (db.Database.CanConnect()) 
+            if (db.Database.CanConnect())
             {
                 try
                 {
@@ -348,7 +348,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBook[0, 9].Value = "Publisher Phone Number:";
             viewDetails.DGVBook[0, 10].Value = "Publisher Email:";
         }
-        
+
         void SetDGVCellsReadOnly()
         {
             viewDetails.DGVBookstore[1, 0].ReadOnly = true;                                         //id
@@ -416,7 +416,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             userNavigating = false;
         }
 
-        void ExtendDGVWithNewAuthorCells(int authorId, string bookId, int startIndexNewAuthor)
+        void ExtendDGVWithNewAuthorCells(int authorId, int startIndexNewAuthor)
         {
             userNavigating = true;
             viewDetails.DGVBook.Rows.Add(3);
@@ -507,7 +507,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     db.FörfattareBöckerJunction.Remove(JunctionFörfattareBöcker);
                     db.SaveChanges();
 
-                    if ((viewDetails.DGVBook.RowCount-1) % 4 == 3) viewDetails.DGVBook?.Rows.RemoveAt(viewDetails.DGVBook.RowCount-1);
+                    if ((viewDetails.DGVBook.RowCount - 1) % 4 == 3) viewDetails.DGVBook?.Rows.RemoveAt(viewDetails.DGVBook.RowCount - 1);
 
                     viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 3);
                     viewDetails.DGVBook.Rows.RemoveAt(e.RowIndex + 2);
@@ -563,7 +563,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             if (SaveAuthorToDatabase(authorIdFromCBSelection, bookId))
             {
                 viewDetails.DGVBook.Rows[viewDetails.DGVBook.CurrentRow.Index].Cells[1] = new DataGridViewTextBoxCell();
-                ExtendDGVWithNewAuthorCells(authorIdFromCBSelection, bookId, viewDetails.DGVBook.CurrentRow.Index);
+                ExtendDGVWithNewAuthorCells(authorIdFromCBSelection, viewDetails.DGVBook.CurrentRow.Index);
             }
             viewDetails.DGVBook[2, viewDetails.DGVBook.CurrentRow.Index].Value = "remove";
             if (!authorsConnectedToCurrentBook.Contains(authorIdFromCBSelection)) authorsConnectedToCurrentBook.Add(authorIdFromCBSelection);

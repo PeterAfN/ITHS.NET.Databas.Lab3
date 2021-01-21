@@ -7,15 +7,10 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
     class PresenterMain
     {
         private readonly IViewMain viewMain;
-        private readonly IViewTreeView viewBookstores;
-        private readonly IViewDetails viewDetails;
 
-
-        public PresenterMain(IViewMain viewMain, IViewTreeView viewBookstores, IViewDetails viewDetails)
+        public PresenterMain(IViewMain viewMain)
         {
             this.viewMain = viewMain;
-            this.viewBookstores = viewBookstores;
-            this.viewDetails = viewDetails;
 
             viewMain.Load += ViewMain_Load;
         }
@@ -28,8 +23,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
         {
 
-                var result = MessageBox.Show("Do you want to exit the program?", "Sql Server Demo Client", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false);
+            var result = MessageBox.Show("Do you want to exit the program?", "Sql Server Demo Client", MessageBoxButtons.YesNo,
+                MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false);
 
             if (result == DialogResult.Yes)
             {

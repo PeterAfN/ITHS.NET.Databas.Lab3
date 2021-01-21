@@ -5,33 +5,22 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
 {
     public partial class ViewMain : Form, IViewMain
     {
-        private readonly ViewTreeView viewBookstores;
+        private readonly ViewTreeView viewTreeView;
         private readonly ViewDetails viewDetails;
-        private readonly ViewNewBook viewNewBook;
-        private readonly ViewNewAuthor viewNewAuthor;
-        private readonly ViewDeleteAuthor viewDeleteAuthor;
 
-        public ViewMain(ViewTreeView viewBookstores, 
-            ViewDetails viewDetails,
-            ViewNewBook viewNewBook,
-            ViewNewAuthor viewNewAuthor,
-            ViewDeleteAuthor viewDeleteAuthor
-            )
+        public ViewMain(ViewTreeView viewTreeView, ViewDetails viewDetails)
         {
             InitializeComponent();
 
-            this.viewBookstores = viewBookstores;
+            this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
-            this.viewNewBook = viewNewBook;
-            this.viewNewAuthor = viewNewAuthor;
-            this.viewDeleteAuthor = viewDeleteAuthor;
 
             AddControls();
         }
 
         public void AddControls()
         {
-            splitContainerMain.Panel1.Controls.Add(viewBookstores);
+            splitContainerMain.Panel1.Controls.Add(viewTreeView);
             splitContainerMain.Panel2.Controls.Add(viewDetails);
             viewDetails.BringToFront();
         }

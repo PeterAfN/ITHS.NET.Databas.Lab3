@@ -1,7 +1,6 @@
 ﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.CustomEventArgs;
 using System;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
 {

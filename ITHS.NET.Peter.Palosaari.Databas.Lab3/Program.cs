@@ -23,16 +23,16 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             var viewNewBook = new ViewNewBook() { Dock = DockStyle.Fill };
             var viewNewAuthor = new ViewNewAuthor() { Dock = DockStyle.Fill };
             var viewDeleteAuthor = new ViewDeleteAuthor() { Dock = DockStyle.Fill };
-            var viewMain = new ViewMain(viewTreeView, viewDetails, viewNewBook, viewNewAuthor, viewDeleteAuthor);
+            var viewMain = new ViewMain(viewTreeView, viewDetails);
 
 
             //Presenters
-            _ = new PresenterMain(viewMain, viewTreeView, viewDetails);
+            _ = new PresenterMain(viewMain);
             _ = new PresenterDetails(viewMain, viewTreeView, viewDetails, viewNewAuthor);
-            _ = new PresenterTreeView(viewMain, viewTreeView, viewDetails, viewNewBook, viewDeleteAuthor, viewNewAuthor);
-            _ = new PresenterNewBook(viewMain, viewTreeView, viewDetails, viewNewBook);
-            _ = new PresenterNewAuthor(viewMain, viewTreeView, viewDetails, viewNewAuthor);
-            _ = new PresenterDeleteAuthor(viewMain, viewTreeView, viewDetails, viewDeleteAuthor);
+            _ = new PresenterTreeView(viewMain, viewTreeView, viewDetails, viewNewBook, viewDeleteAuthor);
+            _ = new PresenterNewBook(viewMain, viewNewBook);
+            _ = new PresenterNewAuthor(viewMain, viewNewAuthor);
+            _ = new PresenterDeleteAuthor(viewMain, viewDeleteAuthor);
 
             Application.Run(viewMain);
         }

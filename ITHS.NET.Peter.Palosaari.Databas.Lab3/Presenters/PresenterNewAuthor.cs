@@ -1,37 +1,33 @@
 ﻿using ITHS.NET.Peter.Palosaari.Databas.Lab3.Views;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 {
-   public  class PresenterNewAuthor
+    public class PresenterNewAuthor
     {
         private readonly ICollection<string> bookIDs = new List<string>();
         private readonly IViewMain viewMain;
-        private readonly IViewTreeView viewTreeView;
-        private readonly IViewDetails viewDetails;
         private readonly IViewNewAuthor viewNewAuthor;
 
-        public PresenterNewAuthor(IViewMain viewMain, IViewTreeView viewTreeView, ViewDetails viewDetails, IViewNewAuthor viewNewAuthor)
+        public PresenterNewAuthor(IViewMain viewMain, IViewNewAuthor viewNewAuthor)
         {
             this.viewMain = viewMain;
-            this.viewTreeView = viewTreeView;
-            this.viewDetails = viewDetails;
             this.viewNewAuthor = viewNewAuthor;
 
-            viewMain.ToolStripMenuItemAddAuthor.Click += ToolStripMenuItemAddAuthor_Click;
-            viewNewAuthor.DGVNewAuthor.EditingControlShowing += DGVNewAuthor_EditingControlShowing;
-            viewNewAuthor.DGVNewAuthor.CellClick += DGVNewAuthor_CellClick;
-            viewNewAuthor.DGVNewAuthor.CellContentClick += DGVNewAuthor_CellContentClick;
-            viewNewAuthor.DGVNewAuthor.SelectionChanged += DGVNewAuthor_SelectionChanged;
-            viewNewAuthor.DGVNewAuthor.DataError += DGVNewAuthor_DataError;
-            viewNewAuthor.ButtonAdd.Click += ButtonAdd_Click;
-            viewNewAuthor.ButtonClose.Click += ButtonClose_Click;
-            viewNewAuthor.LabelLog.Text = string.Empty;
+            this.viewMain.ToolStripMenuItemAddAuthor.Click += ToolStripMenuItemAddAuthor_Click;
+            this.viewNewAuthor.DGVNewAuthor.EditingControlShowing += DGVNewAuthor_EditingControlShowing;
+            this.viewNewAuthor.DGVNewAuthor.CellClick += DGVNewAuthor_CellClick;
+            this.viewNewAuthor.DGVNewAuthor.CellContentClick += DGVNewAuthor_CellContentClick;
+            this.viewNewAuthor.DGVNewAuthor.SelectionChanged += DGVNewAuthor_SelectionChanged;
+            this.viewNewAuthor.DGVNewAuthor.DataError += DGVNewAuthor_DataError;
+            this.viewNewAuthor.ButtonAdd.Click += ButtonAdd_Click;
+            this.viewNewAuthor.ButtonClose.Click += ButtonClose_Click;
+            this.viewNewAuthor.LabelLog.Text = string.Empty;
         }
 
         private void ToolStripMenuItemAddAuthor_Click(object sender, EventArgs e)
