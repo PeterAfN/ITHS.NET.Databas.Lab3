@@ -13,11 +13,14 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly ICollection<string> bookIDs = new List<string>();
         private readonly IViewMain viewMain;
         private readonly IViewNewAuthor viewNewAuthor;
+        private readonly SqlData sqlData;
 
         public PresenterNewAuthor(IViewMain viewMain, IViewNewAuthor viewNewAuthor)
         {
             this.viewMain = viewMain;
             this.viewNewAuthor = viewNewAuthor;
+
+            sqlData = new SqlData();
 
             this.viewMain.ToolStripMenuItemAddAuthor.Click += ToolStripMenuItemAddAuthor_Click;
             this.viewNewAuthor.DGVNewAuthor.EditingControlShowing += DGVNewAuthor_EditingControlShowing;
@@ -142,7 +145,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void AddBookCell(int rowIndexNewCell)
         {
             cBBooks.Items.Clear();
-            var books = GetBooksFromDatabase();
+            sqlData.Update(); var books = sqlData.Böcker;
 
             foreach (Böcker b in books)
             {
@@ -216,24 +219,5 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         }
 
         private void DGVNewAuthor_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
-
-        //todo: create generic class for getting data from database.
-        private ICollection<Böcker> GetBooksFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<Böcker> output = new List<Böcker>();
-                    foreach (Böcker f in db.Böcker)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else return null;
-            }
-        }
-
     }
 }

@@ -12,6 +12,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
     {
         private readonly ICollection<int> authorIDs = new List<int>();
         private int publisherIDs = -1;
+        private readonly SqlData sqlData;
 
         private readonly IViewMain viewMain;
         private readonly IViewNewBook viewNewBook;
@@ -20,6 +21,8 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         {
             this.viewMain = viewMain;
             this.viewNewBook = viewNewBook;
+
+            sqlData = new SqlData();
 
             this.viewMain.ToolStripMenuItemAddBook.Click += ToolStripMenuItemAddBook_Click;
             this.viewNewBook.DGVNewBook.EditingControlShowing += DGVNewBook_EditingControlShowing;
@@ -36,7 +39,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         {
             if (viewNewBook.DGVNewBook.Rows.Count == 0)
             {
-
                 viewNewBook.DGVNewBook.Rows.Add(6);
                 viewNewBook.DGVNewBook[0, 0].Value = "Isbn [Required, 13 digits]:";
                 viewNewBook.DGVNewBook[0, 1].Value = "Title:";
@@ -93,7 +95,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
                 // 3. save book to table 'LagerSaldo'
 
-                var stores = GetStoresFromDatabase();
+                sqlData.Update(); var stores = sqlData.Butiker;
                 foreach (Butiker s in stores)
                 {
                     var lagerSaldo = new LagerSaldo
@@ -162,7 +164,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
 
         private void AddListOfPublishersToComboBox(int rowIndex)
         {
-            var publishers = GetPublishersFromDatabase();
+            sqlData.Update(); var publishers = sqlData.Förlag;
             cBPublishers.Items.Clear();
 
             foreach (Förlag p in publishers)
@@ -199,17 +201,17 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private void AddAuthorCell(int rowIndexNewCell)
         {
             cBAuthors.Items.Clear();
-            var författare = GetAuthorsFromDatabase();
+            sqlData.Update(); var authors = sqlData.Författare;
 
-            foreach (Författare f in författare)
+            foreach (Författare f in authors)
             {
                 if (!authorIDs.Contains(f.Id))
                     cBAuthors.Items.Add($"Id: {f.Id} - {f.Förnamn} {f.Efternamn} - BirthDate: {f.Födelsedatum}");
             }
 
             viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1] = cBAuthors;
-            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[1].Cells[1];               //only way to update cell
-            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1]; //only way to update cell
+            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[1].Cells[1];               //So updates become visible
+            viewNewBook.DGVNewBook.CurrentCell = viewNewBook.DGVNewBook.Rows[rowIndexNewCell].Cells[1]; //So updates become visible
             viewNewBook.DGVNewBook.CellClick -= DGVNewBook_CellClick;
         }
 
@@ -286,57 +288,5 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         }
 
         private void DGVNewBook_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
-
-        //todo: create generic class for getting data from database.
-        private ICollection<Författare> GetAuthorsFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<Författare> output = new List<Författare>();
-                    foreach (Författare f in db.Författare)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else return null;
-            }
-        }
-
-        private ICollection<Förlag> GetPublishersFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<Förlag> output = new List<Förlag>();
-                    foreach (Förlag f in db.Förlag)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else return null;
-            }
-        }
-
-        private ICollection<Butiker> GetStoresFromDatabase()
-        {
-            using var db = new Bokhandel_Lab2Context();
-            {
-                if (db.Database.CanConnect())
-                {
-                    ICollection<Butiker> output = new List<Butiker>();
-                    foreach (Butiker f in db.Butiker)
-                    {
-                        output.Add(f);
-                    }
-                    return output;
-                }
-                else return null;
-            }
-        }
     }
 }

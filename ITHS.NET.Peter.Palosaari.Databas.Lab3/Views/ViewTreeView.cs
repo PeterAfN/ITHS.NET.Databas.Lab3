@@ -25,19 +25,16 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Views
             if (!PreventEvent) TreeViewAfterSelect?.Invoke(TreeView, e);
         }
 
-
         public TreeView TreeView
         {
             get { return treeView; }
             set { treeView = value; }
         }
 
-
         public ContextMenuStrip ContextMenuStripTreeView
         {
             get { return contextMenuStripTreeView; }
             set { contextMenuStripTreeView = value; }
         }
-
     }
 }

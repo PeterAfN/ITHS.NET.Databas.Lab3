@@ -22,13 +22,13 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
         private readonly SqlData sqlData;
 
         public PresenterTreeView(IViewMain viewMain,
-            IViewTreeView viewBookstores,
+            IViewTreeView viewTreeView,
             IViewDetails viewDetails,
             IViewNewBook viewNewBook,
             IViewDeleteAuthor viewDeleteAuthor)
         {
             this.viewMain = viewMain;
-            this.viewTreeView = viewBookstores;
+            this.viewTreeView = viewTreeView;
             this.viewDetails = viewDetails;
             this.viewNewBook = viewNewBook;
             this.viewDeleteAuthor = viewDeleteAuthor;

@@ -30,7 +30,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             {
                 Application.Exit();
             }
-            else viewMain.Activate(); // <--- bring mainForm in front.
+            else viewMain.Activate(); // <--bring mainForm in front.
         }
     }
 }

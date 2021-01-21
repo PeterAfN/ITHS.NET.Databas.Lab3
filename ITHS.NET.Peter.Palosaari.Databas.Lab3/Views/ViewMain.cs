@@ -54,6 +54,5 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             get { return labelLog; }
             set { labelLog = value; }
         }
-
     }
 }

@@ -451,7 +451,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             if (authorsAll.Count() == authorsConnectedToCurrentBook.Count()) return;
 
             viewDetails.DGVBook.Rows.Add(1);
-            viewDetails.DGVBook.FirstDisplayedScrollingRowIndex = viewDetails.DGVBook.RowCount - 1; //scroll to bottom.
+            viewDetails.DGVBook.FirstDisplayedScrollingRowIndex = viewDetails.DGVBook.RowCount - 1;
             viewDetails.DGVBook.CellClick -= DGVBook_CellClick;
             viewDetails.DGVBook.CellClick += DGVBook_CellClick;
             viewDetails.DGVBook[0, newRowIndex].Value = "Author:";
@@ -475,7 +475,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1] = cBAuthorsCell;
             viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[1].Cells[1];
             viewDetails.DGVBook.CurrentCell = viewDetails.DGVBook.Rows[rowIndexNewCell].Cells[1];
-            viewDetails.DGVBook.CellClick -= DGVBook_CellClick;
+            viewDetails.DGVBook.CellClick -= DGVBook_CellClick; //  <--- very important to have, otherwise errors.
         }
 
         //handle clicks on the author cell (when user decides to add an author to book)

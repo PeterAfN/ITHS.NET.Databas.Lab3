@@ -25,7 +25,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3
             var viewDeleteAuthor = new ViewDeleteAuthor() { Dock = DockStyle.Fill };
             var viewMain = new ViewMain(viewTreeView, viewDetails);
 
-
             //Presenters
             _ = new PresenterMain(viewMain);
             _ = new PresenterDetails(viewMain, viewTreeView, viewDetails, viewNewAuthor);
