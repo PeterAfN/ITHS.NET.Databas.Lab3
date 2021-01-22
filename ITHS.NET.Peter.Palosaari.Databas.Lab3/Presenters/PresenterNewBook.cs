@@ -115,7 +115,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             catch (Exception)
             {
-                dbContextTransaction.Rollback(); //not needed but good practice
                 string logText = "Error while saving.";
                 _ = ShowLogTextAsync(logText, Color.Red, 5000);
             }

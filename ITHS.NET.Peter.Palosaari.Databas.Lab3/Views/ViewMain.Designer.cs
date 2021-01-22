@@ -56,7 +56,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(896, 24);
+            this.panelTop.Size = new System.Drawing.Size(1262, 24);
             this.panelTop.TabIndex = 0;
             // 
             // menuStrip1
@@ -66,7 +66,7 @@
             this.tasksToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(896, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1262, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -118,7 +118,7 @@
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 24);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(896, 469);
+            this.panelMain.Size = new System.Drawing.Size(1262, 697);
             this.panelMain.TabIndex = 1;
             // 
             // splitContainerMain
@@ -137,17 +137,17 @@
             this.splitContainerMain.Panel2.Controls.Add(this.panelLog);
             this.splitContainerMain.Panel2.Margin = new System.Windows.Forms.Padding(11);
             this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(3, 2, 11, 0);
-            this.splitContainerMain.Size = new System.Drawing.Size(896, 469);
-            this.splitContainerMain.SplitterDistance = 284;
+            this.splitContainerMain.Size = new System.Drawing.Size(1262, 697);
+            this.splitContainerMain.SplitterDistance = 400;
             this.splitContainerMain.TabIndex = 0;
             // 
             // panelLog
             // 
             this.panelLog.Controls.Add(this.labelLog);
             this.panelLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelLog.Location = new System.Drawing.Point(3, 454);
+            this.panelLog.Location = new System.Drawing.Point(3, 682);
             this.panelLog.Name = "panelLog";
-            this.panelLog.Size = new System.Drawing.Size(594, 15);
+            this.panelLog.Size = new System.Drawing.Size(844, 15);
             this.panelLog.TabIndex = 1;
             // 
             // labelLog
@@ -155,7 +155,7 @@
             this.labelLog.AutoSize = true;
             this.labelLog.Dock = System.Windows.Forms.DockStyle.Right;
             this.labelLog.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelLog.Location = new System.Drawing.Point(586, 0);
+            this.labelLog.Location = new System.Drawing.Point(836, 0);
             this.labelLog.Name = "labelLog";
             this.labelLog.Size = new System.Drawing.Size(8, 12);
             this.labelLog.TabIndex = 1;
@@ -165,7 +165,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 504);
+            this.ClientSize = new System.Drawing.Size(1262, 732);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTop);
             this.DoubleBuffered = true;

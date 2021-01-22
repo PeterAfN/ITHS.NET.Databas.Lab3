@@ -104,8 +104,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                     db.Database.ExecuteSqlInterpolated($"DELETE FROM FörfattareBöcker_Junction WHERE BokID = ({IDCurrentSelectedBook})");   // 2. delete book from table 'FörfattareBöcker_Junction'
                     db.SaveChanges();
 
+                    db.Database.ExecuteSqlInterpolated($"DELETE FROM OrderDetaljer WHERE ProduktId = ({IDCurrentSelectedBook})");           // 3. delete book from table 'OrderDetaljer'
+                    db.SaveChanges();
+
                     var böcker = db.Böcker.FirstOrDefault(b => b.Isbn13 == IDCurrentSelectedBook);
-                    db.Böcker.Remove(böcker);                                                                                               // 3. delete book from table 'böcker'
+                    db.Böcker.Remove(böcker);                                                                                               // 4. delete book from table 'böcker'
                     db.SaveChanges();
                     dbContextTransaction.Commit();
 
@@ -115,7 +118,6 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 }
                 catch (Exception)
                 {
-                    dbContextTransaction.Rollback();
                     string logText = "Error while saving.";
                     _ = ShowLogTextAsync(logText, Color.Red, 5000);
                 }
@@ -175,7 +177,11 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
                 viewTreeView.TreeView?.SelectedNode?.EnsureVisible();
                 viewTreeView.TreeView?.Focus();
             }
-            else viewTreeView.TreeView.SelectedNode = viewTreeView.TreeView.Nodes[parentNode].Nodes[childNode];
+            else if (viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes.Count != 0)
+            {
+                if (viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes[childNode] != null)
+                    viewTreeView.TreeView.SelectedNode = viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes[childNode];
+            }
         }
 
         private void ViewDetails_DataGridViewUpdated(object sender, DetailsChangedEventArgs e)
