@@ -4,5 +4,5 @@
 
   - Öppna 'Packet Manager Console' i Visual studio genom att gå till Tools-> NuGet Package Manager-> Packet Manager Console.
   - För att skapa databasen som programmet kommer att använda, skriv kommandot "update-database" (utan citattecken) i Packet Manager Console och tryck på Enter.
-  - Om inga rödmarkerade felmeddelanden visades är databasen nu skapad.
+  - Om inga rödmarkerade felmeddelanden visas är databasen nu skapad.
   - Nu kan programmet startas i Visual studio. Den kommer att använda sig av databasen som skapades.
