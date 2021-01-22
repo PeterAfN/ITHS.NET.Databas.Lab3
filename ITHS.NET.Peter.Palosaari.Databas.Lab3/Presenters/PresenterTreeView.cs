@@ -179,7 +179,7 @@ namespace ITHS.NET.Peter.Palosaari.Databas.Lab3.Presenters
             }
             else if (viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes.Count != 0)
             {
-                if (viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes[childNode] != null)
+                if (childNode < viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes.Count)
                     viewTreeView.TreeView.SelectedNode = viewTreeView?.TreeView?.Nodes[parentNode]?.Nodes[childNode];
             }
         }
