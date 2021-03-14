@@ -1,11 +1,4 @@
-# Demo bokhandel - SQL Server demo klient
-## Instruktioner för att starta programmet i Visual Studio:
-- För att kunna starta programmet ifrån Visual studio måste en Sql Server vara installerad och igång på samma dator. Efter att detta projekt har laddats ner och öppnats i Visual Studio behöver en databas skapas enligt:
-
-  - Öppna 'Packet Manager Console' i Visual studio genom att gå till Tools-> NuGet Package Manager-> Packet Manager Console.
-  - För att skapa databasen som programmet kommer att använda, skriv kommandot "update-database" (utan citattecken) i Packet Manager Console och tryck på Enter.
-  - Om inga rödmarkerade felmeddelanden visas är databasen nu skapad.
-  - Nu kan programmet startas i Visual studio. Den kommer att använda sig av databasen som skapades.
+## ITHS.NET.Databas.Lab3
 
 Denna lab är en fortsättning på [ITHS.NET.Databas.Lab2](https://github.com/PeterAfN/ITHS.NET.Databas.Lab2). Båda dessa labbarna ingick i kursen "Utveckling mot databas och databasadministration 45p" på IT-Högskolan i Göteborg som jag läste våren år 2021.
 
@@ -71,3 +64,12 @@ väl godkänt.
  Jag måste kunna checka ut och testa projektet på ett smidigt sätt.
  Projektet och koden är tydlig och väl strukturerad.
  Det är lätt att förstå och använda applikationen. 
+
+# Demo bokhandel - SQL Server demo klient
+## Instruktioner för att starta programmet i Visual Studio:
+- För att kunna starta programmet ifrån Visual studio måste en Sql Server vara installerad och igång på samma dator. Efter att detta projekt har laddats ner och öppnats i Visual Studio behöver en databas skapas enligt:
+
+  - Öppna 'Packet Manager Console' i Visual studio genom att gå till Tools-> NuGet Package Manager-> Packet Manager Console.
+  - För att skapa databasen som programmet kommer att använda, skriv kommandot "update-database" (utan citattecken) i Packet Manager Console och tryck på Enter.
+  - Om inga rödmarkerade felmeddelanden visas är databasen nu skapad.
+  - Nu kan programmet startas i Visual studio. Den kommer att använda sig av databasen som skapades.
