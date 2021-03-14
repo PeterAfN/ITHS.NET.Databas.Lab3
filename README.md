@@ -1,4 +1,4 @@
-## ITHS.NET.Databas.Lab3
+# ITHS.NET.Databas.Lab3
 
 Denna lab är en fortsättning på [ITHS.NET.Databas.Lab2](https://github.com/PeterAfN/ITHS.NET.Databas.Lab2). Båda dessa labbarna ingick i kursen "Utveckling mot databas och databasadministration 45p" på IT-Högskolan i Göteborg som jag läste våren år 2021.
 
