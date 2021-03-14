@@ -7,7 +7,7 @@
   - Om inga rödmarkerade felmeddelanden visas är databasen nu skapad.
   - Nu kan programmet startas i Visual studio. Den kommer att använda sig av databasen som skapades.
 
-Denna lab är en fortsättning på [ITHS.NET.Databas.Lab2](https://github.com/PeterAfN/ITHS.NET.Databas.Lab2) och ingick i kursen "Utveckling mot databas och databasadministration, 45p" på IT-Högskolan i Göteborg som jag läste våren år 2021.
+Denna lab är en fortsättning på [ITHS.NET.Databas.Lab2](https://github.com/PeterAfN/ITHS.NET.Databas.Lab2). Båda dessa labbarna ingick i kursen "Utveckling mot databas och databasadministration 45p" på IT-Högskolan i Göteborg som jag läste våren år 2021.
 
 ## Uppgiftsbeskrivningen för labben:
 #### Utveckla en databasapp med Entity Framework Core
